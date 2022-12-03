@@ -32,7 +32,7 @@
 
 //flags
 #define VENT_OPEN_POS 0
-#define VENT_CLOSED_POS 165
+#define VENT_CLOSED_POS 180
 #define CLOSED 0
 #define OPEN 1
 #define PRE_VENT_NOT_DONE 0
