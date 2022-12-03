@@ -1,3 +1,6 @@
+//GHOUL flight software written by:
+//Michael Kalin with love and support from Kruti Geeta-Rajnikant and Jeremy Joseph (JJ) Kuznetsov
+
 #include <RTClib.h>
 #include <Adafruit_BMP280.h>
 #include <Servo.h>
