@@ -1,4 +1,5 @@
-# Helios2
+# GHOUL
 
-Repository for the revived Helios project started in 2022
+Repository for the GHOUL project started in Fall 2022 as a part of the National Eclipse Ballooning Project
 
+(A spooky spiritual sucessor to Helios)
