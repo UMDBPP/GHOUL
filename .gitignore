@@ -1,3 +1,6 @@
+# general ignores
+*.zip
+
 # Ignore list for KiCAD Projects
 # Temporary files
 *.000
