@@ -1706,7 +1706,7 @@
     (property "Value" "NichromeConnector" (id 1) (at 76.2 88.2649 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical" (id 2) (at 69.85 86.36 0)
+    (property "Footprint" "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical" (id 2) (at 69.85 86.36 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (id 3) (at 69.85 86.36 0)
@@ -1915,7 +1915,7 @@
     (property "Value" "NichromeConnector" (id 1) (at 76.2 67.3099 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical" (id 2) (at 69.85 68.58 0)
+    (property "Footprint" "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical" (id 2) (at 69.85 68.58 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (id 3) (at 69.85 68.58 0)
@@ -2321,7 +2321,7 @@
       (reference "U5") (unit 1) (value "LM1084-ADJ") (footprint "Package_TO_SOT_SMD:TO-263-3_TabPin2")
     )
     (path "/734a620d-4445-45de-a54d-e8d8da70fce4"
-      (reference "U6") (unit 1) (value "NichromeConnector") (footprint "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical")
+      (reference "U6") (unit 1) (value "NichromeConnector") (footprint "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical")
     )
     (path "/844dbbcd-0ee2-4f2b-9780-c9edf1ec87d7"
       (reference "U7") (unit 1) (value "Ultimate_GPS_Breakout_v3") (footprint "GHOULFootPrints:Ultimate GPS Breakout v3")
@@ -2330,7 +2330,7 @@
       (reference "U8") (unit 1) (value "Xbee") (footprint "GHOULFootPrints:XBee Explorer")
     )
     (path "/15b37397-972a-4870-a143-25e9781a6e82"
-      (reference "U9") (unit 1) (value "NichromeConnector") (footprint "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical")
+      (reference "U9") (unit 1) (value "NichromeConnector") (footprint "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical")
     )
     (path "/ee1da804-b043-48ee-a3cd-e6aabe5242f6"
       (reference "U10") (unit 1) (value "GHOULIMU") (footprint "GHOULFootPrints:GHOULIMU")
