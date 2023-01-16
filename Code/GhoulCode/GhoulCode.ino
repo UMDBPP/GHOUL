@@ -7,12 +7,15 @@
 #include <SPI.h>
 #include <SD.h>
 #include <TimeLib.h>
+#include <Adafruit_GPS.h>
+#include <TinyGPS++.h>
 
 //sensor declarations
 #define SERVO_PIN 30
 #define FEEDBACK_PIN A13
 #define CUTDOWN_PIN 6
 #define LOGGER_PIN BUILTIN_SDCARD
+#define GPSSerial Serial3
 
 //float parameters
 #define PRE_VENT_ALT 24000
@@ -29,6 +32,10 @@
 #define CUTDOWN_TIMER_DURATION 6000
 #define ARATE_TRIGGER_ALT 40000
 #define ASCENT_RATE_TRIGGER 1
+#define LONG_EAST_BOUND -76.939162
+#define LONG_WEST_BOUND -76.939731
+#define LAT_NORTH_BOUND 38.993059
+#define LAT_SOUTH_BOUND 38.992667
 
 //flags
 #define VENT_OPEN_POS 117
@@ -46,15 +53,21 @@
 #define FLOATING 4
 #define NOT_CUT 0
 #define CUT 1
+#define BAD_FIX 2
 #define TIMER_NOT_STARTED 0
 #define TIMER_STARTED 1
 #define ARATE_TRIGGER_NOT_STARTED 0
 #define ARATE_TRIGGER_STARTED 1
 
+//timer
+IntervalTimer gpsTimer;
+
 //sensors
 Adafruit_BMP280 bmp;
 Servo ventValve;
 File logFile;
+Adafruit_GPS GPS(&GPSSerial);
+//TinyGPSPlus gps;
 
 //storage
 float prev_alt = 0;
@@ -65,6 +78,14 @@ uint32_t vent_open_time = 0;
 int num_cuts = 0;
 uint32_t next_cut_time = UINT_MAX;
 uint32_t cutdown_time = UINT_MAX;
+float gps_lat;
+float gps_long;
+float gps_alt;
+//float gps_speed;
+int gps_sats;
+int antenna_status;
+int gps_fixqual;
+int gps_fault_counter;
 
 //flags
 int pre_vent_status = PRE_VENT_NOT_DONE; //0 = not done, 1 = done
@@ -102,14 +123,19 @@ void setup() {
     Serial.println("Error BMP not found!");
   else
     Serial.println("BMP found!");
+
+  GPSSerial.begin(9600);
   
   if(!SD.begin(LOGGER_PIN))
     Serial.println("Error: SD Card Logger Not Initialized");
   else
     Serial.println("SD card initialized");
+
+  gpsTimer.begin(readGPS, 1000);
 }
 
 void loop() {  
+
   //get time
   DateTime curr_time = DateTime(now());
   uint32_t now_seconds = now();
@@ -118,6 +144,27 @@ void loop() {
   float temp = bmp.readTemperature();
   float pressure = bmp.readPressure();
   float alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
+
+  //read gps data
+  noInterrupts();
+  if(GPS.newNMEAreceived())
+  {
+    GPS.parse(GPS.lastNMEA());
+    Serial.println(GPS.day);
+    Serial.println(GPS.month);
+    Serial.println(GPS.year);
+    int fix = GPS.fix;
+    if(fix == 1)
+    {
+      Serial.println(GPS.latitude);
+      Serial.println(GPS.longitude);
+      Serial.println(GPS.altitude);
+      Serial.println(GPS.satellites);
+    }   
+  }
+  else
+    Serial.println("Nada :(");
+  interrupts();
   
   //calc ascent rate
   float curr_ascent_rate = (alt - prev_alt)/(now_seconds - prev_time);
@@ -231,6 +278,15 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
 
+  //GPS Trigger
+  if(cut_status == NOT_CUT && geofence_check(gps_lat, gps_long, gps_fixqual) == CUT)
+  {
+    cutdown();
+    cut_status = CUT;
+    num_cuts++;
+    next_cut_time = now_seconds + CUT_INTERVAL;
+  }
+
   //subsequent cuts
   if(cut_status == CUT && num_cuts < TOTAL_CUTS)
   {
@@ -258,6 +314,22 @@ void loop() {
   logFile.print(", ");
   logFile.print(now_seconds);
   logFile.print(", ");
+  //GPS
+  logFile.print(gps_lat);
+  logFile.print(", ");
+  logFile.print(gps_long);
+  logFile.print(", ");
+  logFile.print(gps_alt);
+  logFile.print(", ");
+  logFile.print(gps_sats);
+  logFile.print(", ");
+  logFile.print(antenna_status);
+  logFile.print(", ");
+  logFile.print(gps_fixqual);
+  logFile.print(", ");
+  logFile.print(gps_fault_counter);
+  logFile.print(", ");
+  //End GPS
   logFile.print(temp);
   logFile.print(", ");
   logFile.print(pressure);
@@ -309,6 +381,22 @@ void loop() {
   Serial.print(", ");
   Serial.print(now_seconds);
   Serial.print(", ");
+  //GPS
+  Serial.print(gps_lat);
+  Serial.print(", ");
+  Serial.print(gps_long);
+  Serial.print(", ");
+  Serial.print(gps_alt);
+  Serial.print(", ");
+  Serial.print(gps_sats);
+  Serial.print(", ");
+  Serial.print(antenna_status);
+  Serial.print(", ");
+  Serial.print(gps_fixqual);
+  Serial.print(", ");
+  Serial.print(gps_fault_counter);
+  Serial.print(", ");
+  //End GPS
   Serial.print(temp);
   Serial.print(", ");
   Serial.print(pressure);
@@ -372,4 +460,45 @@ void yolo_cutdown()
 time_t getTeensy3Time()
 {
   return Teensy3Clock.get();
+}
+
+// Checks Geofence Compliance (0 = do not cut down, 1 = cut down, 2 = bad fix)
+int geofence_check(float long_coord, float lat_coord, int fix_qual)
+{
+  // Checks fix quality first
+  if(fix_qual == 0)
+  {
+    return BAD_FIX;
+  }
+  // Checks Geofence compliance and adds to fault counter
+  if(long_coord > LONG_EAST_BOUND || long_coord < LONG_WEST_BOUND)
+  {
+    // Noncompliant
+    gps_fault_counter++;
+  }
+  else if(lat_coord < LAT_SOUTH_BOUND || lat_coord > LAT_NORTH_BOUND)
+  {
+    //Noncompliant
+    gps_fault_counter++;
+  }
+  else
+  {
+    // Compliant, resets margin counter
+    gps_fault_counter = 0;
+  }
+  // Returns cut-down command
+  if(gps_fault_counter > 10)
+  {
+    return CUT;
+  }
+  else
+  {
+    return NOT_CUT;
+  }
+
+}
+
+void readGPS()
+{
+  GPS.read();
 }
