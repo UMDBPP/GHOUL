@@ -157,6 +157,10 @@ void loop() {
       gps_long = GPS.longitudeDegrees;
       gps_alt = GPS.altitude;
       gps_sats = GPS.satellites;
+      Serial.print(GPS.latitudeDegrees);
+      Serial.print(GPS.longitudeDegrees);
+      Serial.print(GPS.altitude);
+      Serial.print(GPS.satellites);
     }   
   }
   else
