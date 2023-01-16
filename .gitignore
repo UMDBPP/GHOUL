@@ -9,7 +9,9 @@
 *.kicad_pcb-bak
 *.sch-bak
 *~
-.gbr
+*.gbr
+*.gbrjob
+*.drl
 _autosave-*
 *.tmp
 *-save.pro
