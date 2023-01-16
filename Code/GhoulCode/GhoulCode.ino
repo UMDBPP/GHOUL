@@ -150,16 +150,13 @@ void loop() {
   if(GPS.newNMEAreceived())
   {
     GPS.parse(GPS.lastNMEA());
-    Serial.println(GPS.day);
-    Serial.println(GPS.month);
-    Serial.println(GPS.year);
-    int fix = GPS.fix;
-    if(fix == 1)
+    gps_fixqual = GPS.fix;
+    if(gps_fixqual == 1)
     {
-      Serial.println(GPS.latitude);
-      Serial.println(GPS.longitude);
-      Serial.println(GPS.altitude);
-      Serial.println(GPS.satellites);
+      gps_lat = GPS.latitudeDegrees;
+      gps_long = GPS.longitudeDegrees;
+      gps_alt = GPS.altitude;
+      gps_sats = GPS.satellites;
     }   
   }
   else
@@ -241,8 +238,10 @@ void loop() {
       }
     }
   }
-
-  //altitude trigger
+  //  ---------------------------------------------------------------------------------------------
+  //  CUT DOWN TRIGGERS
+  //  CUT DOWN TRIGGERS
+  //altitude trigger ------------------------------------------------------------------------------
   if(alt >= CUTDOWN_ALTITUDE && cut_status == NOT_CUT)
   {
     cutdown();
@@ -251,7 +250,7 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
 
-  //ascent rate trigger
+  //ascent rate trigger ------------------------------------------------------------------------------
   if(arate_trigger_status == ARATE_TRIGGER_NOT_STARTED && alt >= ARATE_TRIGGER_ALT)
   {
     arate_trigger_status = ARATE_TRIGGER_STARTED;
@@ -264,7 +263,7 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
     
-  //timer trigger
+  //timer trigger ------------------------------------------------------------------------------
   if(timer_status == TIMER_NOT_STARTED && alt >= CUTDOWN_TIMER_TRIGGER_ALT)
   {
     cutdown_time = now_seconds + CUTDOWN_TIMER_DURATION;
@@ -278,7 +277,7 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
 
-  //GPS Trigger
+  //GPS Trigger ------------------------------------------------------------------------------
   if(cut_status == NOT_CUT && geofence_check(gps_lat, gps_long, gps_fixqual) == CUT)
   {
     cutdown();
@@ -297,7 +296,7 @@ void loop() {
       next_cut_time = now_seconds + CUT_INTERVAL;
     }
   }
-  
+  //  ------------------------------------------------------------------------------
   //write to the data file
   logFile = SD.open("datalog.txt", FILE_WRITE);
   if(curr_time.hour() < 10)
