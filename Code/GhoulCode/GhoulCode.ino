@@ -59,12 +59,15 @@
 #define ARATE_TRIGGER_NOT_STARTED 0
 #define ARATE_TRIGGER_STARTED 1
 
+//timer
+IntervalTimer gpsTimer;
+
 //sensors
 Adafruit_BMP280 bmp;
 Servo ventValve;
 File logFile;
-//Adafruit_GPS GPS(&GPSSerial);
-TinyGPSPlus gps;
+Adafruit_GPS GPS(&GPSSerial);
+//TinyGPSPlus gps;
 
 //storage
 float prev_alt = 0;
@@ -121,20 +124,14 @@ void setup() {
   else
     Serial.println("BMP found!");
 
-  /*
-  // 9600 NMEA is the default baud rate for Adafruit MTK GPS's- some use 4800
-  GPS.begin(9600);
-  GPS.sendCommand("$PGCMD,33,0*6D");
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_10HZ); // 10 Hz update rate
-  delay(1000);
-  */
   GPSSerial.begin(9600);
   
   if(!SD.begin(LOGGER_PIN))
     Serial.println("Error: SD Card Logger Not Initialized");
   else
     Serial.println("SD card initialized");
+
+  gpsTimer.begin(readGPS, 1000);
 }
 
 void loop() {  
@@ -148,25 +145,26 @@ void loop() {
   float pressure = bmp.readPressure();
   float alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
 
-  /*
-  //clear gps
-  clearGPS();
-  */
-  //read gps
-  readGPS();
-
-  Serial.println(gps.satellites.value());
-  Serial.println(gps.hdop.value());
-  if (gps.location.isValid())
+  //read gps data
+  noInterrupts();
+  if(GPS.newNMEAreceived())
   {
-    Serial.print(gps.location.lat(), 6);
-    Serial.print(F(","));
-    Serial.print(gps.location.lng(), 6);
+    GPS.parse(GPS.lastNMEA());
+    Serial.println(GPS.day);
+    Serial.println(GPS.month);
+    Serial.println(GPS.year);
+    int fix = GPS.fix;
+    if(fix == 1)
+    {
+      Serial.println(GPS.latitude);
+      Serial.println(GPS.longitude);
+      Serial.println(GPS.altitude);
+      Serial.println(GPS.satellites);
+    }   
   }
   else
-  {
-    Serial.println(F("INVALID"));
-  }
+    Serial.println("Nada :(");
+  interrupts();
   
   //calc ascent rate
   float curr_ascent_rate = (alt - prev_alt)/(now_seconds - prev_time);
@@ -502,48 +500,5 @@ int geofence_check(float long_coord, float lat_coord, int fix_qual)
 
 void readGPS()
 {
-  while(GPSSerial.available() > 0)
-    gps.encode(GPSSerial.read());
+  GPS.read();
 }
-
-/*
-void readGPS()
-{
-  while(!GPS.newNMEAreceived())
-  {
-    char c = GPS.read();
-  }
-  GPS.parse(GPS.lastNMEA());
-  String NMEA1 = GPS.lastNMEA();
-  while(!GPS.newNMEAreceived())
-  {
-    char c = GPS.read();
-  }
-  GPS.parse(GPS.lastNMEA());
-  String NMEA2 = GPS.lastNMEA();
-
-  Serial.print(NMEA1);
-  Serial.print(NMEA2);
-  Serial.println(GPS.fixquality);
-  Serial.println(GPS.latitudeDegrees);
-}
-
-void clearGPS()
-{
-  while(!GPS.newNMEAreceived())
-  {
-    char c = GPS.read();
-  }
-  GPS.parse(GPS.lastNMEA());
-  while(!GPS.newNMEAreceived())
-  {
-    char c = GPS.read();
-  }
-  GPS.parse(GPS.lastNMEA());
-  while(!GPS.newNMEAreceived())
-  {
-    char c = GPS.read();
-  }
-  GPS.parse(GPS.lastNMEA());
-}
-*/
