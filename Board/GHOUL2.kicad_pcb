@@ -5549,7 +5549,7 @@
   (gr_text "Resources Available Online:\n\nbpp.umd.edu/wiki\n\nhttps://github.com/UMDBPP/GHOUL\n\nor email us at nearspace@ssl.umd.edu" (at 198.755 125.095) (layer "B.SilkS") (tstamp f9300d32-7bda-4cae-be27-f6a8881a1e37)
     (effects (font (size 1 1) (thickness 0.15)) (justify left mirror))
   )
-  (gr_text "PWM-PWR-GND-Feedback\nServo" (at 112.395 77.47) (layer "F.SilkS") (tstamp 673df8ff-1e34-4847-93be-a0dda69aadc0)
+  (gr_text "PWM-PWR-GND-Feedback" (at 112.395 77.47) (layer "F.SilkS") (tstamp 673df8ff-1e34-4847-93be-a0dda69aadc0)
     (effects (font (size 1 1) (thickness 0.15)))
   )
   (gr_text "RTC Battery" (at 139.7 121.285) (layer "F.SilkS") (tstamp 6ef4cc1c-bd3a-4fce-b43b-328f171d4d01)
