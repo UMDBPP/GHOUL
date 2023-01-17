@@ -24,7 +24,7 @@
 #define VENT_TIMER 600
 #define SEA_LEVEL_PRESSURE 1020.65
 
-//cutdown parameters
+//cut-down parameters
 #define CUT_INTERVAL 60
 #define TOTAL_CUTS 4
 #define CUTDOWN_ALTITUDE 27000
@@ -81,34 +81,36 @@ uint32_t cutdown_time = UINT_MAX;
 float gps_lat;
 float gps_long;
 float gps_alt;
-//float gps_speed;
 int gps_sats;
 int antenna_status;
 int gps_fixqual;
 int gps_fault_counter;
 
 //flags
-int pre_vent_status = PRE_VENT_NOT_DONE; //0 = not done, 1 = done
-int float_vent_status = FLOAT_VENT_NOT_DONE; //0 = not done, 1 = done
-int vent_status = CLOSED; //0 = closed, 1 = open
-int float_status = NORMAL_ASCENT; //0 = normal ascent, 1 = pre-venting, 2 = float-venting, 3 = floating
-int cut_status = NOT_CUT; //0 = not cut, 1 = cut
-int timer_status = TIMER_NOT_STARTED; //0 = timer not started, 1 = timer started
+int pre_vent_status = PRE_VENT_NOT_DONE;              //0 = not done, 1 = done
+int float_vent_status = FLOAT_VENT_NOT_DONE;          //0 = not done, 1 = done
+int vent_status = CLOSED;                             //0 = closed, 1 = open
+int float_status = NORMAL_ASCENT;                     //0 = normal ascent, 1 = pre-venting, 2 = float-venting, 3 = floating
+int cut_status = NOT_CUT;                             //0 = not cut, 1 = cut
+int timer_status = TIMER_NOT_STARTED;                 //0 = timer not started, 1 = timer started
 int arate_trigger_status = ARATE_TRIGGER_NOT_STARTED; //0 = arate trigger not started, 1 = arate trigger started
 
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(9600);
-  
+
+  // Initiate/close servo
   ventValve.attach(SERVO_PIN);
   delay(50);
   ventValve.write(VENT_CLOSED_POS);
 
+  // Servo Analog Feedback Pin
+  pinMode(FEEDBACK_PIN, INPUT);
+
+  // Initiate cut-down pins
   pinMode(CUTDOWN_PIN, OUTPUT);
   digitalWrite(CUTDOWN_PIN, LOW);
 
-  pinMode(FEEDBACK_PIN, INPUT);
-  
+  // Initiate RTC
   setSyncProvider(getTeensy3Time);
   if(timeStatus() != timeSet)
   {
@@ -118,34 +120,47 @@ void setup() {
   {
     Serial.println("RTC has set the system time");
   }
-    
+
+  // Initiate BMP280
   if(!bmp.begin())
     Serial.println("Error BMP not found!");
   else
     Serial.println("BMP found!");
 
+  // Initiate GPS
   GPSSerial.begin(9600);
-  
+
+  // Check/Initiate SD Logger
   if(!SD.begin(LOGGER_PIN))
     Serial.println("Error: SD Card Logger Not Initialized");
   else
     Serial.println("SD card initialized");
 
+  // Interrupt Timer for GPS
   gpsTimer.begin(readGPS, 1000);
 }
 
 void loop() {  
 
-  //get time
+
+   /*  ============================================================================================
+   *   
+   *                              Data Collection and Storage
+   *   
+       ============================================================================================ */
+
+       
+       
+  //get time ------------------------------------------------------------------------------------ time
   DateTime curr_time = DateTime(now());
   uint32_t now_seconds = now();
   
-  //get pressure, temp, alt
+  //get pressure, temp, alt --------------------------------------------------------------------- pressure, temp, alt
   float temp = bmp.readTemperature();
   float pressure = bmp.readPressure();
   float alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
 
-  //read gps data
+  //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
   noInterrupts();
   if(GPS.newNMEAreceived())
   {
@@ -167,14 +182,23 @@ void loop() {
     Serial.println("Nada :(");
   interrupts();
   
-  //calc ascent rate
+
+  /*  ============================================================================================
+   *   
+   *                              Calculations and Decisions
+   *   
+       ============================================================================================ */
+
+       
+  
+  //calc ascent rate ------------------------------------------------------------------------------ Ascent Rate Calculation
   float curr_ascent_rate = (alt - prev_alt)/(now_seconds - prev_time);
   float ascent_rate = (prev_ascent_rate[0] + prev_ascent_rate[1] + prev_ascent_rate[2] + prev_ascent_rate[3] + prev_ascent_rate[4] + curr_ascent_rate)/6;
 
   float raw_servo_pos = analogRead(FEEDBACK_PIN);
   float servo_pos = (raw_servo_pos/1024)*180;
 
-  //if vent is closed, see if we should open it
+  //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
   if(vent_status == CLOSED)
   {
     if(pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
@@ -194,7 +218,8 @@ void loop() {
     }
   }
 
-  //if vent is open, check whether we are pre-venting or float venting, then close vent if target ascent rate is reached
+  //if vent is open, check whether we are pre-venting or float venting, 
+  // then close vent if target ascent rate is reached -------------------------------------------- Should we close vent?
   if(vent_status == OPEN)
   {
     if(float_status == PRE_VENTING)
@@ -242,10 +267,15 @@ void loop() {
       }
     }
   }
-  //  ---------------------------------------------------------------------------------------------
-  //  CUT DOWN TRIGGERS
-  //  CUT DOWN TRIGGERS
-  //altitude trigger ------------------------------------------------------------------------------
+  //  =============================================================================================
+  //  
+  //                                          CUT DOWN TRIGGERS
+  //
+  //  =============================================================================================
+
+
+  
+  //altitude trigger ------------------------------------------------------------------------------ Altitude Trigger
   if(alt >= CUTDOWN_ALTITUDE && cut_status == NOT_CUT)
   {
     cutdown();
@@ -254,7 +284,7 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
 
-  //ascent rate trigger ------------------------------------------------------------------------------
+  //ascent rate trigger --------------------------------------------------------------------------- Ascent Rate Trigger
   if(arate_trigger_status == ARATE_TRIGGER_NOT_STARTED && alt >= ARATE_TRIGGER_ALT)
   {
     arate_trigger_status = ARATE_TRIGGER_STARTED;
@@ -267,7 +297,7 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
     
-  //timer trigger ------------------------------------------------------------------------------
+  //timer trigger --------------------------------------------------------------------------------- Timer Trigger
   if(timer_status == TIMER_NOT_STARTED && alt >= CUTDOWN_TIMER_TRIGGER_ALT)
   {
     cutdown_time = now_seconds + CUTDOWN_TIMER_DURATION;
@@ -281,7 +311,7 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
 
-  //GPS Trigger ------------------------------------------------------------------------------
+  //GPS Trigger ---------------------------------------------------------------------------------- GPS Geofence Trigger
   if(cut_status == NOT_CUT && geofence_check(gps_lat, gps_long, gps_fixqual) == CUT)
   {
     cutdown();
@@ -290,7 +320,7 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
   }
 
-  //subsequent cuts
+  //Additional Cuts After Trigger Activation ----------------------------------------------------- Additional Cuts (for redundancy)
   if(cut_status == CUT && num_cuts < TOTAL_CUTS)
   {
     if(now_seconds >= next_cut_time)
@@ -300,8 +330,13 @@ void loop() {
       next_cut_time = now_seconds + CUT_INTERVAL;
     }
   }
-  //  ------------------------------------------------------------------------------
-  //write to the data file
+  /*  ============================================================================================
+   *   
+   *                              Writing to SD Card
+   *   
+      ============================================================================================ */
+  
+  //---------------------------------------------------------------------------------------------- Time
   logFile = SD.open("datalog.txt", FILE_WRITE);
   if(curr_time.hour() < 10)
     logFile.print("0");
@@ -317,7 +352,7 @@ void loop() {
   logFile.print(", ");
   logFile.print(now_seconds);
   logFile.print(", ");
-  //GPS
+  //---------------------------------------------------------------------------------------------- GPS
   logFile.print(gps_lat);
   logFile.print(", ");
   logFile.print(gps_long);
@@ -332,7 +367,7 @@ void loop() {
   logFile.print(", ");
   logFile.print(gps_fault_counter);
   logFile.print(", ");
-  //End GPS
+  //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
   logFile.print(temp);
   logFile.print(", ");
   logFile.print(pressure);
@@ -347,6 +382,7 @@ void loop() {
   logFile.print(", ");
   logFile.print(servo_pos);
   logFile.print(", ");
+  //---------------------------------------------------------------------------------------------- Cut-Down & Flight Details
   logFile.print(num_cuts);
   logFile.print(", ");
   logFile.print(next_cut_time);
@@ -369,7 +405,13 @@ void loop() {
   logFile.println();
   logFile.close();
 
-  //write to serial
+   /*  ============================================================================================
+   *   
+   *                              Writing to Serial Monitor
+   *   
+       ============================================================================================ */
+  
+  //---------------------------------------------------------------------------------------------- Time
   if(curr_time.hour() < 10)
     Serial.print("0");
   Serial.print(curr_time.hour());
@@ -384,7 +426,7 @@ void loop() {
   Serial.print(", ");
   Serial.print(now_seconds);
   Serial.print(", ");
-  //GPS
+  //---------------------------------------------------------------------------------------------- GPS
   Serial.print(gps_lat);
   Serial.print(", ");
   Serial.print(gps_long);
@@ -399,7 +441,7 @@ void loop() {
   Serial.print(", ");
   Serial.print(gps_fault_counter);
   Serial.print(", ");
-  //End GPS
+  //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
   Serial.print(temp);
   Serial.print(", ");
   Serial.print(pressure);
@@ -414,6 +456,7 @@ void loop() {
   Serial.print(", ");
   Serial.print(servo_pos);
   Serial.print(", ");
+  //---------------------------------------------------------------------------------------------- Cut-Down & Flight Details
   Serial.print(num_cuts);
   Serial.print(", ");
   Serial.print(next_cut_time);
@@ -435,7 +478,9 @@ void loop() {
   Serial.print(arate_trigger_status);
   Serial.println();
 
-  //clean up
+  
+
+  //Cleaning up ascent-rate data
   for(int i = 0; i < 4; i++)
   {
     prev_ascent_rate[i] = prev_ascent_rate[i+1];
@@ -445,28 +490,34 @@ void loop() {
   prev_ascent_rate[4] = ascent_rate;
 
   delay(1000);
-}
+} // End of Loop
 
-void cutdown()
+/*  ============================================================================================
+   *   
+   *                                 Additional Methods, etc.
+   *   
+      ============================================================================================ */
+
+void cutdown() // Standard Cut-down
 {
   digitalWrite(CUTDOWN_PIN, HIGH);
   delay(8000);
   digitalWrite(CUTDOWN_PIN, LOW);
 }
 
-void yolo_cutdown()
+void yolo_cutdown() // Last-Attempt Cut-Down
 {
   delay(120000); 
   digitalWrite(CUTDOWN_PIN, HIGH);
 }
 
-time_t getTeensy3Time()
+time_t getTeensy3Time() // Getting Time from RTC
 {
   return Teensy3Clock.get();
 }
 
-// Checks Geofence Compliance (0 = do not cut down, 1 = cut down, 2 = bad fix)
-int geofence_check(float long_coord, float lat_coord, int fix_qual)
+
+int geofence_check(float long_coord, float lat_coord, int fix_qual) // Checks Geofence Compliance (0 = do not cut down, 1 = cut down, 2 = bad fix)
 {
   // Checks fix quality first
   if(fix_qual == 0)
@@ -486,7 +537,7 @@ int geofence_check(float long_coord, float lat_coord, int fix_qual)
   }
   else
   {
-    // Compliant, resets margin counter
+    //Compliant, resets margin counter
     gps_fault_counter = 0;
   }
   // Returns cut-down command
@@ -501,7 +552,7 @@ int geofence_check(float long_coord, float lat_coord, int fix_qual)
 
 }
 
-void readGPS()
+void readGPS() // Reads GPS, it seems
 {
   GPS.read();
 }
