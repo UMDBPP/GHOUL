@@ -320,7 +320,7 @@ void loop() {
   }
 
   //GPS Trigger ---------------------------------------------------------------------------------- GPS Geofence Trigger
-  if(cut_status == NOT_CUT && geofence_check(gps_lat, gps_long, gps_fixqual) == CUT)
+  if(cut_status == NOT_CUT && geofence_check(gps_long, gps_lat, gps_fixqual) == CUT)
   {
     cutdown();
     cut_status = CUT;
