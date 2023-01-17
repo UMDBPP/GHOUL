@@ -1,5 +1,5 @@
 //GHOUL flight software written by:
-//Michael Kalin with love and support from Kruti Geeta-Rajnikant and Jeremy Joseph (JJ) Kuznetsov
+//Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant and Daniel Grammar and Akemi Takeuchi
 
 #include <RTClib.h>
 #include <Adafruit_BMP280.h>
@@ -26,16 +26,16 @@
 
 //cut-down parameters
 #define CUT_INTERVAL 60
-#define TOTAL_CUTS 4
+#define TOTAL_CUTS 1
 #define CUTDOWN_ALTITUDE 27000
 #define CUTDOWN_TIMER_TRIGGER_ALT 1000
 #define CUTDOWN_TIMER_DURATION 6000
 #define ARATE_TRIGGER_ALT 40000
 #define ASCENT_RATE_TRIGGER 1
-#define LONG_EAST_BOUND -76.939162
-#define LONG_WEST_BOUND -76.939731
-#define LAT_NORTH_BOUND 38.993059
-#define LAT_SOUTH_BOUND 38.992667
+#define LONG_EAST_BOUND -76.937243 
+#define LONG_WEST_BOUND -76.940906
+#define LAT_NORTH_BOUND 38.994138
+#define LAT_SOUTH_BOUND 38.991425
 
 //flags
 #define VENT_OPEN_POS 117
