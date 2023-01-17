@@ -54,10 +54,14 @@
 #define NOT_CUT 0
 #define CUT 1
 #define BAD_FIX 2
-#define TIMER_NOT_STARTED 0
-#define TIMER_STARTED 1
-#define ARATE_TRIGGER_NOT_STARTED 0
-#define ARATE_TRIGGER_STARTED 1
+#define TIMER_NOT_STARTED           0
+#define TIMER_STARTED               1
+#define ARATE_TRIGGER_NOT_STARTED   0
+#define ARATE_TRIGGER_STARTED       1
+#define CUT_REASON_TIMER            1
+#define CUT_REASON_ALTITUDE         2
+#define CUT_REASON_ASCENT_RATE      3
+#define CUT_REASON_GEOFENCE         4
 
 //timer
 IntervalTimer gpsTimer;
@@ -94,6 +98,7 @@ int float_status = NORMAL_ASCENT;                     //0 = normal ascent, 1 = p
 int cut_status = NOT_CUT;                             //0 = not cut, 1 = cut
 int timer_status = TIMER_NOT_STARTED;                 //0 = timer not started, 1 = timer started
 int arate_trigger_status = ARATE_TRIGGER_NOT_STARTED; //0 = arate trigger not started, 1 = arate trigger started
+int cut_reason = NOT_CUT;                             //0 = not cut, 1 = timer, 2 = altitude, 3 = ascent rate, 4 = geofence
 
 void setup() {
   Serial.begin(9600);
@@ -282,6 +287,7 @@ void loop() {
     cut_status = CUT;
     num_cuts++;
     next_cut_time = now_seconds + CUT_INTERVAL;
+    cut_reason = CUT_REASON_ALTITUDE;
   }
 
   //ascent rate trigger --------------------------------------------------------------------------- Ascent Rate Trigger
@@ -295,6 +301,7 @@ void loop() {
     cut_status = CUT;
     num_cuts++;
     next_cut_time = now_seconds + CUT_INTERVAL;
+    cut_reason = CUT_REASON_ASCENT_RATE;
   }
     
   //timer trigger --------------------------------------------------------------------------------- Timer Trigger
@@ -309,6 +316,7 @@ void loop() {
     cut_status = CUT;
     num_cuts++;
     next_cut_time = now_seconds + CUT_INTERVAL;
+    cut_reason = CUT_REASON_TIMER;
   }
 
   //GPS Trigger ---------------------------------------------------------------------------------- GPS Geofence Trigger
@@ -318,6 +326,7 @@ void loop() {
     cut_status = CUT;
     num_cuts++;
     next_cut_time = now_seconds + CUT_INTERVAL;
+    cut_reason = CUT_REASON_GEOFENCE;
   }
 
   //Additional Cuts After Trigger Activation ----------------------------------------------------- Additional Cuts (for redundancy)
@@ -477,6 +486,9 @@ void loop() {
   Serial.print(", ");
   Serial.print(arate_trigger_status);
   Serial.println();
+
+  Serial.println("Cut reason: ");
+  Serial.println(cut_reason);
 
   
 
