@@ -172,10 +172,10 @@ void loop() {
       gps_long = GPS.longitudeDegrees;
       gps_alt = GPS.altitude;
       gps_sats = GPS.satellites;
-      Serial.print(GPS.latitudeDegrees);
-      Serial.print(GPS.longitudeDegrees);
-      Serial.print(GPS.altitude);
-      Serial.print(GPS.satellites);
+      Serial.println(GPS.latitudeDegrees, 6);
+      Serial.println(GPS.longitudeDegrees, 6);
+      Serial.println(GPS.altitude);
+      Serial.println(GPS.satellites);
     }   
   }
   else
