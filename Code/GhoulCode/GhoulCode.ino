@@ -10,12 +10,14 @@
 #include <Adafruit_GPS.h>
 #include <TinyGPS++.h>
 
-//sensor declarations
-#define SERVO_PIN 30
-#define FEEDBACK_PIN A13
-#define CUTDOWN_PIN 6
+//pin definitions
+#define SERVO_PIN 2
+#define FEEDBACK_PIN A9
+#define CUTDOWN_PIN_1 35
+#define CUTDOWN_PIN_2 36
 #define LOGGER_PIN BUILTIN_SDCARD
-#define GPSSerial Serial3
+#define GPSSerial Serial2
+#define XbeeSerial Serial1
 
 //float parameters
 #define PRE_VENT_ALT 24000
@@ -112,8 +114,8 @@ void setup() {
   pinMode(FEEDBACK_PIN, INPUT);
 
   // Initiate cut-down pins
-  pinMode(CUTDOWN_PIN, OUTPUT);
-  digitalWrite(CUTDOWN_PIN, LOW);
+  pinMode(CUTDOWN_PIN_1, OUTPUT);
+  digitalWrite(CUTDOWN_PIN_1, LOW);
 
   // Initiate RTC
   setSyncProvider(getTeensy3Time);
@@ -512,15 +514,15 @@ void loop() {
 
 void cutdown() // Standard Cut-down
 {
-  digitalWrite(CUTDOWN_PIN, HIGH);
+  digitalWrite(CUTDOWN_PIN_1, HIGH);
   delay(8000);
-  digitalWrite(CUTDOWN_PIN, LOW);
+  digitalWrite(CUTDOWN_PIN_1, LOW);
 }
 
 void yolo_cutdown() // Last-Attempt Cut-Down
 {
   delay(120000); 
-  digitalWrite(CUTDOWN_PIN, HIGH);
+  digitalWrite(CUTDOWN_PIN_1, HIGH);
 }
 
 time_t getTeensy3Time() // Getting Time from RTC
