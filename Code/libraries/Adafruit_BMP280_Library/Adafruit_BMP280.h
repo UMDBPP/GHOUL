@@ -36,7 +36,7 @@
 
 //  Forward declarations of Wire and SPI for board/variant combinations that
 //  don't have a default 'Wire' or 'SPI'
-extern TwoWire Wire2; /**< Forward declaration of Wire object */
+extern TwoWire Wire; /**< Forward declaration of Wire object */
 extern SPIClass SPI; /**< Forward declaration of SPI object */
 
 /*!
@@ -182,7 +182,7 @@ public:
     STANDBY_MS_4000 = 0x07
   };
 
-  Adafruit_BMP280(TwoWire *theWire = &Wire2);
+  Adafruit_BMP280(TwoWire *theWire = &Wire);
   Adafruit_BMP280(int8_t cspin, SPIClass *theSPI = &SPI);
   Adafruit_BMP280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin);
   ~Adafruit_BMP280(void);

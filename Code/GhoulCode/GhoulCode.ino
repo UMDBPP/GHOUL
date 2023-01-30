@@ -105,6 +105,10 @@ int cut_reason = NOT_CUT;                             //0 = not cut, 1 = timer, 
 void setup() {
   Serial.begin(9600);
 
+  Wire.setSCL(7);
+  Wire.setSDA(8);
+  Wire.setClock(100000);
+
   // Initiate/close servo
   ventValve.attach(SERVO_PIN);
   delay(50);

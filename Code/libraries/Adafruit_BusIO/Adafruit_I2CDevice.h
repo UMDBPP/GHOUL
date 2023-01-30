@@ -6,7 +6,7 @@
 ///< The class which defines how we will talk to this device over I2C
 class Adafruit_I2CDevice {
 public:
-  Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire = &Wire2);
+  Adafruit_I2CDevice(uint8_t addr, TwoWire *theWire = &Wire);
   uint8_t address(void);
   bool begin(bool addr_detect = true);
   bool detected(void);
