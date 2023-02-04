@@ -1,16 +1,17 @@
 //GHOUL flight software written by:
 //Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant and Daniel Grammar and Akemi Takeuchi
 
-#include <RTClib.h>
 #include <Adafruit_BMP280.h>
 #include <Servo.h>
 #include <SPI.h>
 #include <SD.h>
 #include <TimeLib.h>
+#include <RTClib.h>
 #include <Adafruit_GPS.h>
-#include <TinyGPS++.h>
 
 //pin definitions
+#define SCL_PIN 7
+#define SDA_PIN 8
 #define SERVO_PIN 2
 #define FEEDBACK_PIN A9
 #define CUTDOWN_PIN_1 35
@@ -56,24 +57,26 @@
 #define NOT_CUT 0
 #define CUT 1
 #define BAD_FIX 2
-#define TIMER_NOT_STARTED           0
-#define TIMER_STARTED               1
-#define ARATE_TRIGGER_NOT_STARTED   0
-#define ARATE_TRIGGER_STARTED       1
-#define CUT_REASON_TIMER            1
-#define CUT_REASON_ALTITUDE         2
-#define CUT_REASON_ASCENT_RATE      3
-#define CUT_REASON_GEOFENCE         4
+#define TIMER_NOT_STARTED 0
+#define TIMER_STARTED 1
+#define ARATE_TRIGGER_NOT_STARTED 0
+#define ARATE_TRIGGER_STARTED 1
+#define CUT_REASON_TIMER 1
+#define CUT_REASON_ALTITUDE 2
+#define CUT_REASON_ASCENT_RATE 3
+#define CUT_REASON_GEOFENCE 4
 
-//timer
+//timer interrupts
 IntervalTimer gpsTimer;
+
+//timers
+elapsedMillis burn_timer;
 
 //sensors
 Adafruit_BMP280 bmp;
 Servo ventValve;
 File logFile;
 Adafruit_GPS GPS(&GPSSerial);
-//TinyGPSPlus gps;
 
 //storage
 float prev_alt = 0;
@@ -105,9 +108,9 @@ int cut_reason = NOT_CUT;                             //0 = not cut, 1 = timer, 
 void setup() {
   Serial.begin(9600);
 
-  Wire.setSCL(7);
-  Wire.setSDA(8);
-  Wire.setClock(100000);
+  // Reassign default pins for I2C bus
+  Wire.setSCL(SCL_PIN);
+  Wire.setSDA(SDA_PIN);
 
   // Initiate/close servo
   ventValve.attach(SERVO_PIN);
@@ -183,14 +186,8 @@ void loop() {
       gps_long = GPS.longitudeDegrees;
       gps_alt = GPS.altitude;
       gps_sats = GPS.satellites;
-      Serial.println(GPS.latitudeDegrees, 6);
-      Serial.println(GPS.longitudeDegrees, 6);
-      Serial.println(GPS.altitude);
-      Serial.println(GPS.satellites);
     }   
   }
-  else
-    Serial.println("Nada :(");
   interrupts();
   
 
@@ -199,7 +196,6 @@ void loop() {
    *                              Calculations and Decisions
    *   
        ============================================================================================ */
-
        
   
   //calc ascent rate ------------------------------------------------------------------------------ Ascent Rate Calculation
