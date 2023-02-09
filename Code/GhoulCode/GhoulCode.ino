@@ -1,5 +1,5 @@
 //GHOUL flight software written by:
-//Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant and Daniel Grammar and Akemi Takeuchi
+//Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant, Daniel Grammar and Akemi Takeuchi
 
 #include <Adafruit_BMP280.h>
 #include <Servo.h>
@@ -93,6 +93,10 @@ float gps_alt;
 int gps_sats;
 int antenna_status;
 int gps_fixqual;
+
+// Faul Counters
+int alt_fault_counter;
+int ar_fault_counter;
 int gps_fault_counter;
 
 //flags
@@ -164,17 +168,18 @@ void loop() {
        ============================================================================================ */
 
        
-       
   //get time ------------------------------------------------------------------------------------ time
   DateTime curr_time = DateTime(now());
   uint32_t now_seconds = now();
   
+
   //get pressure, temp, alt --------------------------------------------------------------------- pressure, temp, alt
   float temp = bmp.readTemperature();
   float pressure = bmp.readPressure();
   float alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
 
-  //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
+
+   //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
   noInterrupts();
   if(GPS.newNMEAreceived())
   {
@@ -189,7 +194,6 @@ void loop() {
     }   
   }
   interrupts();
-  
 
   /*  ============================================================================================
    *   
@@ -283,7 +287,7 @@ void loop() {
 
   
   //altitude trigger ------------------------------------------------------------------------------ Altitude Trigger
-  if(alt >= CUTDOWN_ALTITUDE && cut_status == NOT_CUT)
+  if(cut_status == NOT_CUT && alt_check(alt) == CUT)
   {
     cutdown();
     cut_status = CUT;
@@ -297,7 +301,7 @@ void loop() {
   {
     arate_trigger_status = ARATE_TRIGGER_STARTED;
   }
-  if(arate_trigger_status == ARATE_TRIGGER_STARTED && ascent_rate < ASCENT_RATE_TRIGGER && cut_status == NOT_CUT)
+  if(arate_trigger_status == ARATE_TRIGGER_STARTED && cut_status == NOT_CUT && ar_check(ascent_rate) == CUT)
   {
     cutdown();
     cut_status = CUT;
@@ -530,7 +534,7 @@ time_t getTeensy3Time() // Getting Time from RTC
   return Teensy3Clock.get();
 }
 
-
+//---------------------------------------------------------------------------------------------- Geofence Cutdown Check
 int geofence_check(float long_coord, float lat_coord, int fix_qual) // Checks Geofence Compliance (0 = do not cut down, 1 = cut down, 2 = bad fix)
 {
   // Checks fix quality first
@@ -554,7 +558,7 @@ int geofence_check(float long_coord, float lat_coord, int fix_qual) // Checks Ge
     //Compliant, resets margin counter
     gps_fault_counter = 0;
   }
-  // Returns cut-down command
+  // Returns proper value for cut-down command
   if(gps_fault_counter > 10)
   {
     return CUT;
@@ -564,6 +568,42 @@ int geofence_check(float long_coord, float lat_coord, int fix_qual) // Checks Ge
     return NOT_CUT;
   }
 
+}
+//---------------------------------------------------------------------------------------------- Altitude Cutdown Check
+int alt_check(int alt_val)
+{
+  if(alt_val >= CUTDOWN_ALTITUDE)
+  {
+    alt_fault_counter++;
+  }
+  else
+    alt_fault_counter = 0;
+
+  // Returns proper value for cut-down command
+  if(alt_fault_counter > 10)
+  {
+    return CUT;
+  }
+  else
+    return NOT_CUT;
+}
+
+//---------------------------------------------------------------------------------------------- Ascent-Rate Cutdown Check
+int ar_check(int arate)
+{
+  if(arate < ASCENT_RATE_TRIGGER)
+  {
+    ar_fault_counter++;
+  }
+  else
+    ar_fault_counter = 0;
+  
+  if(ar_fault_counter > 10)
+  {
+    return CUT;
+  }
+  else
+    return NOT_CUT;
 }
 
 void readGPS() // Reads GPS, it seems
