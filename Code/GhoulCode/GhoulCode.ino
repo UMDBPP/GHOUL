@@ -79,9 +79,11 @@ File logFile;
 Adafruit_GPS GPS(&GPSSerial);
 
 //storage
-float prev_alt = 0;
+float prev_gps_alt = 0;
+float prev_pressure_alt = 0;
 uint32_t prev_time = 1;
-float prev_ascent_rate[5] = {0, 0, 0, 0, 0};
+float prev_pressure_ascent_rate[5] = {0, 0, 0, 0, 0};
+float prev_gps_ascent_rate[5] = {0, 0, 0, 0, 0};
 float rate_at_open = 999;
 uint32_t vent_open_time = 0;
 int num_cuts = 0;
@@ -176,7 +178,7 @@ void loop() {
   //get pressure, temp, alt --------------------------------------------------------------------- pressure, temp, alt
   float temp = bmp.readTemperature();
   float pressure = bmp.readPressure();
-  float alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
+  float pressure_alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
 
 
    //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
@@ -202,10 +204,28 @@ void loop() {
        ============================================================================================ */
        
   
-  //calc ascent rate ------------------------------------------------------------------------------ Ascent Rate Calculation
-  float curr_ascent_rate = (alt - prev_alt)/(now_seconds - prev_time);
-  float ascent_rate = (prev_ascent_rate[0] + prev_ascent_rate[1] + prev_ascent_rate[2] + prev_ascent_rate[3] + prev_ascent_rate[4] + curr_ascent_rate)/6;
+  //calc pressure_ascent rate ------------------------------------------------------------------------------ Pressure Ascent Rate Calculation
+  float curr_pressure_ascent_rate = (pressure_alt - prev_pressure_alt)/(now_seconds - prev_time);
+  float pressure_ascent_rate = (prev_pressure_ascent_rate[0] + prev_pressure_ascent_rate[1] + prev_pressure_ascent_rate[2] + prev_pressure_ascent_rate[3] + prev_pressure_ascent_rate[4] + curr_pressure_ascent_rate)/6;
 
+  //calc gps ascent rate ----------------------------------------------------------------------------------- GPS Ascent Rate Calculation
+  float curr_gps_ascent_rate = (gps_alt - prev_gps_alt)/(now_seconds - prev_time);
+  float gps_ascent_rate = (prev_gps_ascent_rate[0] + prev_gps_ascent_rate[1] + prev_gps_ascent_rate[2] + prev_gps_ascent_rate[3] + prev_gps_ascent_rate[4] + curr_gps_ascent_rate)/6;
+
+  //choose whether to use pressure or gps ascent rate
+  float alt;
+  if (gps_fixqual == 1) //we should check more than this
+    alt = gps_alt;
+  else
+    alt = pressure_alt;
+
+  float ascent_rate;
+  if (gps_fixqual == 1) // we should check more than this
+    ascent_rate = gps_ascent_rate;
+  else
+    ascent_rate = pressure_ascent_rate;
+
+  //read servo position
   float raw_servo_pos = analogRead(FEEDBACK_PIN);
   float servo_pos = (raw_servo_pos/1024)*180;
 
