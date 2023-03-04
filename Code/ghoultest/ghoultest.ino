@@ -20,13 +20,13 @@ void loop() {
   delay(5000);
   digitalWrite(MOSFET_PIN_1, HIGH);
   digitalWrite(LED_PIN, HIGH);
-  delay(4000);
+  delay(8000);
   digitalWrite(MOSFET_PIN_1, LOW);
   digitalWrite(LED_PIN, LOW);
-  delay(10000);
+  delay(16000);
   digitalWrite(MOSFET_PIN_2, HIGH);
   digitalWrite(LED_PIN, HIGH);
-  delay(4000);
+  delay(8000);
   digitalWrite(MOSFET_PIN_2, LOW);
   digitalWrite(LED_PIN, LOW);
   delay(30000);

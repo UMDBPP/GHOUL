@@ -1,6 +1,7 @@
 //GHOUL flight software written by:
 //Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant, Daniel Grammar and Akemi Takeuchi
 
+#include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 #include <Servo.h>
 #include <SPI.h>
@@ -9,6 +10,7 @@
 #include <RTClib.h>
 #include <Adafruit_GPS.h>
 #include <XBee.h>
+#include <Adafruit_MMA8451.h>
 
 //pin definitions
 #define SCL_PIN 7
@@ -42,10 +44,12 @@
 #define LAT_SOUTH_BOUND 38.991425
 
 //flags
-#define VENT_OPEN_POS 117
-#define VENT_CLOSED_POS 180
+#define VENT_OPEN_POS 83
+#define VENT_CLOSED_POS 18
 #define CLOSED 0
 #define OPEN 1
+#define XBEE_CLOSED 2
+#define XBEE_OPENED 3
 #define PRE_VENT_NOT_DONE 0
 #define PRE_VENT_DONE 1
 #define FLOAT_VENT_NOT_DONE 0
@@ -83,6 +87,7 @@ elapsedMillis burn_timer;
 
 //sensors
 Adafruit_BMP280 bmp;
+Adafruit_MMA8451 mma = Adafruit_MMA8451();
 Servo ventValve;
 File logFile;
 Adafruit_GPS GPS(&GPSSerial);
@@ -168,6 +173,8 @@ void setup() {
   // Initiate cut-down pins
   pinMode(CUTDOWN_PIN_1, OUTPUT);
   digitalWrite(CUTDOWN_PIN_1, LOW);
+  pinMode(CUTDOWN_PIN_2, OUTPUT);
+  digitalWrite(CUTDOWN_PIN_2, LOW);
 
   // Initiate RTC
   setSyncProvider(getTeensy3Time);
@@ -185,6 +192,13 @@ void setup() {
     Serial.println("Error BMP not found!");
   else
     Serial.println("BMP found!");
+
+  if(!mma.begin())
+    Serial.println("Error accelerometer not found!");
+  else
+    Serial.println("Acceleromter found!");
+
+  mma.setRange(MMA8451_RANGE_8_G);
 
   // Initiate GPS
   GPSSerial.begin(9600);
@@ -213,12 +227,17 @@ void loop() {
   DateTime curr_time = DateTime(now());
   uint32_t now_seconds = now();
   
-
   //get pressure, temp, alt --------------------------------------------------------------------- pressure, temp, alt
   float temp = bmp.readTemperature();
   float pressure = bmp.readPressure();
   float pressure_alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
 
+  //read accelerometer
+  sensors_event_t event; 
+  mma.getEvent(&event);
+  float x = event.acceleration.x;
+  float y = event.acceleration.y;
+  float z = event.acceleration.z;
 
    //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
   noInterrupts();
@@ -231,9 +250,8 @@ void loop() {
       gps_lat = GPS.latitudeDegrees;
       gps_long = GPS.longitudeDegrees;
       gps_alt = GPS.altitude;
-      gps_sats = GPS.satellites;
-      
-    }   
+      gps_sats = GPS.satellites; 
+    }
   }
   interrupts();
 
@@ -241,7 +259,7 @@ void loop() {
   delay(10);
   xbee_status = xbeeRead();
   delay(10);
-  Serial.print("XBee Status :");
+  Serial.print("XBee Status: ");
   Serial.println(xbee_status);
 
   /*  ============================================================================================
@@ -277,74 +295,107 @@ void loop() {
   servo_pos = (raw_servo_pos/1024)*180;
 
   //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
-
-
+  Serial.println(xbee_status);
+  if(xbee_status == XBEE_OPEN)// && vent_status != XBEE_OPENED)
+  {
+    Serial.println("opening");
+    ventValve.write(VENT_OPEN_POS);
+    vent_status = XBEE_OPENED;
+    rate_at_open = ascent_rate;
+    vent_open_time = now_seconds;
+  }
+  else if(xbee_status == XBEE_CLOSE && vent_status != XBEE_CLOSED)
+  {
+    ventValve.write(VENT_CLOSED_POS);
+    vent_status = XBEE_CLOSED;
+  }
   
-  if(vent_status == CLOSED)
+  if(vent_status == XBEE_OPENED)
   {
-    if(pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
+    ventValve.write(VENT_OPEN_POS);
+    /*if(ascent_rate < 1)
     {
-      ventValve.write(VENT_OPEN_POS);
-      vent_status = OPEN;
-      float_status = PRE_VENTING;
-      rate_at_open = ascent_rate;
-      vent_open_time = now_seconds;
-    }
-    else if(float_vent_status == FLOAT_VENT_NOT_DONE && alt > FLOAT_ALT)
-    {
-      ventValve.write(VENT_OPEN_POS);
-      vent_status = OPEN;
-      float_status = FLOAT_VENTING;
-      rate_at_open = ascent_rate;
-    }
+      ventValve.write(VENT_CLOSED_POS);
+      vent_status = XBEE_CLOSED;
+      float_status = FLOATING;
+      float_vent_status = FLOAT_VENT_DONE;
+    }*/
   }
-
-  //if vent is open, check whether we are pre-venting or float venting, 
-  // then close vent if target ascent rate is reached -------------------------------------------- Should we close vent?
-  if(vent_status == OPEN)
+  else if(vent_status == XBEE_CLOSED)
   {
-    if(float_status == PRE_VENTING)
+    //do nothing except keep closed
+    ventValve.write(VENT_CLOSED_POS);
+  }
+  else
+  {
+    if(vent_status == CLOSED)
     {
-      if(ascent_rate <= PRE_VENT_RATIO*rate_at_open)
+      ventValve.write(VENT_CLOSED_POS);
+      if(pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
+      {
+        ventValve.write(VENT_OPEN_POS);
+        vent_status = OPEN;
+        float_status = PRE_VENTING;
+        rate_at_open = ascent_rate;
+        vent_open_time = now_seconds;
+      }
+      else if(float_vent_status == FLOAT_VENT_NOT_DONE && alt > FLOAT_ALT)
+      {
+        ventValve.write(VENT_OPEN_POS);
+        vent_status = OPEN;
+        float_status = FLOAT_VENTING;
+        rate_at_open = ascent_rate;
+      }
+    }
+  
+    //if vent is open, check whether we are pre-venting or float venting, 
+    // then close vent if target ascent rate is reached -------------------------------------------- Should we close vent?
+    if(vent_status == OPEN)
+    {
+      ventValve.write(VENT_OPEN_POS);
+      if(float_status == PRE_VENTING)
+      {
+        if(ascent_rate <= PRE_VENT_RATIO*rate_at_open)
+        {
+          ventValve.write(VENT_CLOSED_POS);
+          vent_status = CLOSED;
+          float_status = PRE_VENTED;
+          pre_vent_status = PRE_VENT_DONE;
+        }
+      }
+      else if(float_status == FLOAT_VENTING)
+      {
+        if(ascent_rate < 1)
+         {
+          ventValve.write(VENT_CLOSED_POS);
+          vent_status = CLOSED;
+          float_status = FLOATING;
+          float_vent_status = FLOAT_VENT_DONE;
+         }
+      }
+      else
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = CLOSED;
-        float_status = PRE_VENTED;
-        pre_vent_status = PRE_VENT_DONE;
       }
     }
-    else if(float_status == FLOAT_VENTING)
+  
+    if(vent_open_time != 0)
     {
-      if(ascent_rate < 1)
-       {
+      if(now_seconds - vent_open_time > VENT_TIMER)
+      {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = CLOSED;
-        float_status = FLOATING;
-        float_vent_status = FLOAT_VENT_DONE;
-       }
-    }
-    else
-    {
-      ventValve.write(VENT_CLOSED_POS);
-      vent_status = CLOSED;
-    }
-  }
-
-  if(vent_open_time != 0)
-  {
-    if(now_seconds - vent_open_time > VENT_TIMER)
-    {
-      ventValve.write(VENT_CLOSED_POS);
-      vent_status = CLOSED;
-      if(float_status == PRE_VENTING && pre_vent_status == PRE_VENT_NOT_DONE)
-      {
-        pre_vent_status = PRE_VENT_DONE;
-        float_status = PRE_VENTED;
-      }
-      else if(float_status == FLOAT_VENTING && float_vent_status == FLOAT_VENT_NOT_DONE)
-      {
-        float_vent_status = FLOAT_VENT_DONE;
-        float_status = FLOATING;
+        if(float_status == PRE_VENTING && pre_vent_status == PRE_VENT_NOT_DONE)
+        {
+          pre_vent_status = PRE_VENT_DONE;
+          float_status = PRE_VENTED;
+        }
+        else if(float_status == FLOAT_VENTING && float_vent_status == FLOAT_VENT_NOT_DONE)
+        {
+          float_vent_status = FLOAT_VENT_DONE;
+          float_status = FLOATING;
+        }
       }
     }
   }
@@ -481,6 +532,12 @@ void loop() {
   logFile.print(", ");
   logFile.print(ascent_rate);
   logFile.print(", ");
+  logFile.print(x);
+  logFile.print(", ");
+  logFile.print(y);
+  logFile.print(", ");
+  logFile.print(z);
+  logFile.print(", ");
   logFile.print(raw_servo_pos);
   logFile.print(", ");
   logFile.print(servo_pos);
@@ -567,6 +624,12 @@ void loop() {
   Serial.print(", ");
   Serial.print(ascent_rate);
   Serial.print(", ");
+  Serial.print(x);
+  Serial.print(", ");
+  Serial.print(y);
+  Serial.print(", ");
+  Serial.print(z);
+  Serial.print(", ");
   Serial.print(raw_servo_pos);
   Serial.print(", ");
   Serial.print(servo_pos);
@@ -628,6 +691,10 @@ void cutdown() // Standard Cut-down
   digitalWrite(CUTDOWN_PIN_1, HIGH);
   delay(8000);
   digitalWrite(CUTDOWN_PIN_1, LOW);
+  delay(16000);
+  digitalWrite(CUTDOWN_PIN_2, HIGH);
+  delay(8000);
+  digitalWrite(CUTDOWN_PIN_2, LOW);
 }
 
 void yolo_cutdown() // Last-Attempt Cut-Down
@@ -821,21 +888,21 @@ int processGroundMessage(){
   if(strstr((char*)xbeeRecBuf,"open")){
       Serial.println("");
       Serial.println("OpenAck");
-      String("PacketAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_OPEN;
   }
   if(strstr((char*)xbeeRecBuf,"close")){ 
       Serial.println("");
       Serial.println("CloseAck");
-      String("ToGNDAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      String("CloseAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_CLOSE;
   }
   if(strstr((char*)xbeeRecBuf,"terminate")){ 
       Serial.println("");
       Serial.println("TermAck");
-      String("ToGNDAckTerm").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      String("TermAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_CUTDOWN;
   }
