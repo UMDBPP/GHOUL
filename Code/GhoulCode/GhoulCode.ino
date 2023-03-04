@@ -8,6 +8,7 @@
 #include <TimeLib.h>
 #include <RTClib.h>
 #include <Adafruit_GPS.h>
+#include <XBee.h>
 
 //pin definitions
 #define SCL_PIN 7
@@ -18,7 +19,7 @@
 #define CUTDOWN_PIN_2 36
 #define LOGGER_PIN BUILTIN_SDCARD
 #define GPSSerial Serial2
-#define XbeeSerial Serial1
+#define XBeeSerial Serial1
 
 //float parameters
 #define PRE_VENT_ALT 24000
@@ -54,6 +55,7 @@
 #define PRE_VENTED 2
 #define FLOAT_VENTING 3
 #define FLOATING 4
+#define XBEE_FLOATING 5
 #define NOT_CUT 0
 #define CUT 1
 #define BAD_FIX 2
@@ -65,6 +67,13 @@
 #define CUT_REASON_ALTITUDE 2
 #define CUT_REASON_ASCENT_RATE 3
 #define CUT_REASON_GEOFENCE 4
+#define CUT_REASON_XBEE 5
+#define XBEE_DO_NOTHING 0
+#define XBEE_BITS_TEST 1
+#define XBEE_GROUND_TEST 2
+#define XBEE_OPEN 3
+#define XBEE_CLOSE 4
+#define XBEE_CUTDOWN 5
 
 //timer interrupts
 IntervalTimer gpsTimer;
@@ -77,6 +86,20 @@ Adafruit_BMP280 bmp;
 Servo ventValve;
 File logFile;
 Adafruit_GPS GPS(&GPSSerial);
+XBee xbee = XBee();
+XBeeResponse response = XBeeResponse();
+
+//xbee stuff
+const uint32_t UniSH = 0x0013A200;    //Common across any and all XBees
+const uint32_t BitsSL = 0x417B4A3B;   //BITS   (white)Specific to the XBee on Bits (the Serial Low address value)
+const uint32_t GroundSL = 0x417B4A36; //GndStn (u.fl)
+ZBTxStatusResponse txStatus = ZBTxStatusResponse(); //What lets the library check if things went through
+ZBRxResponse rx = ZBRxResponse();                   //Similar to above
+ModemStatusResponse msr = ModemStatusResponse();    //And more
+const int xbeeRecBufSize = 50; //Rec must be ~15bytes larger than send because
+const int xbeeSendBufSize = 35;//there is overhead in the transmission that gets parsed out
+uint8_t xbeeRecBuf[xbeeRecBufSize];
+uint8_t xbeeSendBuf[xbeeSendBufSize];
 
 //storage
 float prev_gps_alt = 0;
@@ -95,6 +118,8 @@ float gps_alt;
 int gps_sats;
 int antenna_status;
 int gps_fixqual;
+float raw_servo_pos;
+float servo_pos;
 
 // Faul Counters
 int alt_fault_counter;
@@ -109,7 +134,9 @@ int float_status = NORMAL_ASCENT;                     //0 = normal ascent, 1 = p
 int cut_status = NOT_CUT;                             //0 = not cut, 1 = cut
 int timer_status = TIMER_NOT_STARTED;                 //0 = timer not started, 1 = timer started
 int arate_trigger_status = ARATE_TRIGGER_NOT_STARTED; //0 = arate trigger not started, 1 = arate trigger started
+int geofence_status = NOT_CUT;                        //0 = geofence not started, 1 = geofence trigger started, 2 = bad fix
 int cut_reason = NOT_CUT;                             //0 = not cut, 1 = timer, 2 = altitude, 3 = ascent rate, 4 = geofence
+int xbee_status = XBEE_DO_NOTHING;                                  //0 = do nothing, 1 = bits test (print to serial/file), 2 = ground test, 3 = open, 4 = close, 5 = cutdown
 
 void setup() {
   Serial.begin(9600);
@@ -118,6 +145,16 @@ void setup() {
   Wire.setSCL(SCL_PIN);
   Wire.setSDA(SDA_PIN);
 
+  // Set up XBee Serial
+  XBeeSerial.begin(9600);
+  XBeeSerial.setRX(27);
+  XBeeSerial.setTX(26);
+  
+  // XBee Set up
+  xbee.setSerial(XBeeSerial);
+  String("GHOULxbee_ON").getBytes(xbeeSendBuf, xbeeSendBufSize);
+  xbeeSend(GroundSL, xbeeSendBuf);
+
   // Initiate/close servo
   ventValve.attach(SERVO_PIN);
   delay(50);
@@ -125,6 +162,8 @@ void setup() {
 
   // Servo Analog Feedback Pin
   pinMode(FEEDBACK_PIN, INPUT);
+  raw_servo_pos = analogRead(FEEDBACK_PIN);
+  servo_pos = (raw_servo_pos/1024)*180;
 
   // Initiate cut-down pins
   pinMode(CUTDOWN_PIN_1, OUTPUT);
@@ -193,9 +232,17 @@ void loop() {
       gps_long = GPS.longitudeDegrees;
       gps_alt = GPS.altitude;
       gps_sats = GPS.satellites;
+      
     }   
   }
   interrupts();
+
+  //check xbee
+  delay(10);
+  xbee_status = xbeeRead();
+  delay(10);
+  Serial.print("XBee Status :");
+  Serial.println(xbee_status);
 
   /*  ============================================================================================
    *   
@@ -226,10 +273,13 @@ void loop() {
     ascent_rate = pressure_ascent_rate;
 
   //read servo position
-  float raw_servo_pos = analogRead(FEEDBACK_PIN);
-  float servo_pos = (raw_servo_pos/1024)*180;
+  raw_servo_pos = analogRead(FEEDBACK_PIN);
+  servo_pos = (raw_servo_pos/1024)*180;
 
   //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
+
+
+  
   if(vent_status == CLOSED)
   {
     if(pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
@@ -305,6 +355,15 @@ void loop() {
   //  =============================================================================================
 
 
+  //xbee trigger ---------------------------------------------------------------------------------- XBee Trigger
+  if (cut_status == NOT_CUT && xbee_status == XBEE_CUTDOWN)
+  {
+    cutdown();  
+    cut_status = CUT;
+    num_cuts++;
+    next_cut_time = now_seconds + CUT_INTERVAL;
+    cut_reason = CUT_REASON_XBEE;
+  }
   
   //altitude trigger ------------------------------------------------------------------------------ Altitude Trigger
   if(cut_status == NOT_CUT && alt_check(alt) == CUT)
@@ -321,6 +380,7 @@ void loop() {
   {
     arate_trigger_status = ARATE_TRIGGER_STARTED;
   }
+  
   if(arate_trigger_status == ARATE_TRIGGER_STARTED && cut_status == NOT_CUT && ar_check(ascent_rate) == CUT)
   {
     cutdown();
@@ -336,6 +396,7 @@ void loop() {
     cutdown_time = now_seconds + CUTDOWN_TIMER_DURATION;
     timer_status = TIMER_STARTED;
   }
+  
   if(now_seconds >= cutdown_time && cut_status == NOT_CUT)
   {
     cutdown();
@@ -346,7 +407,8 @@ void loop() {
   }
 
   //GPS Trigger ---------------------------------------------------------------------------------- GPS Geofence Trigger
-  if(cut_status == NOT_CUT && geofence_check(gps_long, gps_lat, gps_fixqual) == CUT)
+  geofence_status = geofence_check(gps_long, gps_lat, gps_fixqual);
+  if(cut_status == NOT_CUT && geofence_status == CUT)
   {
     cutdown();
     cut_status = CUT;
@@ -409,7 +471,13 @@ void loop() {
   logFile.print(", ");
   logFile.print(alt);
   logFile.print(", ");
-  logFile.print(curr_ascent_rate);
+  logFile.print(curr_pressure_ascent_rate);
+  logFile.print(", ");
+  logFile.print(pressure_ascent_rate);
+  logFile.print(", ");
+  logFile.print(curr_gps_ascent_rate);
+  logFile.print(", ");
+  logFile.print(gps_ascent_rate);
   logFile.print(", ");
   logFile.print(ascent_rate);
   logFile.print(", ");
@@ -434,9 +502,15 @@ void loop() {
   logFile.print(", ");
   logFile.print(cut_status);
   logFile.print(", ");
+  logFile.print(cut_reason);
+  logFile.print(", ");
   logFile.print(timer_status);
   logFile.print(", ");
   logFile.print(arate_trigger_status);
+  logFile.print(", ");
+  logFile.print(geofence_status);
+  logFile.print(", ");
+  logFile.print(xbee_status);
   logFile.println();
   logFile.close();
 
@@ -483,7 +557,13 @@ void loop() {
   Serial.print(", ");
   Serial.print(alt);
   Serial.print(", ");
-  Serial.print(curr_ascent_rate);
+  Serial.print(curr_pressure_ascent_rate);
+  Serial.print(", ");
+  Serial.print(pressure_ascent_rate);
+  Serial.print(", ");
+  Serial.print(curr_gps_ascent_rate);
+  Serial.print(", ");
+  Serial.print(gps_ascent_rate);
   Serial.print(", ");
   Serial.print(ascent_rate);
   Serial.print(", ");
@@ -508,27 +588,34 @@ void loop() {
   Serial.print(", ");
   Serial.print(cut_status);
   Serial.print(", ");
+  Serial.print(cut_reason);
+  Serial.print(", ");
   Serial.print(timer_status);
   Serial.print(", ");
   Serial.print(arate_trigger_status);
+  Serial.print(", ");
+  Serial.print(geofence_status);
+  Serial.print(", ");
+  Serial.print(xbee_status);
   Serial.println();
-
-  Serial.println("Cut reason: ");
-  Serial.println(cut_reason);
-
   
-
   //Cleaning up ascent-rate data
   for(int i = 0; i < 4; i++)
   {
-    prev_ascent_rate[i] = prev_ascent_rate[i+1];
+    prev_pressure_ascent_rate[i] = prev_pressure_ascent_rate[i+1];
+    prev_gps_ascent_rate[i] = prev_gps_ascent_rate[i+1];
   }
-  prev_alt = alt;
+  prev_gps_alt = gps_alt;
+  prev_pressure_alt = pressure_alt;
   prev_time = now_seconds;
-  prev_ascent_rate[4] = ascent_rate;
+  prev_pressure_ascent_rate[4] = pressure_ascent_rate;
+  prev_gps_ascent_rate[4] = gps_ascent_rate;
+
+  //Reset XBee status
+  xbee_status = 0;
 
   delay(1000);
-} // End of Loop
+}
 
 /*  ============================================================================================
    *   
@@ -629,4 +716,128 @@ int ar_check(int arate)
 void readGPS() // Reads GPS, it seems
 {
   GPS.read();
+}
+
+//xbee methods
+bool xbeeSend(uint32_t TargetSL,uint8_t* payload){
+  XBeeAddress64 TargetAddress = XBeeAddress64(UniSH,TargetSL);      //The full address, probably could be done more efficiently, oh well
+  ZBTxRequest zbTx = ZBTxRequest(TargetAddress, payload, xbeeSendBufSize); //Assembles Packet
+  xbee.send(zbTx);                                                  //Sends packet
+  memset(xbeeSendBuf, 0, xbeeSendBufSize);                          //Nukes buffer
+  if (xbee.readPacket(500)) {                                       //Checks Reception
+    if (xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {   //If rec
+      xbee.getResponse().getZBTxStatusResponse(txStatus);
+      if (txStatus.getDeliveryStatus() == SUCCESS) {                //If positive transmit response
+        Serial.println("SuccessfulTransmit");
+        return true;
+      } else {
+        Serial.println("TxFail");
+        return false;
+      } 
+    }
+  } else if (xbee.getResponse().isError()) { //Stil have yet to see this trigger, might be broken...
+    Serial.print("Error reading packet.  Error code: ");
+    Serial.println(xbee.getResponse().getErrorCode());
+  } else {
+    Serial.println("Send Failure, check that remote XBee is powered on");  
+  }
+  return false;
+}
+
+int xbeeRead(){
+  xbee.readPacket(); //read serial buffer
+    if (xbee.getResponse().isAvailable()) { //got something
+      if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) { //got a TxRequestPacket
+        xbee.getResponse().getZBRxResponse(rx);
+        
+        uint32_t incominglsb = rx.getRemoteAddress64().getLsb(); //The SL of the sender
+        Serial.print("Incoming Packet From: ");
+        Serial.println(incominglsb,HEX);
+        if(rx.getPacketLength()>=xbeeRecBufSize){                //Probably means something is done broke
+          Serial.print("Oversized Message: ");
+          Serial.println(rx.getPacketLength());
+        }
+        memset(xbeeRecBuf, 0, xbeeRecBufSize); // Nukes old buffer
+        memcpy(xbeeRecBuf,rx.getData(),rx.getPacketLength());
+        if(incominglsb == BitsSL){ //Seperate methods to handle messages from different senders
+          return processBitsMessage();    //prevents one payload from having the chance to be mistaken as another
+        }
+        if(incominglsb == GroundSL){ //Ground Station
+          return processGroundMessage();
+        }    
+      }
+    }
+  return XBEE_DO_NOTHING;
+}
+
+int processBitsMessage(){ //Just print things to the monitor
+  Serial.println("RecFromBits");
+  Serial.write(xbeeRecBuf,xbeeRecBufSize);
+
+  if(strstr((char*)xbeeRecBuf,"test")){ //Checks if "test" is within buffer
+      Serial.println();
+      Serial.println("BitsTest");
+      String test_response = "TestAck " + String(servo_pos);
+      test_response.getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(BitsSL,xbeeSendBuf);
+      return XBEE_BITS_TEST;
+  }
+  if(strstr((char*)xbeeRecBuf,"open")){ //Checks if "test" is within buffer
+      Serial.println();
+      Serial.println("OpenTest");
+      String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(BitsSL,xbeeSendBuf);
+      return XBEE_OPEN;
+  }
+  if(strstr((char*)xbeeRecBuf,"close")){ 
+      Serial.println();
+      Serial.println("CloseTest");
+      String("CloseAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(BitsSL,xbeeSendBuf);
+      return XBEE_CLOSE;
+  }
+  if(strstr((char*)xbeeRecBuf,"terminate")){ 
+      Serial.println("");
+      Serial.println("Terminate");
+      String("TermAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(BitsSL,xbeeSendBuf);
+      return XBEE_CUTDOWN;
+  }
+  return XBEE_DO_NOTHING;
+}
+
+int processGroundMessage(){
+  Serial.print("RecFromGND: ");
+  Serial.write(xbeeRecBuf,xbeeRecBufSize);
+
+  if(strstr((char*)xbeeRecBuf,"test")){
+      Serial.println("");
+      Serial.println("ackTest");
+      String test_response = "TestAck " + String(servo_pos);
+      test_response.getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(GroundSL,xbeeSendBuf);
+      return XBEE_GROUND_TEST;
+  }
+  if(strstr((char*)xbeeRecBuf,"open")){
+      Serial.println("");
+      Serial.println("OpenAck");
+      String("PacketAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(GroundSL,xbeeSendBuf);
+      return XBEE_OPEN;
+  }
+  if(strstr((char*)xbeeRecBuf,"close")){ 
+      Serial.println("");
+      Serial.println("CloseAck");
+      String("ToGNDAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(GroundSL,xbeeSendBuf);
+      return XBEE_CLOSE;
+  }
+  if(strstr((char*)xbeeRecBuf,"terminate")){ 
+      Serial.println("");
+      Serial.println("TermAck");
+      String("ToGNDAckTerm").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(GroundSL,xbeeSendBuf);
+      return XBEE_CUTDOWN;
+  }
+  return XBEE_DO_NOTHING;
 }
