@@ -23,29 +23,31 @@
 #define GPSSerial Serial2
 #define XBeeSerial Serial1
 
-//float parameters
-#define PRE_VENT_ALT 24000
-#define FLOAT_ALT 40000
-#define PRE_VENT_RATIO .36
-#define VENT_TIMER 600
-#define SEA_LEVEL_PRESSURE 1020.65
-
-//cut-down parameters
-#define CUT_INTERVAL 60
-#define TOTAL_CUTS 1
-#define CUTDOWN_ALTITUDE 27000
-#define CUTDOWN_TIMER_TRIGGER_ALT 1000
-#define CUTDOWN_TIMER_DURATION 6000
-#define ARATE_TRIGGER_ALT 40000
-#define ASCENT_RATE_TRIGGER 1
-#define LONG_EAST_BOUND -76.937243 
-#define LONG_WEST_BOUND -76.940906
-#define LAT_NORTH_BOUND 38.994138
-#define LAT_SOUTH_BOUND 38.991425
-
-//flags
+//servo characteristics
 #define VENT_OPEN_POS 83
 #define VENT_CLOSED_POS 18
+
+//float parameters
+#define PRE_VENT_ALT 23500
+#define FLOAT_ALT 40000
+#define PRE_VENT_RATIO .2
+#define VENT_TIMER 1800 //seconds
+#define SEA_LEVEL_PRESSURE 982.45 //mbar
+
+//cut-down parameters
+#define CUT_INTERVAL 60 //seconds
+#define TOTAL_CUTS 3
+#define CUTDOWN_ALTITUDE 32000 //meters
+#define CUTDOWN_TIMER_TRIGGER_ALT 1000 //meters
+#define CUTDOWN_TIMER_DURATION 9000 //seconds
+#define ARATE_TRIGGER_ALT 40000 //meters
+#define ASCENT_RATE_TRIGGER 1 //meters per second
+#define LONG_EAST_BOUND -76.748953 
+#define LONG_WEST_BOUND -78.645083
+#define LAT_NORTH_BOUND 40.286500
+#define LAT_SOUTH_BOUND 39.622177
+
+//flags
 #define CLOSED 0
 #define OPEN 1
 #define XBEE_CLOSED 2
@@ -126,10 +128,10 @@ int gps_fixqual;
 float raw_servo_pos;
 float servo_pos;
 
-// Faul Counters
-int alt_fault_counter;
-int ar_fault_counter;
-int gps_fault_counter;
+//fault counters
+int alt_fault_counter = 0;
+int ar_fault_counter = 0;
+int gps_fault_counter = 0;
 
 //flags
 int pre_vent_status = PRE_VENT_NOT_DONE;              //0 = not done, 1 = done
@@ -141,7 +143,7 @@ int timer_status = TIMER_NOT_STARTED;                 //0 = timer not started, 1
 int arate_trigger_status = ARATE_TRIGGER_NOT_STARTED; //0 = arate trigger not started, 1 = arate trigger started
 int geofence_status = NOT_CUT;                        //0 = geofence not started, 1 = geofence trigger started, 2 = bad fix
 int cut_reason = NOT_CUT;                             //0 = not cut, 1 = timer, 2 = altitude, 3 = ascent rate, 4 = geofence
-int xbee_status = XBEE_DO_NOTHING;                                  //0 = do nothing, 1 = bits test (print to serial/file), 2 = ground test, 3 = open, 4 = close, 5 = cutdown
+int xbee_status = XBEE_DO_NOTHING;                    //0 = do nothing, 1 = bits test (print to serial/file), 2 = ground test, 3 = open, 4 = close, 5 = cutdown
 
 void setup() {
   Serial.begin(9600);
@@ -193,6 +195,7 @@ void setup() {
   else
     Serial.println("BMP found!");
 
+  // Initiate Accelerometer
   if(!mma.begin())
     Serial.println("Error accelerometer not found!");
   else
@@ -259,8 +262,8 @@ void loop() {
   delay(10);
   xbee_status = xbeeRead();
   delay(10);
-  Serial.print("XBee Status: ");
-  Serial.println(xbee_status);
+  //Serial.print("XBee Status: ");
+  //Serial.println(xbee_status);
 
   /*  ============================================================================================
    *   
@@ -295,10 +298,8 @@ void loop() {
   servo_pos = (raw_servo_pos/1024)*180;
 
   //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
-  Serial.println(xbee_status);
   if(xbee_status == XBEE_OPEN)// && vent_status != XBEE_OPENED)
   {
-    Serial.println("opening");
     ventValve.write(VENT_OPEN_POS);
     vent_status = XBEE_OPENED;
     rate_at_open = ascent_rate;
@@ -313,13 +314,13 @@ void loop() {
   if(vent_status == XBEE_OPENED)
   {
     ventValve.write(VENT_OPEN_POS);
-    /*if(ascent_rate < 1)
+    if(ascent_rate < 1 && alt > CUTDOWN_TIMER_TRIGGER_ALT && gps_fixqual == 1)
     {
       ventValve.write(VENT_CLOSED_POS);
       vent_status = XBEE_CLOSED;
       float_status = FLOATING;
       float_vent_status = FLOAT_VENT_DONE;
-    }*/
+    }
   }
   else if(vent_status == XBEE_CLOSED)
   {
@@ -409,7 +410,7 @@ void loop() {
   //xbee trigger ---------------------------------------------------------------------------------- XBee Trigger
   if (cut_status == NOT_CUT && xbee_status == XBEE_CUTDOWN)
   {
-    cutdown();  
+    cutdown();
     cut_status = CUT;
     num_cuts++;
     next_cut_time = now_seconds + CUT_INTERVAL;
@@ -519,6 +520,8 @@ void loop() {
   logFile.print(temp);
   logFile.print(", ");
   logFile.print(pressure);
+  logFile.print(", ");
+  logFile.print(pressure_alt);
   logFile.print(", ");
   logFile.print(alt);
   logFile.print(", ");
