@@ -42,10 +42,10 @@
 #define CUTDOWN_TIMER_DURATION 9000 //seconds
 #define ARATE_TRIGGER_ALT 40000 //meters
 #define ASCENT_RATE_TRIGGER 1 //meters per second
-#define LONG_EAST_BOUND -76.748953 
-#define LONG_WEST_BOUND -78.645083
-#define LAT_NORTH_BOUND 40.286500
-#define LAT_SOUTH_BOUND 39.622177
+#define LONG_EAST_BOUND -70 
+#define LONG_WEST_BOUND -85
+#define LAT_NORTH_BOUND 45
+#define LAT_SOUTH_BOUND 32
 
 //flags
 #define CLOSED 0
@@ -148,6 +148,8 @@ int xbee_status = XBEE_DO_NOTHING;                    //0 = do nothing, 1 = bits
 void setup() {
   Serial.begin(9600);
 
+  Serial.println("Powered on!");
+
   // Reassign default pins for I2C bus
   Wire.setSCL(SCL_PIN);
   Wire.setSDA(SDA_PIN);
@@ -205,6 +207,8 @@ void setup() {
 
   // Initiate GPS
   GPSSerial.begin(9600);
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_GGAONLY);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 
   // Check/Initiate SD Logger
   if(!SD.begin(LOGGER_PIN))
@@ -213,7 +217,9 @@ void setup() {
     Serial.println("SD card initialized");
 
   // Interrupt Timer for GPS
-  gpsTimer.begin(readGPS, 1000);
+  gpsTimer.begin(readGPS, 1000); //try changing to 10000
+
+  Serial.println("Setup done!");
 }
 
 void loop() {  
@@ -246,7 +252,15 @@ void loop() {
   noInterrupts();
   if(GPS.newNMEAreceived())
   {
-    GPS.parse(GPS.lastNMEA());
+    Serial.println("new nmea recieved!");
+    Serial.println(GPS.lastNMEA());
+    logFile = SD.open("datalog.txt", FILE_WRITE);
+    logFile.print(GPS.lastNMEA());
+    logFile.close();
+    if(!GPS.parse(GPS.lastNMEA()))
+    {
+      Serial.println("GPS Parse failed!");
+    }
     gps_fixqual = GPS.fix;
     if(gps_fixqual == 1)
     {
@@ -502,9 +516,9 @@ void loop() {
   logFile.print(now_seconds);
   logFile.print(", ");
   //---------------------------------------------------------------------------------------------- GPS
-  logFile.print(gps_lat);
+  logFile.print(gps_lat, 5);
   logFile.print(", ");
-  logFile.print(gps_long);
+  logFile.print(gps_long, 5);
   logFile.print(", ");
   logFile.print(gps_alt);
   logFile.print(", ");
@@ -596,9 +610,9 @@ void loop() {
   Serial.print(now_seconds);
   Serial.print(", ");
   //---------------------------------------------------------------------------------------------- GPS
-  Serial.print(gps_lat);
+  Serial.print(gps_lat, 5);
   Serial.print(", ");
-  Serial.print(gps_long);
+  Serial.print(gps_long, 5);
   Serial.print(", ");
   Serial.print(gps_alt);
   Serial.print(", ");
@@ -785,6 +799,7 @@ int ar_check(int arate)
 
 void readGPS() // Reads GPS, it seems
 {
+  //Serial.println("Reading gps");
   GPS.read();
 }
 
