@@ -149,6 +149,9 @@ void setup() {
   Serial.begin(9600);
 
   Serial.println("Powered on!");
+  logFile = SD.open("datalog.txt", FILE_WRITE);
+  logFile.println("Powered on!");
+  logFile.close();
 
   // Reassign default pins for I2C bus
   Wire.setSCL(SCL_PIN);
@@ -220,6 +223,9 @@ void setup() {
   gpsTimer.begin(readGPS, 1000); //try changing to 10000
 
   Serial.println("Setup done!");
+  logFile = SD.open("datalog.txt", FILE_WRITE);
+  logFile.println("Setup done!");
+  logFile.close();
 }
 
 void loop() {  
