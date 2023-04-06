@@ -144,6 +144,7 @@ int arate_trigger_status = ARATE_TRIGGER_NOT_STARTED; //0 = arate trigger not st
 int geofence_status = NOT_CUT;                        //0 = geofence not started, 1 = geofence trigger started, 2 = bad fix
 int cut_reason = NOT_CUT;                             //0 = not cut, 1 = timer, 2 = altitude, 3 = ascent rate, 4 = geofence
 int xbee_status = XBEE_DO_NOTHING;                    //0 = do nothing, 1 = bits test (print to serial/file), 2 = ground test, 3 = open, 4 = close, 5 = cutdown
+int cutdown_flag = 1;
 
 void setup() {
   Serial.begin(9600);
@@ -711,13 +712,21 @@ void loop() {
 
 void cutdown() // Standard Cut-down
 {
-  digitalWrite(CUTDOWN_PIN_1, HIGH);
-  delay(8000);
-  digitalWrite(CUTDOWN_PIN_1, LOW);
-  delay(16000);
-  digitalWrite(CUTDOWN_PIN_2, HIGH);
-  delay(8000);
-  digitalWrite(CUTDOWN_PIN_2, LOW);
+  if(cutdown_flag == 1)
+  {
+    digitalWrite(CUTDOWN_PIN_1, HIGH);
+    delay(8000);
+    digitalWrite(CUTDOWN_PIN_1, LOW);
+    cutdown_flag = 2;
+  }
+  else
+  {
+    digitalWrite(CUTDOWN_PIN_2, HIGH);
+    delay(8000);
+    digitalWrite(CUTDOWN_PIN_2, LOW);
+    cutdown_flag = 1;
+  }
+
 }
 
 void yolo_cutdown() // Last-Attempt Cut-Down
