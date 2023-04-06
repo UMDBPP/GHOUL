@@ -149,9 +149,6 @@ void setup() {
   Serial.begin(9600);
 
   Serial.println("Powered on!");
-  logFile = SD.open("datalog.txt", FILE_WRITE);
-  logFile.println("Powered on!");
-  logFile.close();
 
   // Reassign default pins for I2C bus
   Wire.setSCL(SCL_PIN);
@@ -170,12 +167,13 @@ void setup() {
   // Initiate/close servo
   ventValve.attach(SERVO_PIN);
   delay(50);
-  ventValve.write(VENT_CLOSED_POS);
 
   // Servo Analog Feedback Pin
   pinMode(FEEDBACK_PIN, INPUT);
   raw_servo_pos = analogRead(FEEDBACK_PIN);
   servo_pos = (raw_servo_pos/1024)*180;
+
+  ventValve.write(VENT_CLOSED_POS);
 
   // Initiate cut-down pins
   pinMode(CUTDOWN_PIN_1, OUTPUT);
@@ -202,11 +200,12 @@ void setup() {
 
   // Initiate Accelerometer
   if(!mma.begin())
+  {
     Serial.println("Error accelerometer not found!");
+    mma.setRange(MMA8451_RANGE_8_G);
+  }
   else
     Serial.println("Acceleromter found!");
-
-  mma.setRange(MMA8451_RANGE_8_G);
 
   // Initiate GPS
   GPSSerial.begin(9600);
@@ -218,14 +217,15 @@ void setup() {
     Serial.println("Error: SD Card Logger Not Initialized");
   else
     Serial.println("SD card initialized");
-
+  
   // Interrupt Timer for GPS
   gpsTimer.begin(readGPS, 1000); //try changing to 10000
 
   Serial.println("Setup done!");
   logFile = SD.open("datalog.txt", FILE_WRITE);
   logFile.println("Setup done!");
-  logFile.close();
+  logFile.flush();
+  //logFile.close();
 }
 
 void loop() {  
@@ -258,11 +258,11 @@ void loop() {
   noInterrupts();
   if(GPS.newNMEAreceived())
   {
-    Serial.println("new nmea recieved!");
-    Serial.println(GPS.lastNMEA());
-    logFile = SD.open("datalog.txt", FILE_WRITE);
-    logFile.print(GPS.lastNMEA());
-    logFile.close();
+    //Serial.println("new nmea recieved!");
+    //Serial.println(GPS.lastNMEA());
+    //logFile = SD.open("datalog.txt", FILE_WRITE);
+    //logFile.print(GPS.lastNMEA());
+    //logFile.close();
     if(!GPS.parse(GPS.lastNMEA()))
     {
       Serial.println("GPS Parse failed!");
@@ -318,16 +318,16 @@ void loop() {
   servo_pos = (raw_servo_pos/1024)*180;
 
   //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
-  if(xbee_status == XBEE_OPEN)// && vent_status != XBEE_OPENED)
+  if(xbee_status == XBEE_OPEN && vent_status != XBEE_OPENED)
   {
-    ventValve.write(VENT_OPEN_POS);
+    openVent();
     vent_status = XBEE_OPENED;
     rate_at_open = ascent_rate;
     vent_open_time = now_seconds;
   }
   else if(xbee_status == XBEE_CLOSE && vent_status != XBEE_CLOSED)
   {
-    ventValve.write(VENT_CLOSED_POS);
+    closeVent();
     vent_status = XBEE_CLOSED;
   }
   
@@ -336,7 +336,7 @@ void loop() {
     ventValve.write(VENT_OPEN_POS);
     if(ascent_rate < 1 && alt > CUTDOWN_TIMER_TRIGGER_ALT && gps_fixqual == 1)
     {
-      ventValve.write(VENT_CLOSED_POS);
+      closeVent();
       vent_status = XBEE_CLOSED;
       float_status = FLOATING;
       float_vent_status = FLOAT_VENT_DONE;
@@ -354,7 +354,7 @@ void loop() {
       ventValve.write(VENT_CLOSED_POS);
       if(pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
       {
-        ventValve.write(VENT_OPEN_POS);
+        openVent();
         vent_status = OPEN;
         float_status = PRE_VENTING;
         rate_at_open = ascent_rate;
@@ -362,7 +362,7 @@ void loop() {
       }
       else if(float_vent_status == FLOAT_VENT_NOT_DONE && alt > FLOAT_ALT)
       {
-        ventValve.write(VENT_OPEN_POS);
+        openVent();
         vent_status = OPEN;
         float_status = FLOAT_VENTING;
         rate_at_open = ascent_rate;
@@ -378,7 +378,7 @@ void loop() {
       {
         if(ascent_rate <= PRE_VENT_RATIO*rate_at_open)
         {
-          ventValve.write(VENT_CLOSED_POS);
+          closeVent();
           vent_status = CLOSED;
           float_status = PRE_VENTED;
           pre_vent_status = PRE_VENT_DONE;
@@ -388,7 +388,7 @@ void loop() {
       {
         if(ascent_rate < 1)
          {
-          ventValve.write(VENT_CLOSED_POS);
+          closeVent();
           vent_status = CLOSED;
           float_status = FLOATING;
           float_vent_status = FLOAT_VENT_DONE;
@@ -405,7 +405,7 @@ void loop() {
     {
       if(now_seconds - vent_open_time > VENT_TIMER)
       {
-        ventValve.write(VENT_CLOSED_POS);
+        closeVent();
         vent_status = CLOSED;
         if(float_status == PRE_VENTING && pre_vent_status == PRE_VENT_NOT_DONE)
         {
@@ -506,7 +506,7 @@ void loop() {
       ============================================================================================ */
   
   //---------------------------------------------------------------------------------------------- Time
-  logFile = SD.open("datalog.txt", FILE_WRITE);
+  //logFile = SD.open("datalog.txt", FILE_WRITE);
   if(curr_time.hour() < 10)
     logFile.print("0");
   logFile.print(curr_time.hour());
@@ -518,82 +518,83 @@ void loop() {
   if(curr_time.second() < 10)
     logFile.print("0");
   logFile.print(curr_time.second());
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(now_seconds);
-  logFile.print(", ");
+  logFile.print(F(", "));
   //---------------------------------------------------------------------------------------------- GPS
   logFile.print(gps_lat, 5);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(gps_long, 5);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(gps_alt);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(gps_sats);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(antenna_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(gps_fixqual);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(gps_fault_counter);
-  logFile.print(", ");
+  logFile.print(F(", "));
   //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
   logFile.print(temp);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(pressure);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(pressure_alt);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(alt);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(curr_pressure_ascent_rate);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(pressure_ascent_rate);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(curr_gps_ascent_rate);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(gps_ascent_rate);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(ascent_rate);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(x);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(y);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(z);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(raw_servo_pos);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(servo_pos);
-  logFile.print(", ");
+  logFile.print(F(", "));
   //---------------------------------------------------------------------------------------------- Cut-Down & Flight Details
   logFile.print(num_cuts);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(next_cut_time);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(cutdown_time);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(vent_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(float_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(pre_vent_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(float_vent_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(cut_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(cut_reason);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(timer_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(arate_trigger_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(geofence_status);
-  logFile.print(", ");
+  logFile.print(F(", "));
   logFile.print(xbee_status);
   logFile.println();
-  logFile.close();
-
+  //logFile.close();
+  logFile.flush();
+  
    /*  ============================================================================================
    *   
    *                              Writing to Serial Monitor
@@ -612,76 +613,76 @@ void loop() {
   if(curr_time.second() < 10)
     Serial.print("0");
   Serial.print(curr_time.second());
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(now_seconds);
-  Serial.print(", ");
+  Serial.print(F(", "));
   //---------------------------------------------------------------------------------------------- GPS
   Serial.print(gps_lat, 5);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(gps_long, 5);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(gps_alt);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(gps_sats);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(antenna_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(gps_fixqual);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(gps_fault_counter);
-  Serial.print(", ");
+  Serial.print(F(", "));
   //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
   Serial.print(temp);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(pressure);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(alt);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(curr_pressure_ascent_rate);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(pressure_ascent_rate);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(curr_gps_ascent_rate);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(gps_ascent_rate);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(ascent_rate);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(x);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(y);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(z);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(raw_servo_pos);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(servo_pos);
-  Serial.print(", ");
+  Serial.print(F(", "));
   //---------------------------------------------------------------------------------------------- Cut-Down & Flight Details
   Serial.print(num_cuts);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(next_cut_time);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(cutdown_time);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(vent_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(float_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(pre_vent_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(float_vent_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(cut_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(cut_reason);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(timer_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(arate_trigger_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(geofence_status);
-  Serial.print(", ");
+  Serial.print(F(", "));
   Serial.print(xbee_status);
   Serial.println();
   
@@ -708,16 +709,37 @@ void loop() {
    *                                 Additional Methods, etc.
    *   
       ============================================================================================ */
+void openVent()
+{
+  for(int i = VENT_CLOSED_POS; i < VENT_OPEN_POS; i++)
+  {
+    ventValve.write(i);
+    delay(100);
+  }
+  delay(500);
+  ventValve.write(VENT_OPEN_POS);
+}
+
+void closeVent()
+{
+  for(int i = VENT_OPEN_POS; i > VENT_CLOSED_POS; i--)
+  {
+    ventValve.write(i);
+    delay(100);
+  }
+  delay(500);
+  ventValve.write(VENT_CLOSED_POS);
+}
 
 void cutdown() // Standard Cut-down
 {
-  digitalWrite(CUTDOWN_PIN_1, HIGH);
-  delay(8000);
+  for(int i = 0; i <= 256; i++)
+  {
+    analogWrite(CUTDOWN_PIN_1, i);
+    delay(5);
+  }
+  delay(5000);
   digitalWrite(CUTDOWN_PIN_1, LOW);
-  delay(16000);
-  digitalWrite(CUTDOWN_PIN_2, HIGH);
-  delay(8000);
-  digitalWrite(CUTDOWN_PIN_2, LOW);
 }
 
 void yolo_cutdown() // Last-Attempt Cut-Down
