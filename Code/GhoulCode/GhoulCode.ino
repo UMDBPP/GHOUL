@@ -321,14 +321,14 @@ void loop() {
   //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
   if(xbee_status == XBEE_OPEN && vent_status != XBEE_OPENED)
   {
-    openVent();
+    ventValve.write(VENT_OPEN_POS);
     vent_status = XBEE_OPENED;
     rate_at_open = ascent_rate;
     vent_open_time = now_seconds;
   }
   else if(xbee_status == XBEE_CLOSE && vent_status != XBEE_CLOSED)
   {
-    closeVent();
+    ventValve.write(VENT_CLOSED_POS);
     vent_status = XBEE_CLOSED;
   }
   
@@ -337,7 +337,7 @@ void loop() {
     ventValve.write(VENT_OPEN_POS);
     if(ascent_rate < 1 && alt > CUTDOWN_TIMER_TRIGGER_ALT && gps_fixqual == 1)
     {
-      closeVent();
+      ventValve.write(VENT_CLOSED_POS);
       vent_status = XBEE_CLOSED;
       float_status = FLOATING;
       float_vent_status = FLOAT_VENT_DONE;
@@ -355,7 +355,7 @@ void loop() {
       ventValve.write(VENT_CLOSED_POS);
       if(pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
       {
-        openVent();
+        ventValve.write(VENT_OPEN_POS);
         vent_status = OPEN;
         float_status = PRE_VENTING;
         rate_at_open = ascent_rate;
@@ -363,7 +363,7 @@ void loop() {
       }
       else if(float_vent_status == FLOAT_VENT_NOT_DONE && alt > FLOAT_ALT)
       {
-        openVent();
+        ventValve.write(VENT_OPEN_POS);
         vent_status = OPEN;
         float_status = FLOAT_VENTING;
         rate_at_open = ascent_rate;
@@ -379,7 +379,7 @@ void loop() {
       {
         if(ascent_rate <= PRE_VENT_RATIO*rate_at_open)
         {
-          closeVent();
+          ventValve.write(VENT_CLOSED_POS);
           vent_status = CLOSED;
           float_status = PRE_VENTED;
           pre_vent_status = PRE_VENT_DONE;
@@ -389,7 +389,7 @@ void loop() {
       {
         if(ascent_rate < 1)
          {
-          closeVent();
+          ventValve.write(VENT_CLOSED_POS);
           vent_status = CLOSED;
           float_status = FLOATING;
           float_vent_status = FLOAT_VENT_DONE;
@@ -406,7 +406,7 @@ void loop() {
     {
       if(now_seconds - vent_open_time > VENT_TIMER)
       {
-        closeVent();
+        ventValve.write(VENT_CLOSED_POS);
         vent_status = CLOSED;
         if(float_status == PRE_VENTING && pre_vent_status == PRE_VENT_NOT_DONE)
         {
@@ -710,27 +710,6 @@ void loop() {
    *                                 Additional Methods, etc.
    *   
       ============================================================================================ */
-void openVent()
-{
-  for(int i = VENT_CLOSED_POS; i < VENT_OPEN_POS; i++)
-  {
-    ventValve.write(i);
-    delay(100);
-  }
-  delay(500);
-  ventValve.write(VENT_OPEN_POS);
-}
-
-void closeVent()
-{
-  for(int i = VENT_OPEN_POS; i > VENT_CLOSED_POS; i--)
-  {
-    ventValve.write(i);
-    delay(100);
-  }
-  delay(500);
-  ventValve.write(VENT_CLOSED_POS);
-}
 
 void cutdown() // Standard Cut-down
 {
