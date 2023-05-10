@@ -11,8 +11,13 @@
 #include <Adafruit_GPS.h>
 #include <XBee.h>
 #include <Adafruit_MMA8451.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
-//pin definitions
+//pin definitionst
+
+#define TEMPERATURE_PIN 5
+#define HEATER_PIN 6
 #define SCL_PIN 7
 #define SDA_PIN 8
 #define SERVO_PIN 2
@@ -24,34 +29,37 @@
 #define XBeeSerial Serial1
 
 //servo characteristics
-#define VENT_OPEN_POS 83
-#define VENT_CLOSED_POS 18
+#define VENT_OPEN_POS 85
+#define VENT_CLOSED_POS 20
 
 //float parameters
-#define PRE_VENT_ALT 23500
+#define PRE_VENT_ALT 19500
 #define FLOAT_ALT 40000
-#define PRE_VENT_RATIO .2
-#define VENT_TIMER 1800 //seconds
+#define PRE_VENT_RATIO .1
+#define VENT_TIMER 3600 //seconds
 #define SEA_LEVEL_PRESSURE 982.45 //mbar
+#define HEATER_SET_POINT 0
 
 //cut-down parameters
 #define CUT_INTERVAL 60 //seconds
-#define TOTAL_CUTS 3
+#define TOTAL_CUTS 6
 #define CUTDOWN_ALTITUDE 32000 //meters
 #define CUTDOWN_TIMER_TRIGGER_ALT 1000 //meters
-#define CUTDOWN_TIMER_DURATION 9000 //seconds
+#define CUTDOWN_TIMER_DURATION 7200 //seconds
 #define ARATE_TRIGGER_ALT 40000 //meters
 #define ASCENT_RATE_TRIGGER 1 //meters per second
-#define LONG_EAST_BOUND -70 
-#define LONG_WEST_BOUND -85
-#define LAT_NORTH_BOUND 45
-#define LAT_SOUTH_BOUND 32
+#define LONG_EAST_BOUND -77.7243
+#define LONG_WEST_BOUND -79.0975
+#define LAT_NORTH_BOUND 40.4511
+#define LAT_SOUTH_BOUND 39.4569
 
 //flags
 #define CLOSED 0
 #define OPEN 1
 #define XBEE_CLOSED 2
 #define XBEE_OPENED 3
+#define OFF 0
+#define ON 1
 #define PRE_VENT_NOT_DONE 0
 #define PRE_VENT_DONE 1
 #define FLOAT_VENT_NOT_DONE 0
@@ -95,6 +103,8 @@ File logFile;
 Adafruit_GPS GPS(&GPSSerial);
 XBee xbee = XBee();
 XBeeResponse response = XBeeResponse();
+OneWire oneWire(TEMPERATURE_PIN);
+DallasTemperature tempSensor(&oneWire);
 
 //xbee stuff
 const uint32_t UniSH = 0x0013A200;    //Common across any and all XBees
@@ -145,6 +155,7 @@ int geofence_status = NOT_CUT;                        //0 = geofence not started
 int cut_reason = NOT_CUT;                             //0 = not cut, 1 = timer, 2 = altitude, 3 = ascent rate, 4 = geofence
 int xbee_status = XBEE_DO_NOTHING;                    //0 = do nothing, 1 = bits test (print to serial/file), 2 = ground test, 3 = open, 4 = close, 5 = cutdown
 int cutdown_flag = 1;
+int heater_state = OFF;
 
 void setup() {
   Serial.begin(9600);
@@ -176,6 +187,10 @@ void setup() {
 
   ventValve.write(VENT_CLOSED_POS);
 
+  // Initiate heating pad pin
+  pinMode(HEATER_PIN, OUTPUT);
+  digitalWrite(HEATER_PIN, LOW);
+
   // Initiate cut-down pins
   pinMode(CUTDOWN_PIN_1, OUTPUT);
   digitalWrite(CUTDOWN_PIN_1, LOW);
@@ -192,6 +207,9 @@ void setup() {
   {
     Serial.println("RTC has set the system time");
   }
+
+  //Initiate Temperature Probe
+  tempSensor.begin();
 
   // Initiate BMP280
   if(!bmp.begin())
@@ -248,6 +266,11 @@ void loop() {
   float pressure = bmp.readPressure();
   float pressure_alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
 
+  //battery temp
+  tempSensor.requestTemperatures();
+  float batt_temp = tempSensor.getTempCByIndex(0);
+  Serial.println(batt_temp);
+
   //read accelerometer
   sensors_event_t event; 
   mma.getEvent(&event);
@@ -291,7 +314,18 @@ void loop() {
    *                              Calculations and Decisions
    *   
        ============================================================================================ */
-       
+
+  //decide to turn on heater
+  if (batt_temp <= HEATER_SET_POINT && heater_state != ON)
+  {
+    digitalWrite(HEATER_PIN, HIGH);
+    heater_state = ON;
+  }
+  else if (batt_temp > HEATER_SET_POINT && heater_state != OFF)
+  {
+    digitalWrite(HEATER_PIN, LOW);
+    heater_state = OFF;
+  }
   
   //calc pressure_ascent rate ------------------------------------------------------------------------------ Pressure Ascent Rate Calculation
   float curr_pressure_ascent_rate = (pressure_alt - prev_pressure_alt)/(now_seconds - prev_time);
@@ -538,6 +572,8 @@ void loop() {
   logFile.print(gps_fault_counter);
   logFile.print(F(", "));
   //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
+  logFile.print(batt_temp);
+  logFile.print(F(", "));
   logFile.print(temp);
   logFile.print(F(", "));
   logFile.print(pressure);
@@ -592,6 +628,8 @@ void loop() {
   logFile.print(geofence_status);
   logFile.print(F(", "));
   logFile.print(xbee_status);
+  logFile.print(F(", "));
+  logFile.print(heater_state);
   logFile.println();
   //logFile.close();
   logFile.flush();
@@ -633,6 +671,8 @@ void loop() {
   Serial.print(gps_fault_counter);
   Serial.print(F(", "));
   //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
+  Serial.print(batt_temp);
+  Serial.print(F(", "));
   Serial.print(temp);
   Serial.print(F(", "));
   Serial.print(pressure);
@@ -685,6 +725,8 @@ void loop() {
   Serial.print(geofence_status);
   Serial.print(F(", "));
   Serial.print(xbee_status);
+  Serial.print(F(", "));
+  Serial.print(heater_state);
   Serial.println();
   
   //Cleaning up ascent-rate data
@@ -713,6 +755,9 @@ void loop() {
 
 void cutdown() // Standard Cut-down
 {
+  digitalWrite(HEATER_PIN, LOW);
+  heater_state = OFF;
+  delay(3000);
   if(cutdown_flag == 1)
   {
      for(int i = 0; i <= 256; i++)
@@ -734,6 +779,7 @@ void cutdown() // Standard Cut-down
   delay(5000);
   digitalWrite(CUTDOWN_PIN_2, LOW);
   cutdown_flag = 1;
+  delay(3000);
   }
 }
 
