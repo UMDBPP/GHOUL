@@ -1233,7 +1233,7 @@
       (pinfunction "27_A13_SCK1") (pintype "bidirectional") (tstamp 00807ca3-acc9-49d1-ab44-9a259c9e6c93))
     (pad "20" thru_hole circle (at 19.05 7.62 270) (size 1.6 1.6) (drill 1.1) (layers "*.Cu" "*.Mask")
       (net 24 "Xbee DOut") (pinfunction "28_RX7") (pintype "bidirectional") (tstamp 74ae5ed7-87f5-4a74-ae76-edbb658a4596))
-    (pad "21" thru_hole circle locked (at 21.59 7.62 270) (size 1.6 1.6) (drill 1.1) (layers "*.Cu" "*.Mask")
+    (pad "21" thru_hole circle (at 21.59 7.62 270) (size 1.6 1.6) (drill 1.1) (layers "*.Cu" "*.Mask")
       (net 23 "Xbee DIn") (pinfunction "29_TX7") (pintype "bidirectional") (tstamp d5ecba59-9498-4313-b713-b4566e0e8909))
     (pad "22" thru_hole circle (at 24.13 7.62 270) (size 1.6 1.6) (drill 1.1) (layers "*.Cu" "*.Mask")
       (net 55 "unconnected-(U1-30_CRX3-Pad22)") (pinfunction "30_CRX3") (pintype "bidirectional") (tstamp 1410da05-d466-46d2-9dd8-e8763b64829f))
@@ -2067,7 +2067,7 @@
     (tstamp 9b4b28fa-c805-423a-bd5d-c98c1668eedb)
     (at 134.112 107.95 180)
     (attr board_only exclude_from_pos_files exclude_from_bom)
-    (fp_text reference "G***" (at 0 0) (layer "B.SilkS")
+    (fp_text reference "G***" (at 0 0) (layer "B.SilkS") hide
         (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
       (tstamp 00394e1a-53dd-41f2-8e63-55ef69181031)
     )
