@@ -856,7 +856,7 @@ void yolo_cutdown() // Last-Attempt Cut-Down
   delay(30000); 
   digitalWrite(CUTDOWN_PIN_1, HIGH);
   delay(60000);
-  digitalWrite(CUTODOWN_PIN_1, LOW);
+  digitalWrite(CUTDOWN_PIN_1, LOW);
 }
 
 time_t getTeensy3Time() // Getting Time from RTC
