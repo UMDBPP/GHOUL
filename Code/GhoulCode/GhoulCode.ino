@@ -27,7 +27,7 @@
 #define CUTDOWN_PIN_2 36
 #define LOGGER_PIN BUILTIN_SDCARD
 #define GPSSerial Serial2
-#define XBeeSerial Serial7 //need to change to software serial
+#define XBeeSerial Serial7
 //SoftwareSerial XBeeSerial(27, 26);
 
 //servo characteristics
@@ -35,9 +35,9 @@
 #define VENT_CLOSED_POS 20
 
 //float parameters
-#define PRE_VENT_ALT 19500
+#define PRE_VENT_ALT 23000
 #define FLOAT_ALT 40000
-#define PRE_VENT_RATIO .1
+#define PRE_VENT_RATIO .05
 #define VENT_TIMER 3600 //seconds
 #define SEA_LEVEL_PRESSURE 982.45 //mbar
 #define HEATER_SET_POINT 0
@@ -72,6 +72,8 @@
 #define FLOAT_VENTING 3
 #define FLOATING 4
 #define XBEE_FLOATING 5
+#define XBEE_VENT_10 6
+#define XBEE_VENT_30 7
 #define NOT_CUT 0
 #define CUT 1
 #define BAD_FIX 2
@@ -90,6 +92,9 @@
 #define XBEE_OPEN 3
 #define XBEE_CLOSE 4
 #define XBEE_CUTDOWN 5
+#define XBEE_TEN 6
+#define XBEE_THIRTY 7
+#define XBEE_YOLO 8
 
 //timer interrupts
 IntervalTimer gpsTimer;
@@ -139,6 +144,8 @@ int antenna_status;
 int gps_fixqual;
 float raw_servo_pos;
 float servo_pos;
+float raw_voltage_reading;
+float batt_voltage;
 
 //fault counters
 int alt_fault_counter = 0;
@@ -172,8 +179,6 @@ void setup() {
   pinMode(26, INPUT);
   pinMode(27, INPUT);
   XBeeSerial.begin(9600);
-  //XBeeSerial.setRX(27);
-  //XBeeSerial.setTX(26);
   
   // XBee Set up
   xbee.setSerial(XBeeSerial);
@@ -189,6 +194,12 @@ void setup() {
   raw_servo_pos = analogRead(FEEDBACK_PIN);
   servo_pos = (raw_servo_pos/1024)*180;
 
+  // Voltage sensing pin
+  pinMode(VOLTAGE_PIN, INPUT);
+  raw_voltage_reading = analogRead(FEEDBACK_PIN);
+  batt_voltage = (raw_voltage_reading/1024)*8.2;
+
+  // Close vent
   ventValve.write(VENT_CLOSED_POS);
 
   // Initiate heating pad pin
@@ -356,6 +367,10 @@ void loop() {
   raw_servo_pos = analogRead(FEEDBACK_PIN);
   servo_pos = (raw_servo_pos/1024)*180;
 
+  //read battery voltage
+  raw_voltage_reading = analogRead(FEEDBACK_PIN);
+  batt_voltage = (raw_voltage_reading/1024)*8.2;
+
   //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
   if(xbee_status == XBEE_OPEN && vent_status != XBEE_OPENED)
   {
@@ -363,6 +378,22 @@ void loop() {
     vent_status = XBEE_OPENED;
     rate_at_open = ascent_rate;
     vent_open_time = now_seconds;
+  }
+  else if(xbee_status == XBEE_TEN && vent_status!= XBEE_OPENED)
+  {
+    vent_open_time = now_seconds;
+    float_status = XBEE_VENT_10;
+    ventValve.write(VENT_OPEN_POS);
+  }
+  else if(xbee_status == XBEE_THIRTY && vent_status!= XBEE_OPENED)
+  {
+    vent_open_time = now_seconds;
+    float_status = XBEE_VENT_30;
+    ventValve.write(VENT_OPEN_POS);
+  }
+  else if(xbee_status == XBEE_YOLO)
+  {
+    yolo_cutdown();
   }
   else if(xbee_status == XBEE_CLOSE && vent_status != XBEE_CLOSED)
   {
@@ -433,6 +464,24 @@ void loop() {
           float_vent_status = FLOAT_VENT_DONE;
          }
       }
+      else if(float_status == XBEE_VENT_10)
+      {
+        if(now_seconds >= vent_open_time + 10)
+        {
+          ventValve.write(VENT_CLOSED_POS);
+          vent_status = CLOSED;
+          float_status = XBEE_FLOATING;
+        }
+      }
+      else if(float_status == XBEE_VENT_30)
+      {
+        if(now_seconds >= vent_open_time + 30)
+        {
+          ventValve.write(VENT_CLOSED_POS);
+          vent_status = CLOSED;
+          float_status = XBEE_FLOATING;
+        }
+      }
       else
       {
         ventValve.write(VENT_CLOSED_POS);
@@ -467,13 +516,21 @@ void loop() {
 
 
   //xbee trigger ---------------------------------------------------------------------------------- XBee Trigger
-  if (cut_status == NOT_CUT && xbee_status == XBEE_CUTDOWN)
+  if (xbee_status == XBEE_CUTDOWN)
   {
-    cutdown();
-    cut_status = CUT;
-    num_cuts++;
-    next_cut_time = now_seconds + CUT_INTERVAL;
-    cut_reason = CUT_REASON_XBEE;
+    if (cut_status == NOT_CUT)
+    {
+      cutdown();
+      cut_status = CUT;
+      num_cuts++;
+      next_cut_time = now_seconds + CUT_INTERVAL;
+      cut_reason = CUT_REASON_XBEE;
+    }
+    else
+    {
+      num_cuts = num_cuts - 2;
+      cut_reason = CUT_REASON_XBEE;
+    }
   }
   
   //altitude trigger ------------------------------------------------------------------------------ Altitude Trigger
@@ -576,6 +633,8 @@ void loop() {
   logFile.print(gps_fault_counter);
   logFile.print(F(", "));
   //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
+  logFile.print(batt_voltage);
+  logFile.print(F(", "));
   logFile.print(batt_temp);
   logFile.print(F(", "));
   logFile.print(temp);
@@ -675,6 +734,8 @@ void loop() {
   Serial.print(gps_fault_counter);
   Serial.print(F(", "));
   //---------------------------------------------------------------------------------------------- Temp, Pressure, Alt, Ascent Rate, Servo Position
+  Serial.print(batt_voltage);
+  Serial.print(F(", "));
   Serial.print(batt_temp);
   Serial.print(F(", "));
   Serial.print(temp);
@@ -791,8 +852,10 @@ void cutdown() // Standard Cut-down
 
 void yolo_cutdown() // Last-Attempt Cut-Down
 {
-  delay(120000); 
+  delay(30000); 
   digitalWrite(CUTDOWN_PIN_1, HIGH);
+  delay(60000);
+  digitalWrite(CUTODOWN_PIN_1, LOW);
 }
 
 time_t getTeensy3Time() // Getting Time from RTC
@@ -949,6 +1012,20 @@ int processBitsMessage(){ //Just print things to the monitor
       xbeeSend(BitsSL,xbeeSendBuf);
       return XBEE_OPEN;
   }
+  if(strstr((char*)xbeeRecBuf,"ten")){
+      Serial.println("");
+      Serial.println("TenOpenAck");
+      String("TenOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(BitsSL,xbeeSendBuf);
+      return XBEE_TEN;
+  }
+  if(strstr((char*)xbeeRecBuf,"thirty")){
+      Serial.println("");
+      Serial.println("ThirtyOpenAck");
+      String("ThirtyOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(BitsSL,xbeeSendBuf);
+      return XBEE_THIRTY;
+  }
   if(strstr((char*)xbeeRecBuf,"close")){ 
       Serial.println();
       Serial.println("CloseTest");
@@ -962,6 +1039,13 @@ int processBitsMessage(){ //Just print things to the monitor
       String("TermAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(BitsSL,xbeeSendBuf);
       return XBEE_CUTDOWN;
+  }
+  if(strstr((char*)xbeeRecBuf,"blast")){ 
+      Serial.println("");
+      Serial.println("YoloAck");
+      String("YoloAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(BitsSL,xbeeSendBuf);
+      return XBEE_YOLO;
   }
   return XBEE_DO_NOTHING;
 }
@@ -985,6 +1069,20 @@ int processGroundMessage(){
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_OPEN;
   }
+  if(strstr((char*)xbeeRecBuf,"ten")){
+      Serial.println("");
+      Serial.println("TenOpenAck");
+      String("TenOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(GroundSL,xbeeSendBuf);
+      return XBEE_TEN;
+  }
+  if(strstr((char*)xbeeRecBuf,"thirty")){
+      Serial.println("");
+      Serial.println("ThirtyOpenAck");
+      String("ThirtyOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(GroundSL,xbeeSendBuf);
+      return XBEE_THIRTY;
+  }
   if(strstr((char*)xbeeRecBuf,"close")){ 
       Serial.println("");
       Serial.println("CloseAck");
@@ -998,6 +1096,13 @@ int processGroundMessage(){
       String("TermAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_CUTDOWN;
+  }
+  if(strstr((char*)xbeeRecBuf,"blast")){ 
+      Serial.println("");
+      Serial.println("YoloAck");
+      String("YoloAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+      xbeeSend(GroundSL,xbeeSendBuf);
+      return XBEE_YOLO;
   }
   return XBEE_DO_NOTHING;
 }
