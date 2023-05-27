@@ -13,20 +13,22 @@
 #include <Adafruit_MMA8451.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <SoftwareSerial.h>
 
-//pin definitionst
-
-#define TEMPERATURE_PIN 5
-#define HEATER_PIN 6
-#define SCL_PIN 7
-#define SDA_PIN 8
+//pin definitions
+#define TEMPERATURE_PIN 1
+#define HEATER_PIN 15
+#define SCL_PIN 19
+#define SDA_PIN 18
 #define SERVO_PIN 2
 #define FEEDBACK_PIN A9
-#define CUTDOWN_PIN_1 35
+#define VOLTAGE_PIN A8
+#define CUTDOWN_PIN_1 37
 #define CUTDOWN_PIN_2 36
 #define LOGGER_PIN BUILTIN_SDCARD
 #define GPSSerial Serial2
-#define XBeeSerial Serial1
+#define XBeeSerial Serial7 //need to change to software serial
+//SoftwareSerial XBeeSerial(27, 26);
 
 //servo characteristics
 #define VENT_OPEN_POS 85
@@ -167,9 +169,11 @@ void setup() {
   Wire.setSDA(SDA_PIN);
 
   // Set up XBee Serial
+  pinMode(26, INPUT);
+  pinMode(27, INPUT);
   XBeeSerial.begin(9600);
-  XBeeSerial.setRX(27);
-  XBeeSerial.setTX(26);
+  //XBeeSerial.setRX(27);
+  //XBeeSerial.setTX(26);
   
   // XBee Set up
   xbee.setSerial(XBeeSerial);
@@ -232,7 +236,7 @@ void setup() {
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 
   // Check/Initiate SD Logger
-  if(!SD.begin(LOGGER_PIN))
+  if(!SD.begin(BUILTIN_SDCARD))
     Serial.println("Error: SD Card Logger Not Initialized");
   else
     Serial.println("SD card initialized");
@@ -269,7 +273,7 @@ void loop() {
   //battery temp
   tempSensor.requestTemperatures();
   float batt_temp = tempSensor.getTempCByIndex(0);
-  Serial.println(batt_temp);
+  //Serial.println(batt_temp);
 
   //read accelerometer
   sensors_event_t event; 
@@ -755,6 +759,7 @@ void loop() {
 
 void cutdown() // Standard Cut-down
 {
+  Serial.println("terminateing");
   digitalWrite(HEATER_PIN, LOW);
   heater_state = OFF;
   delay(3000);
@@ -765,9 +770,9 @@ void cutdown() // Standard Cut-down
       analogWrite(CUTDOWN_PIN_1, i);
       delay(5);
      }
-    delay(5000);
-    digitalWrite(CUTDOWN_PIN_1, LOW);
-    cutdown_flag = 2;
+     delay(5000);
+     analogWrite(CUTDOWN_PIN_1, 0);
+     cutdown_flag = 2;
   }
   else
   {
@@ -776,11 +781,12 @@ void cutdown() // Standard Cut-down
       analogWrite(CUTDOWN_PIN_2, i);
       delay(5);
     }
-  delay(5000);
-  digitalWrite(CUTDOWN_PIN_2, LOW);
-  cutdown_flag = 1;
-  delay(3000);
+    delay(5000);
+    analogWrite(CUTDOWN_PIN_2, 0);
+    cutdown_flag = 1;
   }
+  Serial.println("Done terminating");
+  delay(3000);
 }
 
 void yolo_cutdown() // Last-Attempt Cut-Down
