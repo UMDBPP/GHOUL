@@ -379,15 +379,17 @@ void loop() {
     rate_at_open = ascent_rate;
     vent_open_time = now_seconds;
   }
-  else if(xbee_status == XBEE_TEN && vent_status!= XBEE_OPENED)
+  else if(xbee_status == XBEE_TEN)
   {
     vent_open_time = now_seconds;
+    vent_status = XBEE_OPENED;
     float_status = XBEE_VENT_10;
     ventValve.write(VENT_OPEN_POS);
   }
-  else if(xbee_status == XBEE_THIRTY && vent_status!= XBEE_OPENED)
+  else if(xbee_status == XBEE_THIRTY)
   {
     vent_open_time = now_seconds;
+    vent_status = XBEE_OPENED;
     float_status = XBEE_VENT_30;
     ventValve.write(VENT_OPEN_POS);
   }
@@ -410,6 +412,25 @@ void loop() {
       vent_status = XBEE_CLOSED;
       float_status = FLOATING;
       float_vent_status = FLOAT_VENT_DONE;
+    }
+
+    if(float_status == XBEE_VENT_10)
+    {
+      if(now_seconds >= vent_open_time + 10)
+      {
+        ventValve.write(VENT_CLOSED_POS);
+        vent_status = XBEE_CLOSED;
+        float_status = XBEE_FLOATING;
+      }
+    }
+    else if(float_status == XBEE_VENT_30)
+    {
+      if(now_seconds >= vent_open_time + 30)
+      {
+        ventValve.write(VENT_CLOSED_POS);
+        vent_status = XBEE_CLOSED;
+        float_status = XBEE_FLOATING;
+      }
     }
   }
   else if(vent_status == XBEE_CLOSED)
@@ -464,31 +485,13 @@ void loop() {
           float_vent_status = FLOAT_VENT_DONE;
          }
       }
-      else if(float_status == XBEE_VENT_10)
-      {
-        if(now_seconds >= vent_open_time + 10)
-        {
-          ventValve.write(VENT_CLOSED_POS);
-          vent_status = CLOSED;
-          float_status = XBEE_FLOATING;
-        }
-      }
-      else if(float_status == XBEE_VENT_30)
-      {
-        if(now_seconds >= vent_open_time + 30)
-        {
-          ventValve.write(VENT_CLOSED_POS);
-          vent_status = CLOSED;
-          float_status = XBEE_FLOATING;
-        }
-      }
       else
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = CLOSED;
       }
     }
-  
+
     if(vent_open_time != 0)
     {
       if(now_seconds - vent_open_time > VENT_TIMER)
