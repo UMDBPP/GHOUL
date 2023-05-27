@@ -823,7 +823,6 @@ void loop() {
 
 void cutdown() // Standard Cut-down
 {
-  Serial.println("terminateing");
   digitalWrite(HEATER_PIN, LOW);
   heater_state = OFF;
   delay(3000);
@@ -849,7 +848,6 @@ void cutdown() // Standard Cut-down
     analogWrite(CUTDOWN_PIN_2, 0);
     cutdown_flag = 1;
   }
-  Serial.println("Done terminating");
   delay(3000);
 }
 
