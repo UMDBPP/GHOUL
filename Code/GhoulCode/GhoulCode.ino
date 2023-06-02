@@ -1104,11 +1104,32 @@ int processGroundMessage() {
     return XBEE_GROUND_TEST;
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
-    Serial.println("");
-    Serial.println("OpenAck");
-    String("OpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
-    xbeeSend(GroundSL, xbeeSendBuf);
-    return XBEE_OPEN;
+    if (strlen(xbeeRecBuf) == 7)
+    {
+      char dig1 = xbeeRecBuf[4];
+      char dig2 = xbeeRecBuf[5];
+      char dig3 = xbeeRecBuf[6];
+      if (dig1 != NULL && dig2 != NULL && dig3 != NULL)
+      {
+        Serial.println();
+        Serial.println("OpenTimer");
+        String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
+        xbeeSend(GroundSL, xbeeSendBuf);
+        int firstDigit = dig1 - '0';
+        int secondDigit = dig2 - '0';
+        int thirdDigit = dig3 - '0';
+        manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
+        return XBEE_OPEN_TIMER;
+      }
+    }
+    else if (strlen(xbeeRecBuf) == 4)
+    {
+      Serial.println();
+      Serial.println("OpenTest");
+      String("OpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+      xbeeSend(GroundSL, xbeeSendBuf);
+      return XBEE_OPEN;
+    }
   }
   if (strstr((char*)xbeeRecBuf, "ten")) {
     Serial.println("");
