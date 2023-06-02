@@ -95,6 +95,7 @@
 #define XBEE_TEN 6
 #define XBEE_THIRTY 7
 #define XBEE_YOLO 8
+#define XBEE_OPEN_TIMER 9
 
 //timer interrupts
 IntervalTimer gpsTimer;
@@ -146,6 +147,7 @@ float raw_servo_pos;
 float servo_pos;
 float raw_voltage_reading;
 float batt_voltage;
+int manual_open_timer;
 
 //fault counters
 int alt_fault_counter = 0;
@@ -1006,12 +1008,36 @@ int processBitsMessage(){ //Just print things to the monitor
       xbeeSend(BitsSL,xbeeSendBuf);
       return XBEE_BITS_TEST;
   }
-  if(strstr((char*)xbeeRecBuf,"open")){ //Checks if "test" is within buffer
-      Serial.println();
-      Serial.println("OpenTest");
-      String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(BitsSL,xbeeSendBuf);
-      return XBEE_OPEN;
+  if(strstr((char*)xbeeRecBuf,"open")){
+      if(strlen(xbeeRecBuf) == 7)
+      {
+        Serial.println();
+        Serial.println("OpenTimer");
+        String("OpenAckTimer").getBytes(xbeeSendBuf,xbeeSendBufSize);
+        xbeeSend(BitsSL,xbeeSendBuf);
+        if(xbeeRecBuf[4])
+        int firstDigit = xbeeRecBuf[4] - '0';
+        int secondDigit = xbeeRecBuf[5] - '0';
+        int thirdDigit = xbeeRecBuf[6] - '0';
+        manual_open_timer = firstDigit*100 + secondDigit*10 + thirdDigit;
+        return XBEE_OPEN_TIMER;
+      }
+      else if(strlen(xbeeRecBuf == 4))
+      {
+        Serial.println();
+        Serial.println("OpenTest");
+        String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
+        xbeeSend(BitsSL,xbeeSendBuf);
+        return XBEE_OPEN;
+      }
+      else
+      {
+        Serial.println();
+        Serial.println("OpenTimerFail");
+        String("OpenTimerFail").getBytes(xbeeSendBuf,xbeeSendBufSize);
+        xbeeSend(BitsSL,xbeeSendBuf);
+        return XBEE_DO_NOTHING;
+      }
   }
   if(strstr((char*)xbeeRecBuf,"ten")){
       Serial.println("");
