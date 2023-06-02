@@ -1026,25 +1026,24 @@ int processBitsMessage() { //Just print things to the monitor
     return XBEE_BITS_TEST;
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
-    if (strlen(xbeeRecBuf) == 7) // command must be in form "openXXX"
+    if (strlen((char*)xbeeRecBuf) == 7) // command must be in form "openXXX"
     {
-      char dig1 = xbeeRecBuf[4];
-      char dig2 = xbeeRecBuf[5];
-      char dig3 = xbeeRecBuf[6];
-      if (dig1 != NULL && dig2 != NULL && dig3 != NULL)
-      {
-        Serial.println();
-        Serial.println("OpenTimer");
-        String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
-        xbeeSend(BitsSL, xbeeSendBuf);
-        int firstDigit = dig1 - '0';
-        int secondDigit = dig2 - '0';
-        int thirdDigit = dig3 - '0';
-        manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
-        return XBEE_OPEN_TIMER;
-      }
+      char* xbeeRecBuf2 = (char*)xbeeRecBuf;
+      char dig1 = xbeeRecBuf2[4];
+      char dig2 = xbeeRecBuf2[5];
+      char dig3 = xbeeRecBuf2[6];
+
+      Serial.println();
+      Serial.println("OpenTimer");
+      String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
+      xbeeSend(BitsSL, xbeeSendBuf);
+      int firstDigit = dig1 - '0';
+      int secondDigit = dig2 - '0';
+      int thirdDigit = dig3 - '0';
+      manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
+      return XBEE_OPEN_TIMER;
     }
-    else if (strlen(xbeeRecBuf) == 4) // for the command to open
+    else if (strlen((char*)xbeeRecBuf) == 4) // for the command to open
     {
       Serial.println();
       Serial.println("OpenTest");
@@ -1104,25 +1103,23 @@ int processGroundMessage() {
     return XBEE_GROUND_TEST;
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
-    if (strlen(xbeeRecBuf) == 7)
+    if (strlen((char*)xbeeRecBuf) == 7)
     {
-      char dig1 = xbeeRecBuf[4];
-      char dig2 = xbeeRecBuf[5];
-      char dig3 = xbeeRecBuf[6];
-      if (dig1 != NULL && dig2 != NULL && dig3 != NULL)
-      {
-        Serial.println();
-        Serial.println("OpenTimer");
-        String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
-        xbeeSend(GroundSL, xbeeSendBuf);
-        int firstDigit = dig1 - '0';
-        int secondDigit = dig2 - '0';
-        int thirdDigit = dig3 - '0';
-        manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
-        return XBEE_OPEN_TIMER;
-      }
+      char* xbeeRecBuf2 = (char*)xbeeRecBuf;
+      char dig1 = xbeeRecBuf2[4];
+      char dig2 = xbeeRecBuf2[5];
+      char dig3 = xbeeRecBuf2[6];
+      Serial.println();
+      Serial.println("OpenTimer");
+      String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
+      xbeeSend(GroundSL, xbeeSendBuf);
+      int firstDigit = dig1 - '0';
+      int secondDigit = dig2 - '0';
+      int thirdDigit = dig3 - '0';
+      manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
+      return XBEE_OPEN_TIMER;
     }
-    else if (strlen(xbeeRecBuf) == 4)
+    else if (strlen((char*)xbeeRecBuf) == 4)
     {
       Serial.println();
       Serial.println("OpenTest");
