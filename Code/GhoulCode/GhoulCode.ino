@@ -1,5 +1,5 @@
 //GHOUL flight software written by:
-//Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant, Daniel Grammar and Akemi Takeuchi
+//Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant, Daniel Grammar, Jack Bishop, and Akemi Takeuchi
 
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
@@ -74,6 +74,7 @@
 #define XBEE_FLOATING 5
 #define XBEE_VENT_10 6
 #define XBEE_VENT_30 7
+#define XBEE_VENT_MANUAL 8
 #define NOT_CUT 0
 #define CUT 1
 #define BAD_FIX 2
@@ -147,7 +148,7 @@ float raw_servo_pos;
 float servo_pos;
 float raw_voltage_reading;
 float batt_voltage;
-int manual_open_timer;
+int manual_open_timer = 0;
 
 //fault counters
 int alt_fault_counter = 0;
@@ -181,7 +182,7 @@ void setup() {
   pinMode(26, INPUT);
   pinMode(27, INPUT);
   XBeeSerial.begin(9600);
-  
+
   // XBee Set up
   xbee.setSerial(XBeeSerial);
   String("GHOULxbee_ON").getBytes(xbeeSendBuf, xbeeSendBufSize);
@@ -194,12 +195,12 @@ void setup() {
   // Servo Analog Feedback Pin
   pinMode(FEEDBACK_PIN, INPUT);
   raw_servo_pos = analogRead(FEEDBACK_PIN);
-  servo_pos = (raw_servo_pos/1024)*180;
+  servo_pos = (raw_servo_pos / 1024) * 180;
 
   // Voltage sensing pin
   pinMode(VOLTAGE_PIN, INPUT);
   raw_voltage_reading = analogRead(FEEDBACK_PIN);
-  batt_voltage = (raw_voltage_reading/1024)*8.2;
+  batt_voltage = (raw_voltage_reading / 1024) * 8.2;
 
   // Close vent
   ventValve.write(VENT_CLOSED_POS);
@@ -216,7 +217,7 @@ void setup() {
 
   // Initiate RTC
   setSyncProvider(getTeensy3Time);
-  if(timeStatus() != timeSet)
+  if (timeStatus() != timeSet)
   {
     Serial.println("Unable to sync with the RTC");
   }
@@ -229,13 +230,13 @@ void setup() {
   tempSensor.begin();
 
   // Initiate BMP280
-  if(!bmp.begin())
+  if (!bmp.begin())
     Serial.println("Error BMP not found!");
   else
     Serial.println("BMP found!");
 
   // Initiate Accelerometer
-  if(!mma.begin())
+  if (!mma.begin())
   {
     Serial.println("Error accelerometer not found!");
     mma.setRange(MMA8451_RANGE_8_G);
@@ -249,11 +250,11 @@ void setup() {
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 
   // Check/Initiate SD Logger
-  if(!SD.begin(BUILTIN_SDCARD))
+  if (!SD.begin(BUILTIN_SDCARD))
     Serial.println("Error: SD Card Logger Not Initialized");
   else
     Serial.println("SD card initialized");
-  
+
   // Interrupt Timer for GPS
   gpsTimer.begin(readGPS, 1000); //try changing to 10000
 
@@ -264,20 +265,20 @@ void setup() {
   //logFile.close();
 }
 
-void loop() {  
+void loop() {
 
 
-   /*  ============================================================================================
-   *   
-   *                              Data Collection and Storage
-   *   
-       ============================================================================================ */
+  /*  ============================================================================================
 
-       
+                                 Data Collection and Storage
+
+      ============================================================================================ */
+
+
   //get time ------------------------------------------------------------------------------------ time
   DateTime curr_time = DateTime(now());
   uint32_t now_seconds = now();
-  
+
   //get pressure, temp, alt --------------------------------------------------------------------- pressure, temp, alt
   float temp = bmp.readTemperature();
   float pressure = bmp.readPressure();
@@ -289,32 +290,32 @@ void loop() {
   //Serial.println(batt_temp);
 
   //read accelerometer
-  sensors_event_t event; 
+  sensors_event_t event;
   mma.getEvent(&event);
   float x = event.acceleration.x;
   float y = event.acceleration.y;
   float z = event.acceleration.z;
 
-   //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
+  //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
   noInterrupts();
-  if(GPS.newNMEAreceived())
+  if (GPS.newNMEAreceived())
   {
     //Serial.println("new nmea recieved!");
     //Serial.println(GPS.lastNMEA());
     //logFile = SD.open("datalog.txt", FILE_WRITE);
     //logFile.print(GPS.lastNMEA());
     //logFile.close();
-    if(!GPS.parse(GPS.lastNMEA()))
+    if (!GPS.parse(GPS.lastNMEA()))
     {
       Serial.println("GPS Parse failed!");
     }
     gps_fixqual = GPS.fix;
-    if(gps_fixqual == 1)
+    if (gps_fixqual == 1)
     {
       gps_lat = GPS.latitudeDegrees;
       gps_long = GPS.longitudeDegrees;
       gps_alt = GPS.altitude;
-      gps_sats = GPS.satellites; 
+      gps_sats = GPS.satellites;
     }
   }
   interrupts();
@@ -327,9 +328,9 @@ void loop() {
   //Serial.println(xbee_status);
 
   /*  ============================================================================================
-   *   
-   *                              Calculations and Decisions
-   *   
+
+                                  Calculations and Decisions
+
        ============================================================================================ */
 
   //decide to turn on heater
@@ -343,14 +344,14 @@ void loop() {
     digitalWrite(HEATER_PIN, LOW);
     heater_state = OFF;
   }
-  
+
   //calc pressure_ascent rate ------------------------------------------------------------------------------ Pressure Ascent Rate Calculation
-  float curr_pressure_ascent_rate = (pressure_alt - prev_pressure_alt)/(now_seconds - prev_time);
-  float pressure_ascent_rate = (prev_pressure_ascent_rate[0] + prev_pressure_ascent_rate[1] + prev_pressure_ascent_rate[2] + prev_pressure_ascent_rate[3] + prev_pressure_ascent_rate[4] + curr_pressure_ascent_rate)/6;
+  float curr_pressure_ascent_rate = (pressure_alt - prev_pressure_alt) / (now_seconds - prev_time);
+  float pressure_ascent_rate = (prev_pressure_ascent_rate[0] + prev_pressure_ascent_rate[1] + prev_pressure_ascent_rate[2] + prev_pressure_ascent_rate[3] + prev_pressure_ascent_rate[4] + curr_pressure_ascent_rate) / 6;
 
   //calc gps ascent rate ----------------------------------------------------------------------------------- GPS Ascent Rate Calculation
-  float curr_gps_ascent_rate = (gps_alt - prev_gps_alt)/(now_seconds - prev_time);
-  float gps_ascent_rate = (prev_gps_ascent_rate[0] + prev_gps_ascent_rate[1] + prev_gps_ascent_rate[2] + prev_gps_ascent_rate[3] + prev_gps_ascent_rate[4] + curr_gps_ascent_rate)/6;
+  float curr_gps_ascent_rate = (gps_alt - prev_gps_alt) / (now_seconds - prev_time);
+  float gps_ascent_rate = (prev_gps_ascent_rate[0] + prev_gps_ascent_rate[1] + prev_gps_ascent_rate[2] + prev_gps_ascent_rate[3] + prev_gps_ascent_rate[4] + curr_gps_ascent_rate) / 6;
 
   //choose whether to use pressure or gps ascent rate
   float alt;
@@ -367,67 +368,83 @@ void loop() {
 
   //read servo position
   raw_servo_pos = analogRead(FEEDBACK_PIN);
-  servo_pos = (raw_servo_pos/1024)*180;
+  servo_pos = (raw_servo_pos / 1024) * 180;
 
   //read battery voltage
   raw_voltage_reading = analogRead(FEEDBACK_PIN);
-  batt_voltage = (raw_voltage_reading/1024)*8.2;
+  batt_voltage = (raw_voltage_reading / 1024) * 8.2;
 
   //if vent is closed, see if we should open it --------------------------------------------------- Should we open vent?
-  if(xbee_status == XBEE_OPEN && vent_status != XBEE_OPENED)
+  if (xbee_status == XBEE_OPEN && vent_status != XBEE_OPENED)
   {
     ventValve.write(VENT_OPEN_POS);
     vent_status = XBEE_OPENED;
     rate_at_open = ascent_rate;
     vent_open_time = now_seconds;
   }
-  else if(xbee_status == XBEE_TEN)
+  else if (xbee_status == XBEE_OPEN_TIMER && manual_open_timer != 0)
+  {
+    vent_open_time = now_seconds;
+    vent_status = XBEE_OPENED;
+    float_status = XBEE_VENT_MANUAL;
+    ventValve.write(VENT_OPEN_POS);
+  }
+  else if (xbee_status == XBEE_TEN)
   {
     vent_open_time = now_seconds;
     vent_status = XBEE_OPENED;
     float_status = XBEE_VENT_10;
     ventValve.write(VENT_OPEN_POS);
   }
-  else if(xbee_status == XBEE_THIRTY)
+  else if (xbee_status == XBEE_THIRTY)
   {
     vent_open_time = now_seconds;
     vent_status = XBEE_OPENED;
     float_status = XBEE_VENT_30;
     ventValve.write(VENT_OPEN_POS);
   }
-  else if(xbee_status == XBEE_YOLO)
+  else if (xbee_status == XBEE_YOLO)
   {
     yolo_cutdown();
   }
-  else if(xbee_status == XBEE_CLOSE && vent_status != XBEE_CLOSED)
+  else if (xbee_status == XBEE_CLOSE && vent_status != XBEE_CLOSED)
   {
     ventValve.write(VENT_CLOSED_POS);
     vent_status = XBEE_CLOSED;
   }
-  
-  if(vent_status == XBEE_OPENED)
+
+  if (vent_status == XBEE_OPENED)
   {
     ventValve.write(VENT_OPEN_POS);
-    if(ascent_rate < 1 && alt > CUTDOWN_TIMER_TRIGGER_ALT && gps_fixqual == 1)
+    if (ascent_rate < 1 && alt > CUTDOWN_TIMER_TRIGGER_ALT && gps_fixqual == 1)
     {
       ventValve.write(VENT_CLOSED_POS);
       vent_status = XBEE_CLOSED;
       float_status = FLOATING;
       float_vent_status = FLOAT_VENT_DONE;
     }
-
-    if(float_status == XBEE_VENT_10)
+    if (float_status == XBEE_VENT_MANUAL)
     {
-      if(now_seconds >= vent_open_time + 10)
+      if (now_seconds >= vent_open_time + manual_open_timer)
+      {
+        ventValve.write(VENT_CLOSED_POS);
+        vent_status = XBEE_CLOSED;
+        float_status = XBEE_FLOATING;
+        manual_open_timer = 0;
+      }
+    }
+    else if (float_status == XBEE_VENT_10)
+    {
+      if (now_seconds >= vent_open_time + 10)
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = XBEE_CLOSED;
         float_status = XBEE_FLOATING;
       }
     }
-    else if(float_status == XBEE_VENT_30)
+    else if (float_status == XBEE_VENT_30)
     {
-      if(now_seconds >= vent_open_time + 30)
+      if (now_seconds >= vent_open_time + 30)
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = XBEE_CLOSED;
@@ -435,17 +452,17 @@ void loop() {
       }
     }
   }
-  else if(vent_status == XBEE_CLOSED)
+  else if (vent_status == XBEE_CLOSED)
   {
     //do nothing except keep closed
     ventValve.write(VENT_CLOSED_POS);
   }
   else
   {
-    if(vent_status == CLOSED)
+    if (vent_status == CLOSED)
     {
       ventValve.write(VENT_CLOSED_POS);
-      if(pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
+      if (pre_vent_status == PRE_VENT_NOT_DONE && alt > PRE_VENT_ALT && alt < FLOAT_ALT)
       {
         ventValve.write(VENT_OPEN_POS);
         vent_status = OPEN;
@@ -453,7 +470,7 @@ void loop() {
         rate_at_open = ascent_rate;
         vent_open_time = now_seconds;
       }
-      else if(float_vent_status == FLOAT_VENT_NOT_DONE && alt > FLOAT_ALT)
+      else if (float_vent_status == FLOAT_VENT_NOT_DONE && alt > FLOAT_ALT)
       {
         ventValve.write(VENT_OPEN_POS);
         vent_status = OPEN;
@@ -461,15 +478,15 @@ void loop() {
         rate_at_open = ascent_rate;
       }
     }
-  
-    //if vent is open, check whether we are pre-venting or float venting, 
+
+    //if vent is open, check whether we are pre-venting or float venting,
     // then close vent if target ascent rate is reached -------------------------------------------- Should we close vent?
-    if(vent_status == OPEN)
+    if (vent_status == OPEN)
     {
       ventValve.write(VENT_OPEN_POS);
-      if(float_status == PRE_VENTING)
+      if (float_status == PRE_VENTING)
       {
-        if(ascent_rate <= PRE_VENT_RATIO*rate_at_open)
+        if (ascent_rate <= PRE_VENT_RATIO * rate_at_open)
         {
           ventValve.write(VENT_CLOSED_POS);
           vent_status = CLOSED;
@@ -477,15 +494,15 @@ void loop() {
           pre_vent_status = PRE_VENT_DONE;
         }
       }
-      else if(float_status == FLOAT_VENTING)
+      else if (float_status == FLOAT_VENTING)
       {
-        if(ascent_rate < 1)
-         {
+        if (ascent_rate < 1)
+        {
           ventValve.write(VENT_CLOSED_POS);
           vent_status = CLOSED;
           float_status = FLOATING;
           float_vent_status = FLOAT_VENT_DONE;
-         }
+        }
       }
       else
       {
@@ -494,18 +511,18 @@ void loop() {
       }
     }
 
-    if(vent_open_time != 0)
+    if (vent_open_time != 0)
     {
-      if(now_seconds - vent_open_time > VENT_TIMER)
+      if (now_seconds - vent_open_time > VENT_TIMER)
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = CLOSED;
-        if(float_status == PRE_VENTING && pre_vent_status == PRE_VENT_NOT_DONE)
+        if (float_status == PRE_VENTING && pre_vent_status == PRE_VENT_NOT_DONE)
         {
           pre_vent_status = PRE_VENT_DONE;
           float_status = PRE_VENTED;
         }
-        else if(float_status == FLOAT_VENTING && float_vent_status == FLOAT_VENT_NOT_DONE)
+        else if (float_status == FLOAT_VENTING && float_vent_status == FLOAT_VENT_NOT_DONE)
         {
           float_vent_status = FLOAT_VENT_DONE;
           float_status = FLOATING;
@@ -514,7 +531,7 @@ void loop() {
     }
   }
   //  =============================================================================================
-  //  
+  //
   //                                          CUT DOWN TRIGGERS
   //
   //  =============================================================================================
@@ -537,9 +554,9 @@ void loop() {
       cut_reason = CUT_REASON_XBEE;
     }
   }
-  
+
   //altitude trigger ------------------------------------------------------------------------------ Altitude Trigger
-  if(cut_status == NOT_CUT && alt_check(alt) == CUT)
+  if (cut_status == NOT_CUT && alt_check(alt) == CUT)
   {
     cutdown();
     cut_status = CUT;
@@ -549,12 +566,12 @@ void loop() {
   }
 
   //ascent rate trigger --------------------------------------------------------------------------- Ascent Rate Trigger
-  if(arate_trigger_status == ARATE_TRIGGER_NOT_STARTED && alt >= ARATE_TRIGGER_ALT)
+  if (arate_trigger_status == ARATE_TRIGGER_NOT_STARTED && alt >= ARATE_TRIGGER_ALT)
   {
     arate_trigger_status = ARATE_TRIGGER_STARTED;
   }
-  
-  if(arate_trigger_status == ARATE_TRIGGER_STARTED && cut_status == NOT_CUT && ar_check(ascent_rate) == CUT)
+
+  if (arate_trigger_status == ARATE_TRIGGER_STARTED && cut_status == NOT_CUT && ar_check(ascent_rate) == CUT)
   {
     cutdown();
     cut_status = CUT;
@@ -562,15 +579,15 @@ void loop() {
     next_cut_time = now_seconds + CUT_INTERVAL;
     cut_reason = CUT_REASON_ASCENT_RATE;
   }
-    
+
   //timer trigger --------------------------------------------------------------------------------- Timer Trigger
-  if(timer_status == TIMER_NOT_STARTED && alt >= CUTDOWN_TIMER_TRIGGER_ALT)
+  if (timer_status == TIMER_NOT_STARTED && alt >= CUTDOWN_TIMER_TRIGGER_ALT)
   {
     cutdown_time = now_seconds + CUTDOWN_TIMER_DURATION;
     timer_status = TIMER_STARTED;
   }
-  
-  if(now_seconds >= cutdown_time && cut_status == NOT_CUT)
+
+  if (now_seconds >= cutdown_time && cut_status == NOT_CUT)
   {
     cutdown();
     cut_status = CUT;
@@ -581,7 +598,7 @@ void loop() {
 
   //GPS Trigger ---------------------------------------------------------------------------------- GPS Geofence Trigger
   geofence_status = geofence_check(gps_long, gps_lat, gps_fixqual);
-  if(cut_status == NOT_CUT && geofence_status == CUT)
+  if (cut_status == NOT_CUT && geofence_status == CUT)
   {
     cutdown();
     cut_status = CUT;
@@ -591,9 +608,9 @@ void loop() {
   }
 
   //Additional Cuts After Trigger Activation ----------------------------------------------------- Additional Cuts (for redundancy)
-  if(cut_status == CUT && num_cuts < TOTAL_CUTS)
+  if (cut_status == CUT && num_cuts < TOTAL_CUTS)
   {
-    if(now_seconds >= next_cut_time)
+    if (now_seconds >= next_cut_time)
     {
       cutdown();
       num_cuts++;
@@ -601,22 +618,22 @@ void loop() {
     }
   }
   /*  ============================================================================================
-   *   
-   *                              Writing to SD Card
-   *   
+
+                                  Writing to SD Card
+
       ============================================================================================ */
-  
+
   //---------------------------------------------------------------------------------------------- Time
   //logFile = SD.open("datalog.txt", FILE_WRITE);
-  if(curr_time.hour() < 10)
+  if (curr_time.hour() < 10)
     logFile.print("0");
   logFile.print(curr_time.hour());
   logFile.print(":");
-  if(curr_time.minute() < 10)
+  if (curr_time.minute() < 10)
     logFile.print("0");
   logFile.print(curr_time.minute());
   logFile.print(":");
-  if(curr_time.second() < 10)
+  if (curr_time.second() < 10)
     logFile.print("0");
   logFile.print(curr_time.second());
   logFile.print(F(", "));
@@ -701,23 +718,23 @@ void loop() {
   logFile.println();
   //logFile.close();
   logFile.flush();
-  
-   /*  ============================================================================================
-   *   
-   *                              Writing to Serial Monitor
-   *   
-       ============================================================================================ */
-  
+
+  /*  ============================================================================================
+
+                                 Writing to Serial Monitor
+
+      ============================================================================================ */
+
   //---------------------------------------------------------------------------------------------- Time
-  if(curr_time.hour() < 10)
+  if (curr_time.hour() < 10)
     Serial.print("0");
   Serial.print(curr_time.hour());
   Serial.print(":");
-  if(curr_time.minute() < 10)
+  if (curr_time.minute() < 10)
     Serial.print("0");
   Serial.print(curr_time.minute());
   Serial.print(":");
-  if(curr_time.second() < 10)
+  if (curr_time.second() < 10)
     Serial.print("0");
   Serial.print(curr_time.second());
   Serial.print(F(", "));
@@ -798,12 +815,12 @@ void loop() {
   Serial.print(F(", "));
   Serial.print(heater_state);
   Serial.println();
-  
+
   //Cleaning up ascent-rate data
-  for(int i = 0; i < 4; i++)
+  for (int i = 0; i < 4; i++)
   {
-    prev_pressure_ascent_rate[i] = prev_pressure_ascent_rate[i+1];
-    prev_gps_ascent_rate[i] = prev_gps_ascent_rate[i+1];
+    prev_pressure_ascent_rate[i] = prev_pressure_ascent_rate[i + 1];
+    prev_gps_ascent_rate[i] = prev_gps_ascent_rate[i + 1];
   }
   prev_gps_alt = gps_alt;
   prev_pressure_alt = pressure_alt;
@@ -818,9 +835,9 @@ void loop() {
 }
 
 /*  ============================================================================================
-   *   
-   *                                 Additional Methods, etc.
-   *   
+
+                                     Additional Methods, etc.
+
       ============================================================================================ */
 
 void cutdown() // Standard Cut-down
@@ -828,20 +845,20 @@ void cutdown() // Standard Cut-down
   digitalWrite(HEATER_PIN, LOW);
   heater_state = OFF;
   delay(3000);
-  if(cutdown_flag == 1)
+  if (cutdown_flag == 1)
   {
-     for(int i = 0; i <= 256; i++)
-     {
+    for (int i = 0; i <= 256; i++)
+    {
       analogWrite(CUTDOWN_PIN_1, i);
       delay(5);
-     }
-     delay(5000);
-     analogWrite(CUTDOWN_PIN_1, 0);
-     cutdown_flag = 2;
+    }
+    delay(5000);
+    analogWrite(CUTDOWN_PIN_1, 0);
+    cutdown_flag = 2;
   }
   else
   {
-    for(int i = 0; i <= 256; i++)
+    for (int i = 0; i <= 256; i++)
     {
       analogWrite(CUTDOWN_PIN_2, i);
       delay(5);
@@ -855,7 +872,7 @@ void cutdown() // Standard Cut-down
 
 void yolo_cutdown() // Last-Attempt Cut-Down
 {
-  delay(30000); 
+  delay(30000);
   digitalWrite(CUTDOWN_PIN_1, HIGH);
   delay(60000);
   digitalWrite(CUTDOWN_PIN_1, LOW);
@@ -870,17 +887,17 @@ time_t getTeensy3Time() // Getting Time from RTC
 int geofence_check(float long_coord, float lat_coord, int fix_qual) // Checks Geofence Compliance (0 = do not cut down, 1 = cut down, 2 = bad fix)
 {
   // Checks fix quality first
-  if(fix_qual == 0)
+  if (fix_qual == 0)
   {
     return BAD_FIX;
   }
   // Checks Geofence compliance and adds to fault counter
-  if(long_coord > LONG_EAST_BOUND || long_coord < LONG_WEST_BOUND)
+  if (long_coord > LONG_EAST_BOUND || long_coord < LONG_WEST_BOUND)
   {
     // Noncompliant
     gps_fault_counter++;
   }
-  else if(lat_coord < LAT_SOUTH_BOUND || lat_coord > LAT_NORTH_BOUND)
+  else if (lat_coord < LAT_SOUTH_BOUND || lat_coord > LAT_NORTH_BOUND)
   {
     //Noncompliant
     gps_fault_counter++;
@@ -891,7 +908,7 @@ int geofence_check(float long_coord, float lat_coord, int fix_qual) // Checks Ge
     gps_fault_counter = 0;
   }
   // Returns proper value for cut-down command
-  if(gps_fault_counter > 10)
+  if (gps_fault_counter > 10)
   {
     return CUT;
   }
@@ -904,7 +921,7 @@ int geofence_check(float long_coord, float lat_coord, int fix_qual) // Checks Ge
 //---------------------------------------------------------------------------------------------- Altitude Cutdown Check
 int alt_check(int alt_val)
 {
-  if(alt_val >= CUTDOWN_ALTITUDE)
+  if (alt_val >= CUTDOWN_ALTITUDE)
   {
     alt_fault_counter++;
   }
@@ -912,7 +929,7 @@ int alt_check(int alt_val)
     alt_fault_counter = 0;
 
   // Returns proper value for cut-down command
-  if(alt_fault_counter > 10)
+  if (alt_fault_counter > 10)
   {
     return CUT;
   }
@@ -923,14 +940,14 @@ int alt_check(int alt_val)
 //---------------------------------------------------------------------------------------------- Ascent-Rate Cutdown Check
 int ar_check(int arate)
 {
-  if(arate < ASCENT_RATE_TRIGGER)
+  if (arate < ASCENT_RATE_TRIGGER)
   {
     ar_fault_counter++;
   }
   else
     ar_fault_counter = 0;
-  
-  if(ar_fault_counter > 10)
+
+  if (ar_fault_counter > 10)
   {
     return CUT;
   }
@@ -945,8 +962,8 @@ void readGPS() // Reads GPS, it seems
 }
 
 //xbee methods
-bool xbeeSend(uint32_t TargetSL,uint8_t* payload){
-  XBeeAddress64 TargetAddress = XBeeAddress64(UniSH,TargetSL);      //The full address, probably could be done more efficiently, oh well
+bool xbeeSend(uint32_t TargetSL, uint8_t* payload) {
+  XBeeAddress64 TargetAddress = XBeeAddress64(UniSH, TargetSL);     //The full address, probably could be done more efficiently, oh well
   ZBTxRequest zbTx = ZBTxRequest(TargetAddress, payload, xbeeSendBufSize); //Assembles Packet
   xbee.send(zbTx);                                                  //Sends packet
   memset(xbeeSendBuf, 0, xbeeSendBufSize);                          //Nukes buffer
@@ -959,169 +976,174 @@ bool xbeeSend(uint32_t TargetSL,uint8_t* payload){
       } else {
         Serial.println("TxFail");
         return false;
-      } 
+      }
     }
   } else if (xbee.getResponse().isError()) { //Stil have yet to see this trigger, might be broken...
     Serial.print("Error reading packet.  Error code: ");
     Serial.println(xbee.getResponse().getErrorCode());
   } else {
-    Serial.println("Send Failure, check that remote XBee is powered on");  
+    Serial.println("Send Failure, check that remote XBee is powered on");
   }
   return false;
 }
 
-int xbeeRead(){
+int xbeeRead() {
   xbee.readPacket(); //read serial buffer
-    if (xbee.getResponse().isAvailable()) { //got something
-      if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) { //got a TxRequestPacket
-        xbee.getResponse().getZBRxResponse(rx);
-        
-        uint32_t incominglsb = rx.getRemoteAddress64().getLsb(); //The SL of the sender
-        Serial.print("Incoming Packet From: ");
-        Serial.println(incominglsb,HEX);
-        if(rx.getPacketLength()>=xbeeRecBufSize){                //Probably means something is done broke
-          Serial.print("Oversized Message: ");
-          Serial.println(rx.getPacketLength());
-        }
-        memset(xbeeRecBuf, 0, xbeeRecBufSize); // Nukes old buffer
-        memcpy(xbeeRecBuf,rx.getData(),rx.getPacketLength());
-        if(incominglsb == BitsSL){ //Seperate methods to handle messages from different senders
-          return processBitsMessage();    //prevents one payload from having the chance to be mistaken as another
-        }
-        if(incominglsb == GroundSL){ //Ground Station
-          return processGroundMessage();
-        }    
+  if (xbee.getResponse().isAvailable()) { //got something
+    if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) { //got a TxRequestPacket
+      xbee.getResponse().getZBRxResponse(rx);
+
+      uint32_t incominglsb = rx.getRemoteAddress64().getLsb(); //The SL of the sender
+      Serial.print("Incoming Packet From: ");
+      Serial.println(incominglsb, HEX);
+      if (rx.getPacketLength() >= xbeeRecBufSize) {            //Probably means something is done broke
+        Serial.print("Oversized Message: ");
+        Serial.println(rx.getPacketLength());
+      }
+      memset(xbeeRecBuf, 0, xbeeRecBufSize); // Nukes old buffer
+      memcpy(xbeeRecBuf, rx.getData(), rx.getPacketLength());
+      if (incominglsb == BitsSL) { //Seperate methods to handle messages from different senders
+        return processBitsMessage();    //prevents one payload from having the chance to be mistaken as another
+      }
+      if (incominglsb == GroundSL) { //Ground Station
+        return processGroundMessage();
       }
     }
+  }
   return XBEE_DO_NOTHING;
 }
 
-int processBitsMessage(){ //Just print things to the monitor
+int processBitsMessage() { //Just print things to the monitor
   Serial.println("RecFromBits");
-  Serial.write(xbeeRecBuf,xbeeRecBufSize);
+  Serial.write(xbeeRecBuf, xbeeRecBufSize);
 
-  if(strstr((char*)xbeeRecBuf,"test")){ //Checks if "test" is within buffer
-      Serial.println();
-      Serial.println("BitsTest");
-      String test_response = "TestAck " + String(servo_pos);
-      test_response.getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(BitsSL,xbeeSendBuf);
-      return XBEE_BITS_TEST;
+  if (strstr((char*)xbeeRecBuf, "test")) { //Checks if "test" is within buffer
+    Serial.println();
+    Serial.println("BitsTest");
+    String test_response = "TestAck " + String(servo_pos);
+    test_response.getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(BitsSL, xbeeSendBuf);
+    return XBEE_BITS_TEST;
   }
-  if(strstr((char*)xbeeRecBuf,"open")){
-      if(strlen(xbeeRecBuf) == 7) // command must be in form "openXXX"
+  if (strstr((char*)xbeeRecBuf, "open")) {
+    if (strlen(xbeeRecBuf) == 7) // command must be in form "openXXX"
+    {
+      char dig1 = xbeeRecBuf[4];
+      char dig2 = xbeeRecBuf[5];
+      char dig3 = xbeeRecBuf[6];
+      if (dig1 != NULL && dig2 != NULL && dig3 != NULL)
       {
         Serial.println();
         Serial.println("OpenTimer");
-        String("OpenAckTimer").getBytes(xbeeSendBuf,xbeeSendBufSize);
-        xbeeSend(BitsSL,xbeeSendBuf);
-        if(xbeeRecBuf[4])
-        int firstDigit = xbeeRecBuf[4] - '0';
-        int secondDigit = xbeeRecBuf[5] - '0';
-        int thirdDigit = xbeeRecBuf[6] - '0';
-        manual_open_timer = firstDigit*100 + secondDigit*10 + thirdDigit;
+        String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
+        xbeeSend(BitsSL, xbeeSendBuf);
+        int firstDigit = dig1 - '0';
+        int secondDigit = dig2 - '0';
+        int thirdDigit = dig3 - '0';
+        manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
         return XBEE_OPEN_TIMER;
       }
-      else if(strlen(xbeeRecBuf == 4)) // for the command to open
-      {
-        Serial.println();
-        Serial.println("OpenTest");
-        String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-        xbeeSend(BitsSL,xbeeSendBuf);
-        return XBEE_OPEN;
-      }
-  }
-  if(strstr((char*)xbeeRecBuf,"ten")){
-      Serial.println("");
-      Serial.println("TenOpenAck");
-      String("TenOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(BitsSL,xbeeSendBuf);
-      return XBEE_TEN;
-  }
-  if(strstr((char*)xbeeRecBuf,"thirty")){
-      Serial.println("");
-      Serial.println("ThirtyOpenAck");
-      String("ThirtyOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(BitsSL,xbeeSendBuf);
-      return XBEE_THIRTY;
-  }
-  if(strstr((char*)xbeeRecBuf,"close")){ 
+    }
+    else if (strlen(xbeeRecBuf) == 4) // for the command to open
+    {
       Serial.println();
-      Serial.println("CloseTest");
-      String("CloseAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(BitsSL,xbeeSendBuf);
-      return XBEE_CLOSE;
+      Serial.println("OpenTest");
+      String("OpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+      xbeeSend(BitsSL, xbeeSendBuf);
+      return XBEE_OPEN;
+    }
   }
-  if(strstr((char*)xbeeRecBuf,"terminate")){ 
-      Serial.println("");
-      Serial.println("Terminate");
-      String("TermAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(BitsSL,xbeeSendBuf);
-      return XBEE_CUTDOWN;
+  if (strstr((char*)xbeeRecBuf, "ten")) {
+    Serial.println("");
+    Serial.println("TenOpenAck");
+    String("TenOpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(BitsSL, xbeeSendBuf);
+    return XBEE_TEN;
   }
-  if(strstr((char*)xbeeRecBuf,"blast")){ 
-      Serial.println("");
-      Serial.println("YoloAck");
-      String("YoloAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(BitsSL,xbeeSendBuf);
-      return XBEE_YOLO;
+  if (strstr((char*)xbeeRecBuf, "thirty")) {
+    Serial.println("");
+    Serial.println("ThirtyOpenAck");
+    String("ThirtyOpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(BitsSL, xbeeSendBuf);
+    return XBEE_THIRTY;
+  }
+  if (strstr((char*)xbeeRecBuf, "close")) {
+    Serial.println();
+    Serial.println("CloseTest");
+    String("CloseAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(BitsSL, xbeeSendBuf);
+    return XBEE_CLOSE;
+  }
+  if (strstr((char*)xbeeRecBuf, "terminate")) {
+    Serial.println("");
+    Serial.println("Terminate");
+    String("TermAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(BitsSL, xbeeSendBuf);
+    return XBEE_CUTDOWN;
+  }
+  if (strstr((char*)xbeeRecBuf, "blast")) {
+    Serial.println("");
+    Serial.println("YoloAck");
+    String("YoloAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(BitsSL, xbeeSendBuf);
+    return XBEE_YOLO;
   }
   return XBEE_DO_NOTHING;
 }
 
-int processGroundMessage(){
+int processGroundMessage() {
   Serial.print("RecFromGND: ");
-  Serial.write(xbeeRecBuf,xbeeRecBufSize);
+  Serial.write(xbeeRecBuf, xbeeRecBufSize);
 
-  if(strstr((char*)xbeeRecBuf,"test")){
-      Serial.println("");
-      Serial.println("ackTest");
-      String test_response = "TestAck " + String(servo_pos);
-      test_response.getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(GroundSL,xbeeSendBuf);
-      return XBEE_GROUND_TEST;
+  if (strstr((char*)xbeeRecBuf, "test")) {
+    Serial.println("");
+    Serial.println("ackTest");
+    String test_response = "TestAck " + String(servo_pos);
+    test_response.getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL, xbeeSendBuf);
+    return XBEE_GROUND_TEST;
   }
-  if(strstr((char*)xbeeRecBuf,"open")){
-      Serial.println("");
-      Serial.println("OpenAck");
-      String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(GroundSL,xbeeSendBuf);
-      return XBEE_OPEN;
+  if (strstr((char*)xbeeRecBuf, "open")) {
+    Serial.println("");
+    Serial.println("OpenAck");
+    String("OpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL, xbeeSendBuf);
+    return XBEE_OPEN;
   }
-  if(strstr((char*)xbeeRecBuf,"ten")){
-      Serial.println("");
-      Serial.println("TenOpenAck");
-      String("TenOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(GroundSL,xbeeSendBuf);
-      return XBEE_TEN;
+  if (strstr((char*)xbeeRecBuf, "ten")) {
+    Serial.println("");
+    Serial.println("TenOpenAck");
+    String("TenOpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL, xbeeSendBuf);
+    return XBEE_TEN;
   }
-  if(strstr((char*)xbeeRecBuf,"thirty")){
-      Serial.println("");
-      Serial.println("ThirtyOpenAck");
-      String("ThirtyOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(GroundSL,xbeeSendBuf);
-      return XBEE_THIRTY;
+  if (strstr((char*)xbeeRecBuf, "thirty")) {
+    Serial.println("");
+    Serial.println("ThirtyOpenAck");
+    String("ThirtyOpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL, xbeeSendBuf);
+    return XBEE_THIRTY;
   }
-  if(strstr((char*)xbeeRecBuf,"close")){ 
-      Serial.println("");
-      Serial.println("CloseAck");
-      String("CloseAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(GroundSL,xbeeSendBuf);
-      return XBEE_CLOSE;
+  if (strstr((char*)xbeeRecBuf, "close")) {
+    Serial.println("");
+    Serial.println("CloseAck");
+    String("CloseAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL, xbeeSendBuf);
+    return XBEE_CLOSE;
   }
-  if(strstr((char*)xbeeRecBuf,"terminate")){ 
-      Serial.println("");
-      Serial.println("TermAck");
-      String("TermAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(GroundSL,xbeeSendBuf);
-      return XBEE_CUTDOWN;
+  if (strstr((char*)xbeeRecBuf, "terminate")) {
+    Serial.println("");
+    Serial.println("TermAck");
+    String("TermAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL, xbeeSendBuf);
+    return XBEE_CUTDOWN;
   }
-  if(strstr((char*)xbeeRecBuf,"blast")){ 
-      Serial.println("");
-      Serial.println("YoloAck");
-      String("YoloAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
-      xbeeSend(GroundSL,xbeeSendBuf);
-      return XBEE_YOLO;
+  if (strstr((char*)xbeeRecBuf, "blast")) {
+    Serial.println("");
+    Serial.println("YoloAck");
+    String("YoloAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL, xbeeSendBuf);
+    return XBEE_YOLO;
   }
   return XBEE_DO_NOTHING;
 }
