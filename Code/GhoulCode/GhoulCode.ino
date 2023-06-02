@@ -31,8 +31,8 @@
 //SoftwareSerial XBeeSerial(27, 26);
 
 //servo characteristics
-#define VENT_OPEN_POS 85
-#define VENT_CLOSED_POS 20
+#define VENT_OPEN_POS 80
+#define VENT_CLOSED_POS 1
 
 //float parameters
 #define PRE_VENT_ALT 23000
@@ -43,17 +43,17 @@
 #define HEATER_SET_POINT 0
 
 //cut-down parameters
-#define CUT_INTERVAL 60 //seconds
+#define CUT_INTERVAL 90 //seconds
 #define TOTAL_CUTS 6
 #define CUTDOWN_ALTITUDE 32000 //meters
 #define CUTDOWN_TIMER_TRIGGER_ALT 1000 //meters
-#define CUTDOWN_TIMER_DURATION 7200 //seconds
+#define CUTDOWN_TIMER_DURATION 10800 //seconds
 #define ARATE_TRIGGER_ALT 40000 //meters
 #define ASCENT_RATE_TRIGGER 1 //meters per second
-#define LONG_EAST_BOUND -77.7243
-#define LONG_WEST_BOUND -79.0975
-#define LAT_NORTH_BOUND 40.4511
-#define LAT_SOUTH_BOUND 39.4569
+#define LONG_EAST_BOUND -76.73292
+#define LONG_WEST_BOUND -77.23520
+#define LAT_NORTH_BOUND 39.93583
+#define LAT_SOUTH_BOUND 39.53248
 
 //flags
 #define CLOSED 0
@@ -833,7 +833,7 @@ void cutdown() // Standard Cut-down
       analogWrite(CUTDOWN_PIN_1, i);
       delay(5);
      }
-     delay(5000);
+     delay(8000);
      analogWrite(CUTDOWN_PIN_1, 0);
      cutdown_flag = 2;
   }
@@ -844,7 +844,7 @@ void cutdown() // Standard Cut-down
       analogWrite(CUTDOWN_PIN_2, i);
       delay(5);
     }
-    delay(5000);
+    delay(8000);
     analogWrite(CUTDOWN_PIN_2, 0);
     cutdown_flag = 1;
   }
