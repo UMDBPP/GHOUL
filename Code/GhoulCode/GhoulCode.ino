@@ -1026,7 +1026,10 @@ int processBitsMessage() { //Just print things to the monitor
     return XBEE_BITS_TEST;
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
-    if (strlen((char*)xbeeRecBuf) == 7) // command must be in form "openXXX"
+    size_t bufLen = strlen((char*)xbeeRecBuf);
+    Serial.print("string length: ");
+    Serial.println(bufLen);
+    if (bufLen == 7) // command must be in form "openXXX"
     {
       char dig1 = (char)xbeeRecBuf[4];
       char dig2 = (char)xbeeRecBuf[5];
@@ -1042,7 +1045,7 @@ int processBitsMessage() { //Just print things to the monitor
       manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
       return XBEE_OPEN_TIMER;
     }
-    else if (strlen((char*)xbeeRecBuf) == 4) // for the command to open
+    else if (bufLen == 4) // for the command to open
     {
       Serial.println();
       Serial.println("OpenTest");
@@ -1096,18 +1099,22 @@ int processGroundMessage() {
   if (strstr((char*)xbeeRecBuf, "test")) {
     Serial.println("");
     Serial.println("ackTest");
+    Serial.println((char*)xbeeRecBuf);
     String test_response = "TestAck " + String(servo_pos);
     test_response.getBytes(xbeeSendBuf, xbeeSendBufSize);
     xbeeSend(GroundSL, xbeeSendBuf);
     return XBEE_GROUND_TEST;
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
-    if (strlen((char*)xbeeRecBuf) == 7)
+    size_t bufLen = strlen((char*)xbeeRecBuf);
+    Serial.print("string length: ");
+    Serial.println(bufLen);
+    if (bufLen == 7) // command must be in form "openXXX"
     {
-      char* xbeeRecBuf2 = (char*)xbeeRecBuf;
-      char dig1 = xbeeRecBuf2[4];
-      char dig2 = xbeeRecBuf2[5];
-      char dig3 = xbeeRecBuf2[6];
+      char dig1 = (char)xbeeRecBuf[4];
+      char dig2 = (char)xbeeRecBuf[5];
+      char dig3 = (char)xbeeRecBuf[6];
+
       Serial.println();
       Serial.println("OpenTimer");
       String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
@@ -1118,7 +1125,7 @@ int processGroundMessage() {
       manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
       return XBEE_OPEN_TIMER;
     }
-    else if (strlen((char*)xbeeRecBuf) == 4)
+    else if (bufLen == 4) // for the command to open
     {
       Serial.println();
       Serial.println("OpenTest");
