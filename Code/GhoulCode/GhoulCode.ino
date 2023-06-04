@@ -1020,6 +1020,7 @@ int processBitsMessage() { //Just print things to the monitor
   if (strstr((char*)xbeeRecBuf, "test")) { //Checks if "test" is within buffer
     Serial.println();
     Serial.println("BitsTest");
+    Serial.println((char*)xbeeRecBuf);
     String test_response = "TestAck " + String(servo_pos);
     test_response.getBytes(xbeeSendBuf, xbeeSendBufSize);
     xbeeSend(BitsSL, xbeeSendBuf);
