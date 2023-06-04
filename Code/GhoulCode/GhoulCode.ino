@@ -1028,8 +1028,6 @@ int processBitsMessage() { //Just print things to the monitor
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
     size_t bufLen = strlen((char*)xbeeRecBuf);
-    Serial.print("string length: ");
-    Serial.println(bufLen);
     if (bufLen == 6) // for the command to open
     {
       Serial.println("");
@@ -1040,23 +1038,14 @@ int processBitsMessage() { //Just print things to the monitor
     }
     else if (bufLen == 9) // command must be in form "openXXX"
     {
-      Serial.print("xbeeRecBuf (5 6 7): ");
       int dig1 = xbeeRecBuf[5] - 48;
       int dig2 = xbeeRecBuf[6] - 48;
       int dig3 = xbeeRecBuf[7] - 48;
-      Serial.print(dig1);
-      Serial.print(" ");
-      Serial.print(dig2);
-      Serial.print(" ");
-      Serial.println(dig3);
-
       Serial.println("");
       Serial.println("OpenTimer");
       String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
       xbeeSend(BitsSL, xbeeSendBuf);
       manual_open_timer = dig1 * 100 + dig2 * 10 + dig3;  //should be in secs
-      Serial.print("Manual open timer: ");
-      Serial.println(manual_open_timer);
       return XBEE_OPEN_TIMER;
     }
   }
@@ -1113,9 +1102,6 @@ int processGroundMessage() {
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
     size_t bufLen = strlen((char*)xbeeRecBuf);
-    
-    Serial.print("string length: ");
-    Serial.println(bufLen);
     if (bufLen == 6) // for the command to open
     {
       Serial.println("");
@@ -1126,23 +1112,14 @@ int processGroundMessage() {
     }
     else if (bufLen == 9) // command must be in form "openXXX"
     {
-      Serial.print("xbeeRecBuf (5 6 7): ");
       int dig1 = xbeeRecBuf[5] - 48;
       int dig2 = xbeeRecBuf[6] - 48;
       int dig3 = xbeeRecBuf[7] - 48;
-      Serial.print(dig1);
-      Serial.print(" ");
-      Serial.print(dig2);
-      Serial.print(" ");
-      Serial.println(dig3);
-
       Serial.println("");
       Serial.println("OpenTimer");
       String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
       xbeeSend(GroundSL, xbeeSendBuf);
       manual_open_timer = dig1 * 100 + dig2 * 10 + dig3;
-      Serial.print("Manual open timer: ");
-      Serial.println(manual_open_timer);
       return XBEE_OPEN_TIMER;
     }
   }
