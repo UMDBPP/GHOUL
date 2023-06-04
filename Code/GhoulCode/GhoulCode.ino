@@ -1030,29 +1030,34 @@ int processBitsMessage() { //Just print things to the monitor
     size_t bufLen = strlen((char*)xbeeRecBuf);
     Serial.print("string length: ");
     Serial.println(bufLen);
-    if (bufLen == 7) // command must be in form "openXXX"
+    if (bufLen == 6) // for the command to open
     {
-      char dig1 = (char)xbeeRecBuf[4];
-      char dig2 = (char)xbeeRecBuf[5];
-      char dig3 = (char)xbeeRecBuf[6];
-
-      Serial.println();
-      Serial.println("OpenTimer");
-      String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
-      xbeeSend(BitsSL, xbeeSendBuf);
-      int firstDigit = dig1 - '0';
-      int secondDigit = dig2 - '0';
-      int thirdDigit = dig3 - '0';
-      manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
-      return XBEE_OPEN_TIMER;
-    }
-    else if (bufLen == 4) // for the command to open
-    {
-      Serial.println();
+      Serial.println("");
       Serial.println("OpenTest");
       String("OpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
       xbeeSend(BitsSL, xbeeSendBuf);
       return XBEE_OPEN;
+    }
+    else if (bufLen == 9) // command must be in form "openXXX"
+    {
+      Serial.print("xbeeRecBuf (5 6 7): ");
+      int dig1 = xbeeRecBuf[5] - 48;
+      int dig2 = xbeeRecBuf[6] - 48;
+      int dig3 = xbeeRecBuf[7] - 48;
+      Serial.print(dig1);
+      Serial.print(" ");
+      Serial.print(dig2);
+      Serial.print(" ");
+      Serial.println(dig3);
+
+      Serial.println("");
+      Serial.println("OpenTimer");
+      String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
+      xbeeSend(BitsSL, xbeeSendBuf);
+      manual_open_timer = dig1 * 100 + dig2 * 10 + dig3;  //should be in secs
+      Serial.print("Manual open timer: ");
+      Serial.println(manual_open_timer);
+      return XBEE_OPEN_TIMER;
     }
   }
   if (strstr((char*)xbeeRecBuf, "ten")) {
@@ -1108,31 +1113,37 @@ int processGroundMessage() {
   }
   if (strstr((char*)xbeeRecBuf, "open")) {
     size_t bufLen = strlen((char*)xbeeRecBuf);
+    
     Serial.print("string length: ");
     Serial.println(bufLen);
-    if (bufLen == 7) // command must be in form "openXXX"
+    if (bufLen == 6) // for the command to open
     {
-      char dig1 = (char)xbeeRecBuf[4];
-      char dig2 = (char)xbeeRecBuf[5];
-      char dig3 = (char)xbeeRecBuf[6];
-
-      Serial.println();
-      Serial.println("OpenTimer");
-      String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
-      xbeeSend(GroundSL, xbeeSendBuf);
-      int firstDigit = dig1 - '0';
-      int secondDigit = dig2 - '0';
-      int thirdDigit = dig3 - '0';
-      manual_open_timer = firstDigit * 100 + secondDigit * 10 + thirdDigit;
-      return XBEE_OPEN_TIMER;
-    }
-    else if (bufLen == 4) // for the command to open
-    {
-      Serial.println();
+      Serial.println("");
       Serial.println("OpenTest");
       String("OpenAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
       xbeeSend(GroundSL, xbeeSendBuf);
       return XBEE_OPEN;
+    }
+    else if (bufLen == 9) // command must be in form "openXXX"
+    {
+      Serial.print("xbeeRecBuf (5 6 7): ");
+      int dig1 = xbeeRecBuf[5] - 48;
+      int dig2 = xbeeRecBuf[6] - 48;
+      int dig3 = xbeeRecBuf[7] - 48;
+      Serial.print(dig1);
+      Serial.print(" ");
+      Serial.print(dig2);
+      Serial.print(" ");
+      Serial.println(dig3);
+
+      Serial.println("");
+      Serial.println("OpenTimer");
+      String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
+      xbeeSend(GroundSL, xbeeSendBuf);
+      manual_open_timer = dig1 * 100 + dig2 * 10 + dig3;
+      Serial.print("Manual open timer: ");
+      Serial.println(manual_open_timer);
+      return XBEE_OPEN_TIMER;
     }
   }
   if (strstr((char*)xbeeRecBuf, "ten")) {
