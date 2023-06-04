@@ -1028,10 +1028,9 @@ int processBitsMessage() { //Just print things to the monitor
   if (strstr((char*)xbeeRecBuf, "open")) {
     if (strlen((char*)xbeeRecBuf) == 7) // command must be in form "openXXX"
     {
-      char* xbeeRecBuf2 = (char*)xbeeRecBuf;
-      char dig1 = xbeeRecBuf2[4];
-      char dig2 = xbeeRecBuf2[5];
-      char dig3 = xbeeRecBuf2[6];
+      char dig1 = (char)xbeeRecBuf[4];
+      char dig2 = (char)xbeeRecBuf[5];
+      char dig3 = (char)xbeeRecBuf[6];
 
       Serial.println();
       Serial.println("OpenTimer");
