@@ -149,6 +149,7 @@ float servo_pos;
 float raw_voltage_reading;
 float batt_voltage;
 int manual_open_timer = 0;
+int manual_timer_status = 0;
 
 //fault counters
 int alt_fault_counter = 0;
@@ -379,13 +380,15 @@ void loop() {
   {
     ventValve.write(VENT_OPEN_POS);
     vent_status = XBEE_OPENED;
+    manual_timer_status = 0;
     rate_at_open = ascent_rate;
     vent_open_time = now_seconds;
   }
-  else if (xbee_status == XBEE_OPEN_TIMER && manual_open_timer != 0)
+  else if (xbee_status == XBEE_OPEN_TIMER) //add another check
   {
     vent_open_time = now_seconds;
     vent_status = XBEE_OPENED;
+    manual_timer_status = 1;
     float_status = XBEE_VENT_MANUAL;
     ventValve.write(VENT_OPEN_POS);
   }
@@ -425,12 +428,13 @@ void loop() {
     }
     if (float_status == XBEE_VENT_MANUAL)
     {
-      if (now_seconds >= vent_open_time + manual_open_timer)
+      if (now_seconds >= vent_open_time + manual_open_timer && manual_timer_status == 1)
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = XBEE_CLOSED;
         float_status = XBEE_FLOATING;
         manual_open_timer = 0;
+        manual_timer_status = 0;
       }
     }
     else if (float_status == XBEE_VENT_10)
@@ -1115,6 +1119,14 @@ int processGroundMessage() {
       int dig1 = xbeeRecBuf[5] - 48;
       int dig2 = xbeeRecBuf[6] - 48;
       int dig3 = xbeeRecBuf[7] - 48;
+<<<<<<< Updated upstream
+=======
+      Serial.print(dig1);
+      Serial.print(" ");
+      Serial.print(dig2);
+      Serial.print(" ");
+      Serial.println(dig3);
+>>>>>>> Stashed changes
       Serial.println("");
       Serial.println("OpenTimer");
       String("OpenAckTimer").getBytes(xbeeSendBuf, xbeeSendBufSize);
