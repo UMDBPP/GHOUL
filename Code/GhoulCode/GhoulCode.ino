@@ -1,5 +1,5 @@
 //GHOUL flight software written by:
-//Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant, Daniel Grammar and Akemi Takeuchi
+//Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant, Daniel Grammar, Akemi Takeuchi, and Jack Bishop
 
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
@@ -31,8 +31,8 @@
 //SoftwareSerial XBeeSerial(27, 26);
 
 //servo characteristics
-#define VENT_OPEN_POS 80
-#define VENT_CLOSED_POS 1
+#define VENT_OPEN_POS 70
+#define VENT_CLOSED_POS 7
 
 //float parameters
 #define PRE_VENT_ALT 23000
@@ -50,10 +50,10 @@
 #define CUTDOWN_TIMER_DURATION 10800 //seconds
 #define ARATE_TRIGGER_ALT 40000 //meters
 #define ASCENT_RATE_TRIGGER 1 //meters per second
-#define LONG_EAST_BOUND -76.73292
-#define LONG_WEST_BOUND -77.23520
-#define LAT_NORTH_BOUND 39.93583
-#define LAT_SOUTH_BOUND 39.53248
+#define LONG_EAST_BOUND -76.230376
+#define LONG_WEST_BOUND -77.00220
+#define LAT_NORTH_BOUND 39.790335
+#define LAT_SOUTH_BOUND 39.42744
 
 //flags
 #define CLOSED 0
@@ -74,6 +74,7 @@
 #define XBEE_FLOATING 5
 #define XBEE_VENT_10 6
 #define XBEE_VENT_30 7
+#define XBEE_VENT_TIMED 8
 #define NOT_CUT 0
 #define CUT 1
 #define BAD_FIX 2
@@ -95,6 +96,7 @@
 #define XBEE_TEN 6
 #define XBEE_THIRTY 7
 #define XBEE_YOLO 8
+#define XBEE_TIMED 9
 
 //timer interrupts
 IntervalTimer gpsTimer;
@@ -146,6 +148,7 @@ float raw_servo_pos;
 float servo_pos;
 float raw_voltage_reading;
 float batt_voltage;
+uint8_t vent_open_duration = 0;
 
 //fault counters
 int alt_fault_counter = 0;
@@ -155,7 +158,7 @@ int gps_fault_counter = 0;
 //flags
 int pre_vent_status = PRE_VENT_NOT_DONE;              //0 = not done, 1 = done
 int float_vent_status = FLOAT_VENT_NOT_DONE;          //0 = not done, 1 = done
-int vent_status = CLOSED;                             //0 = closed, 1 = open
+int vent_status = CLOSED;                             //0 = closed, 1 = open, 2 = xbee closed, 3 = xbee opened
 int float_status = NORMAL_ASCENT;                     //0 = normal ascent, 1 = pre-venting, 2 = float-venting, 3 = floating
 int cut_status = NOT_CUT;                             //0 = not cut, 1 = cut
 int timer_status = TIMER_NOT_STARTED;                 //0 = timer not started, 1 = timer started
@@ -393,6 +396,14 @@ void loop() {
     float_status = XBEE_VENT_30;
     ventValve.write(VENT_OPEN_POS);
   }
+  else if (xbee_status == XBEE_TIMED)
+  {
+    // saves timestamp of open and adjusts flags accordingly
+    vent_open_time = now_seconds;
+    vent_status = XBEE_OPENED;
+    float_status = XBEE_VENT_TIMED;
+    ventValve.write(VENT_OPEN_POS);
+  }
   else if(xbee_status == XBEE_YOLO)
   {
     yolo_cutdown();
@@ -416,7 +427,7 @@ void loop() {
 
     if(float_status == XBEE_VENT_10)
     {
-      if(now_seconds >= vent_open_time + 10)
+      if(now_seconds >= vent_open_time + 20)
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = XBEE_CLOSED;
@@ -425,12 +436,19 @@ void loop() {
     }
     else if(float_status == XBEE_VENT_30)
     {
-      if(now_seconds >= vent_open_time + 30)
+      if(now_seconds >= vent_open_time + 60)
       {
         ventValve.write(VENT_CLOSED_POS);
         vent_status = XBEE_CLOSED;
         float_status = XBEE_FLOATING;
       }
+    }
+    else if(float_status == XBEE_VENT_TIMED && now_seconds >= vent_open_time + vent_open_duration) // if the duration for the timed open has elapsed
+    {
+      ventValve.write(VENT_CLOSED_POS);
+      vent_status = XBEE_CLOSED;
+      float_status = XBEE_FLOATING;
+      Serial.println("CLOSING DUE TO TIMER COMPLETION");
     }
   }
   else if(vent_status == XBEE_CLOSED)
@@ -999,7 +1017,6 @@ int processBitsMessage(){ //Just print things to the monitor
   Serial.write(xbeeRecBuf,xbeeRecBufSize);
 
   if(strstr((char*)xbeeRecBuf,"test")){ //Checks if "test" is within buffer
-      Serial.println();
       Serial.println("BitsTest");
       String test_response = "TestAck " + String(servo_pos);
       test_response.getBytes(xbeeSendBuf,xbeeSendBufSize);
@@ -1007,28 +1024,37 @@ int processBitsMessage(){ //Just print things to the monitor
       return XBEE_BITS_TEST;
   }
   if(strstr((char*)xbeeRecBuf,"open")){ //Checks if "test" is within buffer
-      Serial.println();
       Serial.println("OpenTest");
       String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(BitsSL,xbeeSendBuf);
       return XBEE_OPEN;
   }
   if(strstr((char*)xbeeRecBuf,"ten")){
-      Serial.println("");
       Serial.println("TenOpenAck");
       String("TenOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(BitsSL,xbeeSendBuf);
       return XBEE_TEN;
   }
   if(strstr((char*)xbeeRecBuf,"thirty")){
-      Serial.println("");
       Serial.println("ThirtyOpenAck");
       String("ThirtyOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(BitsSL,xbeeSendBuf);
       return XBEE_THIRTY;
   }
+  if(strstr((char*)xbeeRecBuf," time ")){
+    Serial.println();
+    // tokenize the string and iterate through until at the numbers
+    char *token = strtok((char*)xbeeRecBuf, " ");
+    token = strtok(NULL, " ");
+    delay(10);
+    token = strtok(NULL, " ");
+    Serial.println(token);
+    vent_open_duration = atoi(token); // array-to-integer on the numbers of the token
+    String("TimedAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(BitsSL,xbeeSendBuf);
+    return XBEE_TIMED;
+  }
   if(strstr((char*)xbeeRecBuf,"close")){ 
-      Serial.println();
       Serial.println("CloseTest");
       String("CloseAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(BitsSL,xbeeSendBuf);
@@ -1042,7 +1068,6 @@ int processBitsMessage(){ //Just print things to the monitor
       return XBEE_CUTDOWN;
   }
   if(strstr((char*)xbeeRecBuf,"blast")){ 
-      Serial.println("");
       Serial.println("YoloAck");
       String("YoloAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(BitsSL,xbeeSendBuf);
@@ -1052,11 +1077,10 @@ int processBitsMessage(){ //Just print things to the monitor
 }
 
 int processGroundMessage(){
-  Serial.print("RecFromGND: ");
+  Serial.println("RecFromGND: ");
   Serial.write(xbeeRecBuf,xbeeRecBufSize);
 
   if(strstr((char*)xbeeRecBuf,"test")){
-      Serial.println("");
       Serial.println("ackTest");
       String test_response = "TestAck " + String(servo_pos);
       test_response.getBytes(xbeeSendBuf,xbeeSendBufSize);
@@ -1064,42 +1088,46 @@ int processGroundMessage(){
       return XBEE_GROUND_TEST;
   }
   if(strstr((char*)xbeeRecBuf,"open")){
-      Serial.println("");
       Serial.println("OpenAck");
       String("OpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_OPEN;
   }
   if(strstr((char*)xbeeRecBuf,"ten")){
-      Serial.println("");
       Serial.println("TenOpenAck");
       String("TenOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_TEN;
   }
   if(strstr((char*)xbeeRecBuf,"thirty")){
-      Serial.println("");
       Serial.println("ThirtyOpenAck");
       String("ThirtyOpenAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_THIRTY;
   }
+  if(strstr((char*)xbeeRecBuf,"time ")){
+    // tokenize the string and iterate through until at the numbers
+    char *token = strtok((char*)xbeeRecBuf, " ");
+    token = strtok(NULL, " ");
+    Serial.println(token);
+    vent_open_duration = atoi(token); // array-to-integer on the numbers of the token
+    String("TimedAck").getBytes(xbeeSendBuf, xbeeSendBufSize);
+    xbeeSend(GroundSL,xbeeSendBuf);
+    return XBEE_TIMED;
+  }
   if(strstr((char*)xbeeRecBuf,"close")){ 
-      Serial.println("");
       Serial.println("CloseAck");
       String("CloseAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_CLOSE;
   }
   if(strstr((char*)xbeeRecBuf,"terminate")){ 
-      Serial.println("");
       Serial.println("TermAck");
       String("TermAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
       return XBEE_CUTDOWN;
   }
   if(strstr((char*)xbeeRecBuf,"blast")){ 
-      Serial.println("");
       Serial.println("YoloAck");
       String("YoloAck").getBytes(xbeeSendBuf,xbeeSendBufSize);
       xbeeSend(GroundSL,xbeeSendBuf);
