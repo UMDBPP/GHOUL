@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 0)
+  (lib (name "GHOUL2-eagle-import")(type "KiCad")(uri "${KIPRJMOD}/GHOUL2-eagle-import.kicad_sym")(options "")(descr ""))
+)
