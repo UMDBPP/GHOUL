@@ -8,18 +8,20 @@
 #include <SD.h>
 #include <TimeLib.h>
 #include <RTClib.h>
-#include <Adafruit_GPS.h>
 #include <XBee.h>
 #include <Adafruit_MMA8451.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <SoftwareSerial.h>
+#include <TinyGPS++.h>
+#include <TinyGPSPlus.h>
+#include <MS5607.h>
 
 //pin definitions
 #define TEMPERATURE_PIN 1
 #define HEATER_PIN 15
-#define SCL_PIN 19
-#define SDA_PIN 18
+#define SCL_PIN 17
+#define SDA_PIN 16
 #define SERVO_PIN 2
 #define FEEDBACK_PIN A9
 #define VOLTAGE_PIN A8
@@ -27,18 +29,20 @@
 #define CUTDOWN_PIN_2 36
 #define LOGGER_PIN BUILTIN_SDCARD
 #define GPSSerial Serial2
+#define GPSTX 8
+#define GPSRX 7
 #define XBeeSerial Serial7
 //SoftwareSerial XBeeSerial(27, 26);
 
 //servo characteristics
-#define VENT_OPEN_POS 70
-#define VENT_CLOSED_POS 7
+#define VENT_OPEN_POS 90
+#define VENT_CLOSED_POS 27
 
 //float parameters
-#define PRE_VENT_ALT 23000
+#define PRE_VENT_ALT 35000
 #define FLOAT_ALT 40000
 #define PRE_VENT_RATIO .05
-#define VENT_TIMER 3600 //seconds
+#define VENT_TIMER 10000 //seconds
 #define SEA_LEVEL_PRESSURE 982.45 //mbar
 #define HEATER_SET_POINT 0
 
@@ -47,13 +51,13 @@
 #define TOTAL_CUTS 6
 #define CUTDOWN_ALTITUDE 32000 //meters
 #define CUTDOWN_TIMER_TRIGGER_ALT 1000 //meters
-#define CUTDOWN_TIMER_DURATION 10800 //seconds
+#define CUTDOWN_TIMER_DURATION 100000 //seconds
 #define ARATE_TRIGGER_ALT 40000 //meters
 #define ASCENT_RATE_TRIGGER 1 //meters per second
-#define LONG_EAST_BOUND -76.230376
-#define LONG_WEST_BOUND -77.00220
-#define LAT_NORTH_BOUND 39.790335
-#define LAT_SOUTH_BOUND 39.42744
+#define LONG_EAST_BOUND -75.456744
+#define LONG_WEST_BOUND -79.491871
+#define LAT_NORTH_BOUND 40.763307
+#define LAT_SOUTH_BOUND 38.167377
 
 //flags
 #define CLOSED 0
@@ -99,17 +103,17 @@
 #define XBEE_TIMED 9
 
 //timer interrupts
-IntervalTimer gpsTimer;
 
 //timers
 elapsedMillis burn_timer;
 
 //sensors
-Adafruit_BMP280 bmp;
+MS5607 bmp;
 Adafruit_MMA8451 mma = Adafruit_MMA8451();
 Servo ventValve;
 File logFile;
-Adafruit_GPS GPS(&GPSSerial);
+TinyGPSPlus GPS;
+SoftwareSerial gps_ss(GPSRX, GPSTX);
 XBee xbee = XBee();
 XBeeResponse response = XBeeResponse();
 OneWire oneWire(TEMPERATURE_PIN);
@@ -149,6 +153,9 @@ float servo_pos;
 float raw_voltage_reading;
 float batt_voltage;
 uint8_t vent_open_duration = 0;
+float temp;
+float pressure;
+float pressure_alt;
 
 //fault counters
 int alt_fault_counter = 0;
@@ -175,8 +182,8 @@ void setup() {
   Serial.println("Powered on!");
 
   // Reassign default pins for I2C bus
-  Wire.setSCL(SCL_PIN);
-  Wire.setSDA(SDA_PIN);
+  Wire1.setSCL(SCL_PIN);
+  Wire1.setSDA(SDA_PIN);
 
   // Set up XBee Serial
   pinMode(26, INPUT);
@@ -245,18 +252,13 @@ void setup() {
     Serial.println("Acceleromter found!");
 
   // Initiate GPS
-  GPSSerial.begin(9600);
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_GGAONLY);
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+  gps_ss.begin(9600);
 
   // Check/Initiate SD Logger
-  if(!SD.begin(BUILTIN_SDCARD))
+  if(!SD.begin(LOGGER_PIN))
     Serial.println("Error: SD Card Logger Not Initialized");
   else
     Serial.println("SD card initialized");
-  
-  // Interrupt Timer for GPS
-  gpsTimer.begin(readGPS, 1000); //try changing to 10000
 
   Serial.println("Setup done!");
   logFile = SD.open("datalog.txt", FILE_WRITE);
@@ -280,9 +282,11 @@ void loop() {
   uint32_t now_seconds = now();
   
   //get pressure, temp, alt --------------------------------------------------------------------- pressure, temp, alt
-  float temp = bmp.readTemperature();
-  float pressure = bmp.readPressure();
-  float pressure_alt = bmp.readAltitude(SEA_LEVEL_PRESSURE);
+  if(bmp.readDigitalValue()){
+    temp = bmp.getTemperature();
+    pressure = bmp.getPressure();
+    pressure_alt = bmp.getAltitude();
+  }
 
   //battery temp
   tempSensor.requestTemperatures();
@@ -297,35 +301,21 @@ void loop() {
   float z = event.acceleration.z;
 
    //read gps data -------------------------------------------------------------------------------- gps (long, lat, alt, fix, sats #)
-  noInterrupts();
-  if(GPS.newNMEAreceived())
+  if(gps_ss.available() > 0 && GPS.encode(gps_ss.read()))
   {
-    //Serial.println("new nmea recieved!");
-    //Serial.println(GPS.lastNMEA());
-    //logFile = SD.open("datalog.txt", FILE_WRITE);
-    //logFile.print(GPS.lastNMEA());
-    //logFile.close();
-    if(!GPS.parse(GPS.lastNMEA()))
-    {
-      Serial.println("GPS Parse failed!");
-    }
-    gps_fixqual = GPS.fix;
-    if(gps_fixqual == 1)
-    {
-      gps_lat = GPS.latitudeDegrees;
-      gps_long = GPS.longitudeDegrees;
-      gps_alt = GPS.altitude;
-      gps_sats = GPS.satellites; 
-    }
+    gps_fixqual = GPS.location.isValid();
+    gps_lat = GPS.location.lat();
+    gps_long = GPS.location.lng();
+    gps_alt = GPS.altitude.feet();
+    gps_sats = GPS.satellites.value();
   }
-  interrupts();
-
+  
   //check xbee
   delay(10);
   xbee_status = xbeeRead();
   delay(10);
-  //Serial.print("XBee Status: ");
-  //Serial.println(xbee_status);
+  Serial.print("XBee Status: ");
+  Serial.println(xbee_status);
 
   /*  ============================================================================================
    *   
@@ -952,12 +942,6 @@ int ar_check(int arate)
   }
   else
     return NOT_CUT;
-}
-
-void readGPS() // Reads GPS, it seems
-{
-  //Serial.println("Reading gps");
-  GPS.read();
 }
 
 //xbee methods
