@@ -1,3 +1,5 @@
+
+
 //GHOUL flight software written by:
 //Michael Kalin and Jeremy Joseph (JJ) Kuznetsov with love and support from Kruti Geeta-Rajnikant, Daniel Grammar, Akemi Takeuchi, and Jack Bishop
 
@@ -15,7 +17,7 @@
 #include <SoftwareSerial.h>
 #include <TinyGPS++.h>
 #include <TinyGPSPlus.h>
-#include <MS5607.h>
+#include <MS5607_GHOUL.h>
 
 //pin definitions
 #define TEMPERATURE_PIN 1
@@ -35,8 +37,8 @@
 //SoftwareSerial XBeeSerial(27, 26);
 
 //servo characteristics
-#define VENT_OPEN_POS 90
-#define VENT_CLOSED_POS 27
+#define VENT_OPEN_POS 75
+#define VENT_CLOSED_POS 10
 
 //float parameters
 #define PRE_VENT_ALT 35000
@@ -47,7 +49,7 @@
 #define HEATER_SET_POINT 0
 
 //cut-down parameters
-#define CUT_INTERVAL 90 //seconds
+#define CUT_INTERVAL 60 //seconds
 #define TOTAL_CUTS 6
 #define CUTDOWN_ALTITUDE 32000 //meters
 #define CUTDOWN_TIMER_TRIGGER_ALT 1000 //meters
@@ -156,6 +158,7 @@ uint8_t vent_open_duration = 0;
 float temp;
 float pressure;
 float pressure_alt;
+float batt_temp;
 
 //fault counters
 int alt_fault_counter = 0;
@@ -235,6 +238,11 @@ void setup() {
 
   //Initiate Temperature Probe
   tempSensor.begin();
+  if(tempSensor.getTempCByIndex(0) != DEVICE_DISCONNECTED_C)
+    Serial.print("PASS");
+  else
+    Serial.print("FAIL");
+  
 
   // Initiate BMP280
   if(!bmp.begin())
@@ -287,10 +295,14 @@ void loop() {
     pressure = bmp.getPressure();
     pressure_alt = bmp.getAltitude();
   }
+  
+  Serial.print(temp);
+  Serial.print(F(", "));
+  Serial.println(pressure);
 
   //battery temp
   tempSensor.requestTemperatures();
-  float batt_temp = tempSensor.getTempCByIndex(0);
+  batt_temp = tempSensor.getTempCByIndex(0);
   //Serial.println(batt_temp);
 
   //read accelerometer
@@ -946,6 +958,7 @@ int ar_check(int arate)
 
 //xbee methods
 bool xbeeSend(uint32_t TargetSL,uint8_t* payload){
+  Serial.println("XBEE SEND IT LETS GO HYPE");
   XBeeAddress64 TargetAddress = XBeeAddress64(UniSH,TargetSL);      //The full address, probably could be done more efficiently, oh well
   ZBTxRequest zbTx = ZBTxRequest(TargetAddress, payload, xbeeSendBufSize); //Assembles Packet
   xbee.send(zbTx);                                                  //Sends packet
@@ -973,7 +986,9 @@ bool xbeeSend(uint32_t TargetSL,uint8_t* payload){
 int xbeeRead(){
   xbee.readPacket(); //read serial buffer
     if (xbee.getResponse().isAvailable()) { //got something
+      Serial.println(xbee.getResponse().getApiId());
       if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) { //got a TxRequestPacket
+        Serial.println("XBEE READ YES YES GOOD CHECK MARK");
         xbee.getResponse().getZBRxResponse(rx);
         
         uint32_t incominglsb = rx.getRemoteAddress64().getLsb(); //The SL of the sender
@@ -989,6 +1004,7 @@ int xbeeRead(){
           return processBitsMessage();    //prevents one payload from having the chance to be mistaken as another
         }
         if(incominglsb == GroundSL){ //Ground Station
+          Serial.println("GROUNDSLMESSAGE");
           return processGroundMessage();
         }    
       }
