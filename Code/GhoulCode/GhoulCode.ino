@@ -236,7 +236,7 @@ void setup() {
   //Initiate Temperature Probe
   tempSensor.begin();
 
-  // Initiate pt_sensor280
+  // Initiate pt_sensor
   if (!pt_sensor.begin())
     Serial.println("Error pt_sensor not found!");
   else
