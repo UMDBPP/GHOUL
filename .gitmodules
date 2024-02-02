@@ -1,0 +1,7 @@
+[submodule "Board/Libraries/kicad-lib"]
+	path = Board/Libraries/kicad-lib
+	url = https://github.com/UMDBPP/kicad-lib.git
+[submodule "kicad-lib"]
+	path = kicad-lib
+	url = https://github.com/UMDBPP/kicad-lib.git
+	branch = main
