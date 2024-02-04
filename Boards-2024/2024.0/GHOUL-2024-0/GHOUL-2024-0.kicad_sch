@@ -10084,7 +10084,7 @@
     (property "Value" "LTM4622AEV-PBF" (at 302.26 76.2 0)
       (effects (font (size 1.524 1.524)))
     )
-    (property "Footprint" "LGA25_6P25X6P25_ADI" (at 313.69 45.72 0)
+    (property "Footprint" "GHOUL2024:LGA25_6P25X6P25_ADI" (at 313.69 45.72 0)
       (effects (font (size 1.27 1.27) italic) hide)
     )
     (property "Datasheet" "LTM4622AEV-PBF" (at 313.69 45.72 0)
