@@ -1,5 +1,9 @@
 "Source:","/Users/michaelshipman/Developer/GHOUL/Test-Cutdown-Board/Cutdown_Test/Cutdown_Test.kicad_sch"
+<<<<<<< HEAD
 "Date:","2024 February 04, Sunday 17:26:10"
+=======
+"Date:","2024 February 03, Saturday 18:01:11"
+>>>>>>> refs/remotes/origin/avionics-2.0
 "Tool:","Eeschema 7.0.5-0"
 "Generator:","/Applications/KiCad/KiCad.app/Contents/SharedSupport/plugins/bom_csv_grouped_by_value_with_fp.py"
 "Component Count:","31"
@@ -15,12 +19,20 @@
 "J2","1","Conn_01x02_Socket","Conn_01x02_Socket","Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical","Generic connector, single row, 01x02, script generated","",""
 "JP1, JP2","2","SolderJumper_2_Open","SolderJumper_2_Open","Jumper:SolderJumper-2_P1.3mm_Open_TrianglePad1.0x1.5mm","Solder Jumper, 2-pole, open","",""
 "L1","1","3.3uH","L","BPP_Lib:L_Bourns_SRP1265A","Inductor","",""
+<<<<<<< HEAD
 "R1","1","57.4k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
 "R2","1","5m","R_Small","Resistor_SMD:R_2512_6332Metric","Resistor, small symbol","",""
 "R3","1","75k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
 "R4","1","56.2k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
 "R5","1","277k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
 "R6","1","100k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
+=======
+"R1","1","81.1k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
+"R2","1","5m","R_Small","Resistor_SMD:R_2512_6332Metric","Resistor, small symbol","",""
+"R3","1","75k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
+"R4","1","56.2k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
+"R5, R6","2","154k","R_Small","Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder","Resistor, small symbol","",""
+>>>>>>> refs/remotes/origin/avionics-2.0
 "SW1","1","SW_SPDT","SW_SPDT","BPP_Lib:CL-SB-12B-01_NDC","Switch, single pole double throw","",""
 "TP1, TP2, TP3, TP5, TP6, TP8","6","TestPoint","TestPoint","TestPoint:TestPoint_Keystone_5000-5004_Miniature","test point","",""
 "U1","1","LT3120JV-PBF","LT3120JV-PBF","BPP_Lib:LQFN28_Rev0_ADI-M","","",""
