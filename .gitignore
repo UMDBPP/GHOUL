@@ -1,5 +1,6 @@
 # general ignores
 *.zip
+.DS_Store
 
 # Ignore list for KiCAD Projects
 # Temporary files
