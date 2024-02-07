@@ -2,7 +2,11 @@
 <export version="E">
   <design>
     <source>/Users/michaelshipman/Developer/GHOUL/Test-Cutdown-Board/Cutdown_Test/Cutdown_Test.kicad_sch</source>
+<<<<<<< HEAD
+    <date>2024 February 04, Sunday 17:26:10</date>
+=======
     <date>2024 February 03, Saturday 18:01:11</date>
+>>>>>>> refs/remotes/origin/avionics-2.0
     <tool>Eeschema 7.0.5-0</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
@@ -212,7 +216,11 @@
       <tstamps>08f75825-9f03-44b2-859a-5dd532ee3360</tstamps>
     </comp>
     <comp ref="R1">
+<<<<<<< HEAD
+      <value>57.4k</value>
+=======
       <value>81.1k</value>
+>>>>>>> refs/remotes/origin/avionics-2.0
       <footprint>Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder</footprint>
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
@@ -256,7 +264,11 @@
       <tstamps>09158b25-c5a9-4110-b04f-cd3fd849bdb8</tstamps>
     </comp>
     <comp ref="R5">
+<<<<<<< HEAD
+      <value>277k</value>
+=======
       <value>154k</value>
+>>>>>>> refs/remotes/origin/avionics-2.0
       <footprint>Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder</footprint>
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
@@ -267,7 +279,11 @@
       <tstamps>106ba717-8674-473e-989a-fd01e9fd9696</tstamps>
     </comp>
     <comp ref="R6">
+<<<<<<< HEAD
+      <value>100k</value>
+=======
       <value>154k</value>
+>>>>>>> refs/remotes/origin/avionics-2.0
       <footprint>Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder</footprint>
       <libsource lib="Device" part="R_Small" description="Resistor, small symbol"/>
       <property name="Sheetname" value=""/>
