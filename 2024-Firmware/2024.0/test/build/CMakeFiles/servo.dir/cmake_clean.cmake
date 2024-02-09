@@ -128,10 +128,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj.d"
   "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj"
   "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj.d"
+  "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj"
+  "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj.d"
   "CMakeFiles/servo.dir/test.c.obj"
   "CMakeFiles/servo.dir/test.c.obj.d"
-  "CMakeFiles/servo.dir/vent-servo.c.obj"
-  "CMakeFiles/servo.dir/vent-servo.c.obj.d"
   "servo.elf"
   "servo.pdb"
 )

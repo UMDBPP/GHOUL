@@ -1,4 +1,4 @@
-// Padded and checksummed version of: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
+// Padded and checksummed version of: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
 
 .cpu cortex-m0plus
 .thumb

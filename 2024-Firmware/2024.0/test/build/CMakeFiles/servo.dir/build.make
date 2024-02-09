@@ -83,19 +83,19 @@ CMakeFiles/servo.dir/test.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/servo.dir/test.c.s"
 	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/test.c -o CMakeFiles/servo.dir/test.c.s
 
-CMakeFiles/servo.dir/vent-servo.c.obj: CMakeFiles/servo.dir/flags.make
-CMakeFiles/servo.dir/vent-servo.c.obj: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/vent-servo.c
-CMakeFiles/servo.dir/vent-servo.c.obj: CMakeFiles/servo.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/servo.dir/vent-servo.c.obj"
-	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/servo.dir/vent-servo.c.obj -MF CMakeFiles/servo.dir/vent-servo.c.obj.d -o CMakeFiles/servo.dir/vent-servo.c.obj -c /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/vent-servo.c
+CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj: CMakeFiles/servo.dir/flags.make
+CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c
+CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj: CMakeFiles/servo.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj"
+	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj -MF CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj.d -o CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj -c /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c
 
-CMakeFiles/servo.dir/vent-servo.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/servo.dir/vent-servo.c.i"
-	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/vent-servo.c > CMakeFiles/servo.dir/vent-servo.c.i
+CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.i"
+	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c > CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.i
 
-CMakeFiles/servo.dir/vent-servo.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/servo.dir/vent-servo.c.s"
-	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/vent-servo.c -o CMakeFiles/servo.dir/vent-servo.c.s
+CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.s"
+	/opt/homebrew/bin/arm-none-eabi-gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c -o CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.s
 
 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: CMakeFiles/servo.dir/flags.make
 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c
@@ -1069,7 +1069,7 @@ CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/p
 # Object files for target servo
 servo_OBJECTS = \
 "CMakeFiles/servo.dir/test.c.obj" \
-"CMakeFiles/servo.dir/vent-servo.c.obj" \
+"CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj" \
 "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj" \
 "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj" \
 "CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_platform/platform.c.obj" \
@@ -1145,7 +1145,7 @@ servo_OBJECTS = \
 servo_EXTERNAL_OBJECTS =
 
 servo.elf: CMakeFiles/servo.dir/test.c.obj
-servo.elf: CMakeFiles/servo.dir/vent-servo.c.obj
+servo.elf: CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
 servo.elf: CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
 servo.elf: CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
 servo.elf: CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_platform/platform.c.obj

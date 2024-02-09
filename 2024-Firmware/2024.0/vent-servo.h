@@ -3,8 +3,8 @@
 
 #include "pico/stdlib.h"
 
-#define WRAP_VALUE (uint16_t)19999
-#define PWM_DIV 24
+#define WRAP_VALUE (uint16_t)59999
+#define PWM_DIV 8
 
 void setup_vent_servo(uint pwm_pin);
 void vent_servo_demo();

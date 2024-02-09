@@ -1737,6 +1737,30 @@ Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_commo
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.s
 .PHONY : Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.s
 
+Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.obj: Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+.PHONY : Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.obj
+
+# target to build an object file
+Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+.PHONY : Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+
+Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.i: Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.i
+.PHONY : Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.i
+
+# target to preprocess a source file
+Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.i
+.PHONY : Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.i
+
+Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.s: Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.s
+.PHONY : Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.s
+
+# target to generate assembly for a file
+Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.s
+.PHONY : Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.s
+
 test.obj: test.c.obj
 .PHONY : test.obj
 
@@ -1760,30 +1784,6 @@ test.s: test.c.s
 test.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/test.c.s
 .PHONY : test.c.s
-
-vent-servo.obj: vent-servo.c.obj
-.PHONY : vent-servo.obj
-
-# target to build an object file
-vent-servo.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/vent-servo.c.obj
-.PHONY : vent-servo.c.obj
-
-vent-servo.i: vent-servo.c.i
-.PHONY : vent-servo.i
-
-# target to preprocess a source file
-vent-servo.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/vent-servo.c.i
-.PHONY : vent-servo.c.i
-
-vent-servo.s: vent-servo.c.s
-.PHONY : vent-servo.s
-
-# target to generate assembly for a file
-vent-servo.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/servo.dir/build.make CMakeFiles/servo.dir/vent-servo.c.s
-.PHONY : vent-servo.c.s
 
 # Help Target
 help:
@@ -1990,12 +1990,12 @@ help:
 	@echo "... Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.obj"
 	@echo "... Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.i"
 	@echo "... Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.s"
+	@echo "... Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.obj"
+	@echo "... Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.i"
+	@echo "... Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.s"
 	@echo "... test.obj"
 	@echo "... test.i"
 	@echo "... test.s"
-	@echo "... vent-servo.obj"
-	@echo "... vent-servo.i"
-	@echo "... vent-servo.s"
 .PHONY : help
 
 

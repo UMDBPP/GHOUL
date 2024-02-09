@@ -110,14 +110,14 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/tools/CMakeLists.txt"
   "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/tools/FindELF2UF2.cmake"
   "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/tools/FindPioasm.cmake"
-  "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/CMakeLists.txt"
+  "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/CMakeLists.txt"
   "CMakeFiles/3.27.7/CMakeASMCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeCCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeSystem.cmake"
   "elf2uf2/tmp/ELF2UF2Build-mkdirs.cmake"
   "pico-sdk/src/rp2_common/tinyusb/pioasm/tmp/PioasmBuild-mkdirs.cmake"
-  "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/pico_sdk_import.cmake"
+  "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/pico_sdk_import.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeASMCompiler.cmake.in"
   "/opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeASMInformation.cmake"
   "/opt/homebrew/Cellar/cmake/3.27.7/share/cmake/Modules/CMakeCCompiler.cmake.in"
@@ -335,7 +335,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/servo.dir/DependInfo.cmake"
+  "CMakeFiles/servo-calibrate.dir/DependInfo.cmake"
   "CMakeFiles/ELF2UF2Build.dir/DependInfo.cmake"
   "pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default.dir/DependInfo.cmake"
   "pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/DependInfo.cmake"

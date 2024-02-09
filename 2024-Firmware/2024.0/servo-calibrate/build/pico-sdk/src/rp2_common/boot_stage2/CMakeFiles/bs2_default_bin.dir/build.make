@@ -53,10 +53,10 @@ RM = /opt/homebrew/Cellar/cmake/3.27.7/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test
+CMAKE_SOURCE_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build
+CMAKE_BINARY_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build
 
 # Utility rule file for bs2_default_bin.
 
@@ -69,8 +69,8 @@ include pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/progr
 pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin: pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
 
 pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin: pico-sdk/src/rp2_common/boot_stage2/bs2_default.elf
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating bs2_default.bin"
-	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/boot_stage2 && /opt/homebrew/bin/arm-none-eabi-objcopy -Obinary /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.elf /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating bs2_default.bin"
+	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/pico-sdk/src/rp2_common/boot_stage2 && /opt/homebrew/bin/arm-none-eabi-objcopy -Obinary /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.elf /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
 
 bs2_default_bin: pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin
 bs2_default_bin: pico-sdk/src/rp2_common/boot_stage2/bs2_default.bin
@@ -82,10 +82,10 @@ pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/build: bs2_de
 .PHONY : pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/build
 
 pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/clean:
-	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/boot_stage2 && $(CMAKE_COMMAND) -P CMakeFiles/bs2_default_bin.dir/cmake_clean.cmake
+	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/pico-sdk/src/rp2_common/boot_stage2 && $(CMAKE_COMMAND) -P CMakeFiles/bs2_default_bin.dir/cmake_clean.cmake
 .PHONY : pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/clean
 
 pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/depend:
-	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/boot_stage2 /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/boot_stage2 /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/boot_stage2 /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/pico-sdk/src/rp2_common/boot_stage2 /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/servo-calibrate/build/pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : pico-sdk/src/rp2_common/boot_stage2/CMakeFiles/bs2_default_bin.dir/depend
 
