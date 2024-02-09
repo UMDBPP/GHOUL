@@ -5,3 +5,7 @@
 	path = kicad-lib
 	url = https://github.com/UMDBPP/kicad-lib.git
 	branch = main
+[submodule "2024-Firmware/2024.0/pico-sdk"]
+	path = 2024-Firmware/2024.0/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk.git
+	branch = master
