@@ -91,6 +91,10 @@ Discarded input sections
  .bss           0x00000000        0x0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
  .text.vent_servo_set_pulse_width
                 0x00000000       0x70 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+ .text.vent_servo_open
+                0x00000000       0x68 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+ .text.vent_servo_close
+                0x00000000       0x68 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
  .text          0x00000000        0x0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
  .data          0x00000000        0x0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
  .bss           0x00000000        0x0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
@@ -1186,9 +1190,9 @@ Discarded input sections
  .comment       0x00000000       0x45 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/rp2040_usb_device_enumeration.c.obj
  .ARM.attributes
                 0x00000000       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/rp2040_usb_device_enumeration.c.obj
- .text          0x00000000        0x0 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccgCR5x3.o
- .data          0x00000000        0x0 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccgCR5x3.o
- .bss           0x00000000        0x0 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccgCR5x3.o
+ .text          0x00000000        0x0 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccI2KJIS.o
+ .data          0x00000000        0x0 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccI2KJIS.o
+ .bss           0x00000000        0x0 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccI2KJIS.o
  .data          0x00000000        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .bss           0x00000000        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .text          0x00000000        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc.a(libc_a-calloc.o)
@@ -1507,11 +1511,11 @@ LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-no
 .boot2          0x10000000      0x100
                 0x10000000                        __boot2_start__ = .
  *(.boot2)
- .boot2         0x10000000      0x100 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccgCR5x3.o
+ .boot2         0x10000000      0x100 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccI2KJIS.o
                 0x10000100                        __boot2_end__ = .
                 0x00000001                        ASSERT (((__boot2_end__ - __boot2_start__) == 0x100), ERROR: Pico second stage bootloader must be 256 bytes in size)
 
-.text           0x10000100     0x6f10
+.text           0x10000100     0x6f30
                 0x10000100                        __logical_binary_start = .
  *(.vectors)
  .vectors       0x10000100       0xd4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
@@ -1579,594 +1583,594 @@ LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-no
                 0x10000308       0x18 CMakeFiles/servo.dir/test.c.obj
                 0x10000308                main
  .text.setup_vent_servo
-                0x10000320       0x74 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+                0x10000320       0x94 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
                 0x10000320                setup_vent_servo
  .text.vent_servo_demo
-                0x10000394      0x10c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
-                0x10000394                vent_servo_demo
+                0x100003b4      0x10c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+                0x100003b4                vent_servo_demo
  .text.set_sys_clock_48mhz
-                0x100004a0       0x40 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
-                0x100004a0                set_sys_clock_48mhz
+                0x100004c0       0x40 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj
+                0x100004c0                set_sys_clock_48mhz
  .text.gpio_set_function
-                0x100004e0       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
-                0x100004e0                gpio_set_function
+                0x10000500       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.obj
+                0x10000500                gpio_set_function
  .text.running_on_fpga
-                0x10000510       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
-                0x10000510                running_on_fpga
+                0x10000530       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_platform/platform.c.obj
+                0x10000530                running_on_fpga
  .text.hw_claim_or_assert
-                0x10000520       0x44 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
-                0x10000520                hw_claim_or_assert
+                0x10000540       0x44 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
+                0x10000540                hw_claim_or_assert
  .text.hw_claim_unused_from_range
-                0x10000564       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
-                0x10000564                hw_claim_unused_from_range
+                0x10000584       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_claim/claim.c.obj
+                0x10000584                hw_claim_unused_from_range
  .text.spin_locks_reset
-                0x10000600       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
-                0x10000600                spin_locks_reset
+                0x10000620       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
+                0x10000620                spin_locks_reset
  .text.next_striped_spin_lock_num
-                0x1000061c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
-                0x1000061c                next_striped_spin_lock_num
+                0x1000063c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
+                0x1000063c                next_striped_spin_lock_num
  .text.spin_lock_claim_unused
-                0x10000634       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
-                0x10000634                spin_lock_claim_unused
+                0x10000654       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
+                0x10000654                spin_lock_claim_unused
  .text.irq_set_enabled
-                0x10000658       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x10000658                irq_set_enabled
+                0x10000678       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000678                irq_set_enabled
  .text.irq_set_pending
-                0x1000067c       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x1000067c                irq_set_pending
+                0x1000069c       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x1000069c                irq_set_pending
  .text.irq_has_shared_handler
-                0x1000068c       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x1000068c                irq_has_shared_handler
+                0x100006ac       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x100006ac                irq_has_shared_handler
  .text.irq_get_vtable_handler
-                0x100006b8       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x100006b8                irq_get_vtable_handler
+                0x100006d8       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x100006d8                irq_get_vtable_handler
  .text.irq_set_exclusive_handler
-                0x100006c8       0x54 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x100006c8                irq_set_exclusive_handler
+                0x100006e8       0x54 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x100006e8                irq_set_exclusive_handler
  .text.irq_add_shared_handler
-                0x1000071c      0x1f4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x1000071c                irq_add_shared_handler
+                0x1000073c      0x1f4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x1000073c                irq_add_shared_handler
  .text.irq_remove_handler
-                0x10000910      0x1c4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x10000910                irq_remove_handler
+                0x10000930      0x1c4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000930                irq_remove_handler
  .text.irq_add_tail_to_free_list
-                0x10000ad4       0xb4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x10000ad4                irq_add_tail_to_free_list
+                0x10000af4       0xb4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000af4                irq_add_tail_to_free_list
  .text.irq_init_priorities
-                0x10000b88       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x10000b88                irq_init_priorities
+                0x10000ba8       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000ba8                irq_init_priorities
  .text.user_irq_claim_unused
-                0x10000bac       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
-                0x10000bac                user_irq_claim_unused
+                0x10000bcc       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000bcc                user_irq_claim_unused
  .text.lock_init
-                0x10000bd8       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/lock_core.c.obj
-                0x10000bd8                lock_init
+                0x10000bf8       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/lock_core.c.obj
+                0x10000bf8                lock_init
  .text.mutex_init
-                0x10000be8       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/mutex.c.obj
-                0x10000be8                mutex_init
+                0x10000c08       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/mutex.c.obj
+                0x10000c08                mutex_init
  .text.recursive_mutex_init
-                0x10000c04       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/mutex.c.obj
-                0x10000c04                recursive_mutex_init
+                0x10000c24       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/mutex.c.obj
+                0x10000c24                recursive_mutex_init
  .text.critical_section_init
-                0x10000c20       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/critical_section.c.obj
-                0x10000c20                critical_section_init
+                0x10000c40       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/critical_section.c.obj
+                0x10000c40                critical_section_init
  .text.critical_section_init_with_lock_num
-                0x10000c3c       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/critical_section.c.obj
-                0x10000c3c                critical_section_init_with_lock_num
+                0x10000c5c       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_sync/critical_section.c.obj
+                0x10000c5c                critical_section_init_with_lock_num
  .text.timer_pool_entry_comparator
-                0x10000c50       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
-                0x10000c50                timer_pool_entry_comparator
+                0x10000c70       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10000c70                timer_pool_entry_comparator
  .text.sleep_until_callback
-                0x10000c84       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10000ca4       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
  .text.add_alarm_under_lock.isra.0
-                0x10000cb4      0x100 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10000cd4      0x100 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
  .text.alarm_pool_alarm_callback
-                0x10000db4      0x1c0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10000dd4      0x1c0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
  .text.alarm_pool_init_default
-                0x10000f74       0x6c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
-                0x10000f74                alarm_pool_init_default
+                0x10000f94       0x6c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10000f94                alarm_pool_init_default
  .text.alarm_pool_get_default
-                0x10000fe0        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
-                0x10000fe0                alarm_pool_get_default
+                0x10001000        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10001000                alarm_pool_get_default
  .text.alarm_pool_add_alarm_at
-                0x10000fe8      0x17c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
-                0x10000fe8                alarm_pool_add_alarm_at
+                0x10001008      0x17c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10001008                alarm_pool_add_alarm_at
  .text.alarm_pool_core_num
-                0x10001164        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
-                0x10001164                alarm_pool_core_num
+                0x10001184        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10001184                alarm_pool_core_num
  .text.best_effort_wfe_or_timeout
-                0x10001168       0xcc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
-                0x10001168                best_effort_wfe_or_timeout
+                0x10001188       0xcc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_time/time.c.obj
+                0x10001188                best_effort_wfe_or_timeout
  .text.hardware_alarm_irq_handler
-                0x10001234       0xbc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001254       0xbc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
  .text.hardware_alarm_claim
-                0x100012f0       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
-                0x100012f0                hardware_alarm_claim
+                0x10001310       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001310                hardware_alarm_claim
  .text.time_us_64
-                0x10001308       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
-                0x10001308                time_us_64
+                0x10001328       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001328                time_us_64
  .text.busy_wait_us
-                0x1000131c       0x68 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
-                0x1000131c                busy_wait_us
+                0x1000133c       0x68 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x1000133c                busy_wait_us
  .text.hardware_alarm_set_callback
-                0x10001384       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
-                0x10001384                hardware_alarm_set_callback
+                0x100013a4       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x100013a4                hardware_alarm_set_callback
  .text.hardware_alarm_set_target
-                0x10001410       0xd0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
-                0x10001410                hardware_alarm_set_target
+                0x10001430       0xd0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001430                hardware_alarm_set_target
  .text.hardware_alarm_cancel
-                0x100014e0       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
-                0x100014e0                hardware_alarm_cancel
+                0x10001500       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001500                hardware_alarm_cancel
  .text.ph_merge_nodes
-                0x1000151c       0x58 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
+                0x1000153c       0x58 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
  .text.ph_post_alloc_init
-                0x10001574       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
-                0x10001574                ph_post_alloc_init
+                0x10001594       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
+                0x10001594                ph_post_alloc_init
  .text.ph_merge_two_pass
-                0x100015b0       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
-                0x100015b0                ph_merge_two_pass
+                0x100015d0       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
+                0x100015d0                ph_merge_two_pass
  .text.ph_remove_any_head
-                0x1000163c      0x100 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
+                0x1000165c      0x100 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
  .text.ph_remove_head
-                0x1000173c      0x104 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
-                0x1000173c                ph_remove_head
+                0x1000175c      0x104 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
+                0x1000175c                ph_remove_head
  .text.ph_remove_and_free_node
-                0x10001840       0x78 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
-                0x10001840                ph_remove_and_free_node
+                0x10001860       0x78 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/common/pico_util/pheap.c.obj
+                0x10001860                ph_remove_and_free_node
  .text.uart_init
-                0x100018b8      0x18c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
-                0x100018b8                uart_init
+                0x100018d8      0x18c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_uart/uart.c.obj
+                0x100018d8                uart_init
  .text.clock_configure
-                0x10001a44      0x114 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
-                0x10001a44                clock_configure
+                0x10001a64      0x114 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x10001a64                clock_configure
  .text.clocks_init
-                0x10001b58      0x2c8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
-                0x10001b58                clocks_init
+                0x10001b78      0x2c8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x10001b78                clocks_init
  .text.clock_get_hz
-                0x10001e20        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
-                0x10001e20                clock_get_hz
+                0x10001e40        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x10001e40                clock_get_hz
  .text.pll_init
-                0x10001e2c       0xa4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
-                0x10001e2c                pll_init
+                0x10001e4c       0xa4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
+                0x10001e4c                pll_init
  .text.pll_deinit
-                0x10001ed0        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
-                0x10001ed0                pll_deinit
+                0x10001ef0        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
+                0x10001ef0                pll_deinit
  .text.watchdog_start_tick
-                0x10001ed8       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
-                0x10001ed8                watchdog_start_tick
+                0x10001ef8       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
+                0x10001ef8                watchdog_start_tick
  .text.watchdog_reboot
-                0x10001ee8       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
-                0x10001ee8                watchdog_reboot
+                0x10001f08       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_watchdog/watchdog.c.obj
+                0x10001f08                watchdog_reboot
  .text.xosc_init
-                0x10001f84       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
-                0x10001f84                xosc_init
+                0x10001fa4       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_xosc/xosc.c.obj
+                0x10001fa4                xosc_init
  .text.runtime_init
-                0x10001fac       0xf0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
-                0x10001fac                runtime_init
- .text._exit    0x1000209c        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
-                0x1000209c                _exit
- .text.exit     0x100020a0        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
-                0x100020a0                exit
- .text.panic    0x100020a8       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
-                0x100020a8                panic
+                0x10001fcc       0xf0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+                0x10001fcc                runtime_init
+ .text._exit    0x100020bc        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+                0x100020bc                _exit
+ .text.exit     0x100020c0        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+                0x100020c0                exit
+ .text.panic    0x100020c8       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+                0x100020c8                panic
  .text.hard_assertion_failure
-                0x100020d8        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
-                0x100020d8                hard_assertion_failure
+                0x100020f8        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+                0x100020f8                hard_assertion_failure
  .text._out_null
-                0x100020e4        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10002104        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .text._out_rev
-                0x100020e8       0xac CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10002108       0xac CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .text._ntoa_format
-                0x10002194      0x250 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x100021b4      0x250 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .text._out_char
-                0x100023e4       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10002404       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .text._out_fct
-                0x100023f4       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
- .text._etoa    0x10002404      0x464 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
- .text._ftoa    0x10002868      0x3c0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10002414       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+ .text._etoa    0x10002424      0x464 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+ .text._ftoa    0x10002888      0x3c0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .text._vsnprintf
-                0x10002c28      0xbc8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10002c48      0xbc8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .text.vfctprintf
-                0x100037f0       0x20 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
-                0x100037f0                vfctprintf
+                0x10003810       0x20 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10003810                vfctprintf
  .text.weak_raw_vprintf
-                0x10003810       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
-                0x10003810                weak_raw_vprintf
- .text          0x10003840       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
+                0x10003830       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10003830                weak_raw_vprintf
+ .text          0x10003860       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bit_ops/bit_ops_aeabi.S.obj
  .text.rom_func_lookup
-                0x10003850       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
-                0x10003850                rom_func_lookup
+                0x10003870       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
+                0x10003870                rom_func_lookup
  .text.rom_data_lookup
-                0x10003860       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
-                0x10003860                rom_data_lookup
+                0x10003880       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
+                0x10003880                rom_data_lookup
  .text.rom_funcs_lookup
-                0x10003870       0x44 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
-                0x10003870                rom_funcs_lookup
+                0x10003890       0x44 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_bootrom/bootrom.c.obj
+                0x10003890                rom_funcs_lookup
  .text.__wrap___aeabi_idiv
-                0x100038b4       0x50 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
-                0x100038b4                __wrap___aeabi_idivmod
-                0x100038b4                divmod_s32s32
-                0x100038b4                div_s32s32
-                0x100038b4                __wrap___aeabi_idiv
-                0x100038bc                divmod_s32s32_unsafe
-                0x100038e8                divmod_s32s32_savestate
+                0x100038d4       0x50 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
+                0x100038d4                __wrap___aeabi_idivmod
+                0x100038d4                divmod_s32s32
+                0x100038d4                div_s32s32
+                0x100038d4                __wrap___aeabi_idiv
+                0x100038dc                divmod_s32s32_unsafe
+                0x10003908                divmod_s32s32_savestate
  .text.__wrap___aeabi_uidiv
-                0x10003904       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
-                0x10003904                __wrap___aeabi_uidiv
-                0x10003904                __wrap___aeabi_uidivmod
-                0x10003904                div_u32u32
-                0x10003904                divmod_u32u32
-                0x1000390c                divmod_u32u32_unsafe
-                0x10003934                divmod_u32u32_savestate
+                0x10003924       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
+                0x10003924                __wrap___aeabi_uidiv
+                0x10003924                __wrap___aeabi_uidivmod
+                0x10003924                div_u32u32
+                0x10003924                divmod_u32u32
+                0x1000392c                divmod_u32u32_unsafe
+                0x10003954                divmod_u32u32_savestate
  .text.__wrap___aeabi_ldiv
-                0x10003950      0x424 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
-                0x10003950                __wrap___aeabi_ldivmod
-                0x10003950                div_s64s64
-                0x10003950                divmod_s64s64
-                0x10003980                divmod_u64u64
-                0x10003980                div_u64u64
-                0x10003980                __wrap___aeabi_uldivmod
-                0x10003990                divmod_u64u64_savestate
-                0x100039b0                divmod_s64s64_unsafe
-                0x10003a38                divmod_u64u64_unsafe
+                0x10003970      0x424 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_divider/divider.S.obj
+                0x10003970                __wrap___aeabi_ldivmod
+                0x10003970                div_s64s64
+                0x10003970                divmod_s64s64
+                0x100039a0                divmod_u64u64
+                0x100039a0                div_u64u64
+                0x100039a0                __wrap___aeabi_uldivmod
+                0x100039b0                divmod_u64u64_savestate
+                0x100039d0                divmod_s64s64_unsafe
+                0x10003a58                divmod_u64u64_unsafe
  .text.__wrap___aeabi_darithmetic
-                0x10003d74       0x80 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003d74                __wrap___aeabi_drsub
-                0x10003d7a                __wrap___aeabi_dsub
-                0x10003d8c                __wrap___aeabi_dadd
-                0x10003d9e                __wrap___aeabi_ddiv
-                0x10003dda                __wrap___aeabi_dmul
+                0x10003d94       0x80 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003d94                __wrap___aeabi_drsub
+                0x10003d9a                __wrap___aeabi_dsub
+                0x10003dac                __wrap___aeabi_dadd
+                0x10003dbe                __wrap___aeabi_ddiv
+                0x10003dfa                __wrap___aeabi_dmul
  .text.__wrap___aeabi_cdcmple
-                0x10003df4       0x6c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003df4                __wrap___aeabi_cdrcmple
-                0x10003e04                __wrap___aeabi_cdcmple
-                0x10003e04                __wrap___aeabi_cdcmpeq
+                0x10003e14       0x6c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003e14                __wrap___aeabi_cdrcmple
+                0x10003e24                __wrap___aeabi_cdcmple
+                0x10003e24                __wrap___aeabi_cdcmpeq
  .text.__wrap___aeabi_dcmplt
-                0x10003e60        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003e60                __wrap___aeabi_dcmplt
+                0x10003e80        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003e80                __wrap___aeabi_dcmplt
  .text.__wrap___aeabi_dcmpge
-                0x10003e6c       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003e6c                __wrap___aeabi_dcmpge
+                0x10003e8c       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003e8c                __wrap___aeabi_dcmpge
  .text.__wrap___aeabi_dcmpgt
-                0x10003e7c        0xa CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003e7c                __wrap___aeabi_dcmpgt
+                0x10003e9c        0xa CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003e9c                __wrap___aeabi_dcmpgt
  .text.__wrap___aeabi_dcmpun
-                0x10003e86       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003e86                __wrap___aeabi_dcmpun
- *fill*         0x10003ea2        0x2 
+                0x10003ea6       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003ea6                __wrap___aeabi_dcmpun
+ *fill*         0x10003ec2        0x2 
  .text.__wrap___aeabi_i2d
-                0x10003ea4       0x38 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003ea4                __wrap___aeabi_ui2d
-                0x10003eac                __wrap___aeabi_i2d
+                0x10003ec4       0x38 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003ec4                __wrap___aeabi_ui2d
+                0x10003ecc                __wrap___aeabi_i2d
  .text.__wrap___aeabi_d2iz
-                0x10003edc       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003edc                __wrap___aeabi_d2iz
-                0x10003edc                double2int_z
+                0x10003efc       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003efc                __wrap___aeabi_d2iz
+                0x10003efc                double2int_z
  .text.__wrap___aeabi_d2uiz
-                0x10003f24       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003f24                double2uint
-                0x10003f24                __wrap___aeabi_d2uiz
+                0x10003f44       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003f44                double2uint
+                0x10003f44                __wrap___aeabi_d2uiz
  .text.__wrap___aeabi_d2f
-                0x10003f3c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
-                0x10003f3c                __wrap___aeabi_d2f
+                0x10003f5c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_aeabi.S.obj
+                0x10003f5c                __wrap___aeabi_d2f
  .text.__aeabi_double_init
-                0x10003f54       0x98 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
-                0x10003f54                __aeabi_double_init
+                0x10003f74       0x98 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_init_rom.c.obj
+                0x10003f74                __aeabi_double_init
  .text.double_table_shim_on_use_helper
-                0x10003fec       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x10003fec                double_table_shim_on_use_helper
+                0x1000400c       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x1000400c                double_table_shim_on_use_helper
  .text.__wrap___aeabi_dsub
-                0x10004018       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x10004018                drsub_shim
-                0x1000401e                dsub_shim
+                0x10004038       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x10004038                drsub_shim
+                0x1000403e                dsub_shim
  .text.dadd_shim
-                0x10004028      0x15c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x10004028                dadd_shim
+                0x10004048      0x15c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x10004048                dadd_shim
  .text.dmul_shim
-                0x10004184      0x15c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x10004184                dmul_shim
+                0x100041a4      0x15c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x100041a4                dmul_shim
  .text.ddiv_shim
-                0x100042e0      0x1b0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x100042e0                ddiv_shim
+                0x10004300      0x1b0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x10004300                ddiv_shim
  .text.double2uint_shim
-                0x10004490        0xe CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x10004490                double2uint_shim
-                0x10004492                double2ufix_shim
- *fill*         0x1000449e        0x2 
+                0x100044b0        0xe CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x100044b0                double2uint_shim
+                0x100044b2                double2ufix_shim
+ *fill*         0x100044be        0x2 
  .text.double2uint64_shim
-                0x100044a0       0x70 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x100044a0                double2uint64_shim
-                0x100044a2                double2ufix64_shim
-                0x100044c2                d2fix_a
+                0x100044c0       0x70 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x100044c0                double2uint64_shim
+                0x100044c2                double2ufix64_shim
+                0x100044e2                d2fix_a
  .text.double2float_shim
-                0x10004510       0x5c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x10004510                double2float_shim
+                0x10004530       0x5c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x10004530                double2float_shim
  .text.dunpacks
-                0x1000456c       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
-                0x1000456c                dunpacks
+                0x1000458c       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_double/double_v1_rom_shim.S.obj
+                0x1000458c                dunpacks
  .text.__aeabi_lmul
-                0x100045a8       0x32 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
-                0x100045a8                __wrap___aeabi_lmul
- *fill*         0x100045da        0x2 
+                0x100045c8       0x32 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_int64_ops/pico_int64_ops_aeabi.S.obj
+                0x100045c8                __wrap___aeabi_lmul
+ *fill*         0x100045fa        0x2 
  .text.__wrap___aeabi_f2d
-                0x100045dc       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
-                0x100045dc                __wrap___aeabi_f2d
+                0x100045fc       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_aeabi.S.obj
+                0x100045fc                __wrap___aeabi_f2d
  .text.__aeabi_float_init
-                0x100045f0       0x64 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
-                0x100045f0                __aeabi_float_init
+                0x10004610       0x64 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_init_rom.c.obj
+                0x10004610                __aeabi_float_init
  .text.float_table_shim_on_use_helper
-                0x10004654       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
-                0x10004654                float_table_shim_on_use_helper
+                0x10004674       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
+                0x10004674                float_table_shim_on_use_helper
  .text.float2double_shim
-                0x10004680       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
-                0x10004680                float2double_shim
- .text          0x100046b0       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
-                0x100046b0                __aeabi_mem_init
- .text.memset   0x100046c0        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
-                0x100046c0                __wrap_memset
- .text.memcpy   0x100046cc        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
-                0x100046cc                __wrap___aeabi_memcpy
-                0x100046cc                __wrap_memcpy
+                0x100046a0       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_float/float_v1_rom_shim.S.obj
+                0x100046a0                float2double_shim
+ .text          0x100046d0       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
+                0x100046d0                __aeabi_mem_init
+ .text.memset   0x100046e0        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
+                0x100046e0                __wrap_memset
+ .text.memcpy   0x100046ec        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_mem_ops/mem_ops_aeabi.S.obj
+                0x100046ec                __wrap___aeabi_memcpy
+                0x100046ec                __wrap_memcpy
  .text.stdio_out_chars_crlf
-                0x100046d8       0x94 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x100046f8       0x94 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
  .text.stdio_buffered_printer
-                0x1000476c       0x64 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x1000478c       0x64 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
  .text.__wrap_putchar
-                0x100047d0       0x98 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
-                0x100047d0                __wrap_putchar
+                0x100047f0       0x98 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x100047f0                __wrap_putchar
  .text.__wrap_puts
-                0x10004868       0xe0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10004868                __wrap_puts
+                0x10004888       0xe0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10004888                __wrap_puts
  .text.stdio_set_driver_enabled
-                0x10004948       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10004948                stdio_set_driver_enabled
+                0x10004968       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10004968                stdio_set_driver_enabled
  .text.__wrap_vprintf
-                0x10004978       0xd4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10004978                __wrap_vprintf
+                0x10004998       0xd4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10004998                __wrap_vprintf
  .text.__wrap_printf
-                0x10004a4c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10004a4c                __wrap_printf
+                0x10004a6c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10004a6c                __wrap_printf
  .text.stdio_init_all
-                0x10004a64       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10004a64                stdio_init_all
+                0x10004a84       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10004a84                stdio_init_all
  .text.stdio_uart_out_chars
-                0x10004a74       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10004a94       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
  .text.stdio_uart_in_chars
-                0x10004ac0       0x90 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
-                0x10004ac0                stdio_uart_in_chars
+                0x10004ae0       0x90 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10004ae0                stdio_uart_in_chars
  .text.on_uart_rx
-                0x10004b50       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10004b70       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
  .text.stdio_uart_set_chars_available_callback
-                0x10004b78       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10004b98       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
  .text.stdio_uart_init
-                0x10004c04       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
-                0x10004c04                stdio_uart_init
+                0x10004c24       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10004c24                stdio_uart_init
  .text.resetd_init
-                0x10004c4c        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x10004c6c        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
  .text.resetd_reset
-                0x10004c50        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x10004c70        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
  .text.resetd_open
-                0x10004c5c       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x10004c7c       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
  .text.resetd_xfer_cb
-                0x10004c84        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x10004ca4        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
  .text.resetd_control_xfer_cb
-                0x10004c88       0x60 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x10004ca8       0x60 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
  .text.usbd_app_driver_get_cb
-                0x10004ce8        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
-                0x10004ce8                usbd_app_driver_get_cb
+                0x10004d08        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x10004d08                usbd_app_driver_get_cb
  .text.tud_cdc_line_coding_cb
-                0x10004cf4       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
-                0x10004cf4                tud_cdc_line_coding_cb
+                0x10004d14       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x10004d14                tud_cdc_line_coding_cb
  .text.stdio_usb_set_chars_available_callback
-                0x10004d28       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
-                0x10004d28                stdio_usb_set_chars_available_callback
- .text.usb_irq  0x10004d3c       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10004d48       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10004d48                stdio_usb_set_chars_available_callback
+ .text.usb_irq  0x10004d5c       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
  .text.timer_task
-                0x10004d4c       0x54 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10004d6c       0x54 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
  .text.stdio_usb_in_chars
-                0x10004da0       0x90 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
-                0x10004da0                stdio_usb_in_chars
+                0x10004dc0       0x90 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10004dc0                stdio_usb_in_chars
  .text.stdio_usb_out_chars
-                0x10004e30      0x104 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10004e50      0x104 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
  .text.low_priority_worker_irq
-                0x10004f34       0xa8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10004f54       0xa8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
  .text.tud_cdc_rx_cb
-                0x10004fdc       0x20 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
-                0x10004fdc                tud_cdc_rx_cb
+                0x10004ffc       0x20 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10004ffc                tud_cdc_rx_cb
  .text.stdio_usb_init
-                0x10004ffc       0xe0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
-                0x10004ffc                stdio_usb_init
+                0x1000501c       0xe0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x1000501c                stdio_usb_init
  .text.tud_descriptor_device_cb
-                0x100050dc        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
-                0x100050dc                tud_descriptor_device_cb
+                0x100050fc        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+                0x100050fc                tud_descriptor_device_cb
  .text.tud_descriptor_configuration_cb
-                0x100050e4        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
-                0x100050e4                tud_descriptor_configuration_cb
+                0x10005104        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+                0x10005104                tud_descriptor_configuration_cb
  .text.tud_descriptor_string_cb
-                0x100050ec       0x78 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
-                0x100050ec                tud_descriptor_string_cb
+                0x1000510c       0x78 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+                0x1000510c                tud_descriptor_string_cb
  .text.startup._retrieve_unique_id_on_boot
-                0x10005164       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj
+                0x10005184       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj
  .text.pico_get_unique_board_id_string
-                0x10005174      0x1a8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj
-                0x10005174                pico_get_unique_board_id_string
+                0x10005194      0x1a8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj
+                0x10005194                pico_get_unique_board_id_string
  .text.flash_get_unique_id
-                0x1000531c       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_flash/flash.c.obj
-                0x1000531c                flash_get_unique_id
+                0x1000533c       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_flash/flash.c.obj
+                0x1000533c                flash_get_unique_id
  .text.dcd_int_enable
-                0x10005358        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x10005358                dcd_int_enable
+                0x10005378        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x10005378                dcd_int_enable
  .text.dcd_set_address
-                0x10005364       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x10005364                dcd_set_address
+                0x10005384       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x10005384                dcd_set_address
  .text.dcd_connect
-                0x10005378       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x10005378                dcd_connect
+                0x10005398       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x10005398                dcd_connect
  .text.dcd_init
-                0x10005388       0x98 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x10005388                dcd_init
+                0x100053a8       0x98 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x100053a8                dcd_init
  .text.dcd_edpt0_status_complete
-                0x10005420       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x10005420                dcd_edpt0_status_complete
+                0x10005440       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x10005440                dcd_edpt0_status_complete
  .text.dcd_edpt_open
-                0x1000543c      0x108 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x1000543c                dcd_edpt_open
+                0x1000545c      0x108 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x1000545c                dcd_edpt_open
  .text.dcd_edpt_close_all
-                0x10005544        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x10005544                dcd_edpt_close_all
+                0x10005564        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x10005564                dcd_edpt_close_all
  .text.dcd_edpt_xfer
-                0x1000554c       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x1000554c                dcd_edpt_xfer
+                0x1000556c       0x24 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x1000556c                dcd_edpt_xfer
  .text.dcd_edpt_stall
-                0x10005570       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x10005570                dcd_edpt_stall
+                0x10005590       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x10005590                dcd_edpt_stall
  .text.dcd_edpt_clear_stall
-                0x100055a4       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
-                0x100055a4                dcd_edpt_clear_stall
+                0x100055c4       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x100055c4                dcd_edpt_clear_stall
  .text.rp2040_usb_init
-                0x100055d4       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
-                0x100055d4                rp2040_usb_init
+                0x100055f4       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
+                0x100055f4                rp2040_usb_init
  .text.hw_endpoint_xfer_start
-                0x10005620       0x40 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
-                0x10005620                hw_endpoint_xfer_start
+                0x10005640       0x40 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
+                0x10005640                hw_endpoint_xfer_start
  .text.tud_mounted
-                0x10005660       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10005660                tud_mounted
+                0x10005680       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x10005680                tud_mounted
  .text.tud_suspended
-                0x10005670       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10005670                tud_suspended
+                0x10005690       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x10005690                tud_suspended
  .text.tud_inited
-                0x10005680       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10005680                tud_inited
+                0x100056a0       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x100056a0                tud_inited
  .text.tud_init
-                0x10005694       0xdc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10005694                tud_init
+                0x100056b4       0xdc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x100056b4                tud_init
  .text.tud_task_ext
-                0x10005770      0x850 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10005770                tud_task_ext
+                0x10005790      0x850 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x10005790                tud_task_ext
  .text.usbd_open_edpt_pair
-                0x10005fc0       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10005fc0                usbd_open_edpt_pair
+                0x10005fe0       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x10005fe0                usbd_open_edpt_pair
  .text.usbd_defer_func
-                0x1000605c       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x1000605c                usbd_defer_func
+                0x1000607c       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x1000607c                usbd_defer_func
  .text.usbd_edpt_open
-                0x100060a4       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x100060a4                usbd_edpt_open
+                0x100060c4       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x100060c4                usbd_edpt_open
  .text.usbd_edpt_claim
-                0x100060d8       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x100060d8                usbd_edpt_claim
+                0x100060f8       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x100060f8                usbd_edpt_claim
  .text.usbd_edpt_release
-                0x10006100       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10006100                usbd_edpt_release
+                0x10006120       0x28 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x10006120                usbd_edpt_release
  .text.usbd_edpt_xfer
-                0x10006128       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10006128                usbd_edpt_xfer
+                0x10006148       0x4c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x10006148                usbd_edpt_xfer
  .text.tud_control_status
-                0x10006174       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
-                0x10006174                tud_control_status
+                0x10006194       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
+                0x10006194                tud_control_status
  .text.tud_control_xfer
-                0x100061a0       0xac CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
-                0x100061a0                tud_control_xfer
+                0x100061c0       0xac CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
+                0x100061c0                tud_control_xfer
  .text.usbd_control_reset
-                0x1000624c       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
-                0x1000624c                usbd_control_reset
+                0x1000626c       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
+                0x1000626c                usbd_control_reset
  .text.usbd_control_set_complete_callback
-                0x10006260        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
-                0x10006260                usbd_control_set_complete_callback
+                0x10006280        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
+                0x10006280                usbd_control_set_complete_callback
  .text.usbd_control_set_request
-                0x1000626c       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
-                0x1000626c                usbd_control_set_request
+                0x1000628c       0x1c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
+                0x1000628c                usbd_control_set_request
  .text.usbd_control_xfer_cb
-                0x10006288       0xf4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
-                0x10006288                usbd_control_xfer_cb
+                0x100062a8       0xf4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd_control.c.obj
+                0x100062a8                usbd_control_xfer_cb
  .text.tud_cdc_n_connected
-                0x1000637c       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x1000637c                tud_cdc_n_connected
+                0x1000639c       0x30 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x1000639c                tud_cdc_n_connected
  .text.tud_cdc_n_available
-                0x100063ac       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x100063ac                tud_cdc_n_available
+                0x100063cc       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x100063cc                tud_cdc_n_available
  .text.tud_cdc_n_read
-                0x100063c4       0x70 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x100063c4                tud_cdc_n_read
+                0x100063e4       0x70 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x100063e4                tud_cdc_n_read
  .text.tud_cdc_n_write_flush
-                0x10006434       0x78 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x10006434                tud_cdc_n_write_flush
+                0x10006454       0x78 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x10006454                tud_cdc_n_write_flush
  .text.tud_cdc_n_write
-                0x100064ac       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x100064ac                tud_cdc_n_write
+                0x100064cc       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x100064cc                tud_cdc_n_write
  .text.tud_cdc_n_write_available
-                0x100064e0       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x100064e0                tud_cdc_n_write_available
+                0x10006500       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x10006500                tud_cdc_n_write_available
  .text.cdcd_init
-                0x100064f8       0x7c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x100064f8                cdcd_init
+                0x10006518       0x7c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x10006518                cdcd_init
  .text.cdcd_reset
-                0x10006574       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x10006574                cdcd_reset
+                0x10006594       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x10006594                cdcd_reset
  .text.cdcd_open
-                0x100065a0       0xe4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x100065a0                cdcd_open
+                0x100065c0       0xe4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x100065c0                cdcd_open
  .text.cdcd_control_xfer_cb
-                0x10006684       0xe4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x10006684                cdcd_control_xfer_cb
+                0x100066a4       0xe4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x100066a4                cdcd_control_xfer_cb
  .text.cdcd_xfer_cb
-                0x10006768      0x13c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
-                0x10006768                cdcd_xfer_cb
+                0x10006788      0x13c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/class/cdc/cdc_device.c.obj
+                0x10006788                cdcd_xfer_cb
  .text.tusb_init
-                0x100068a4        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
-                0x100068a4                tusb_init
+                0x100068c4        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
+                0x100068c4                tusb_init
  .text.tusb_inited
-                0x100068b0        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
-                0x100068b0                tusb_inited
+                0x100068d0        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
+                0x100068d0                tusb_inited
  .text.tu_edpt_claim
-                0x100068b8       0x50 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
-                0x100068b8                tu_edpt_claim
+                0x100068d8       0x50 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
+                0x100068d8                tu_edpt_claim
  .text.tu_edpt_release
-                0x10006908       0x38 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
-                0x10006908                tu_edpt_release
+                0x10006928       0x38 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
+                0x10006928                tu_edpt_release
  .text.tu_edpt_validate
-                0x10006940       0x7c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
-                0x10006940                tu_edpt_validate
+                0x10006960       0x7c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
+                0x10006960                tu_edpt_validate
  .text.tu_edpt_bind_driver
-                0x100069bc       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
-                0x100069bc                tu_edpt_bind_driver
+                0x100069dc       0x34 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
+                0x100069dc                tu_edpt_bind_driver
  .text.tu_fifo_config
-                0x100069f0       0x6c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x100069f0                tu_fifo_config
+                0x10006a10       0x6c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006a10                tu_fifo_config
  .text.tu_fifo_count
-                0x10006a5c       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006a5c                tu_fifo_count
+                0x10006a7c       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006a7c                tu_fifo_count
  .text.tu_fifo_empty
-                0x10006a88       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006a88                tu_fifo_empty
+                0x10006aa8       0x10 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006aa8                tu_fifo_empty
  .text.tu_fifo_remaining
-                0x10006a98       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006a98                tu_fifo_remaining
+                0x10006ab8       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006ab8                tu_fifo_remaining
  .text.tu_fifo_read
-                0x10006ac4       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006ac4                tu_fifo_read
+                0x10006ae4       0x9c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006ae4                tu_fifo_read
  .text.tu_fifo_read_n
-                0x10006b60       0xe8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006b60                tu_fifo_read_n
+                0x10006b80       0xe8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006b80                tu_fifo_read_n
  .text.tu_fifo_write
-                0x10006c48       0xa8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006c48                tu_fifo_write
+                0x10006c68       0xa8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006c68                tu_fifo_write
  .text.tu_fifo_write_n
-                0x10006cf0      0x178 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006cf0                tu_fifo_write_n
+                0x10006d10      0x178 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006d10                tu_fifo_write_n
  .text.tu_fifo_clear
-                0x10006e68       0x40 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006e68                tu_fifo_clear
+                0x10006e88       0x40 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006e88                tu_fifo_clear
  .text.tu_fifo_set_overwritable
-                0x10006ea8       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
-                0x10006ea8                tu_fifo_set_overwritable
- .text.strlen   0x10006ef0       0x5c /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc.a(libc_a-strlen-stub.o)
-                0x10006ef0                strlen
+                0x10006ec8       0x48 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
+                0x10006ec8                tu_fifo_set_overwritable
+ .text.strlen   0x10006f10       0x5c /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc.a(libc_a-strlen-stub.o)
+                0x10006f10                strlen
  *(.fini)
- .fini          0x10006f4c        0x4 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crti.o
-                0x10006f4c                _fini
- .fini.__stub   0x10006f50       0xc0 linker stubs
+ .fini          0x10006f6c        0x4 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crti.o
+                0x10006f6c                _fini
+ .fini.__stub   0x10006f70       0xc0 linker stubs
  *crtbegin.o(.ctors)
  *crtbegin?.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
@@ -2178,127 +2182,127 @@ LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  *(SORT_BY_NAME(.dtors.*))
  *(.dtors)
  *(.eh_frame*)
- .eh_frame      0x10007010        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
-                0x10007010                        . = ALIGN (0x4)
+ .eh_frame      0x10007030        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x10007030                        . = ALIGN (0x4)
 
-.glue_7         0x10007010        0x0
- .glue_7        0x10007010        0x0 linker stubs
+.glue_7         0x10007030        0x0
+ .glue_7        0x10007030        0x0 linker stubs
 
-.glue_7t        0x10007010        0x0
- .glue_7t       0x10007010        0x0 linker stubs
+.glue_7t        0x10007030        0x0
+ .glue_7t       0x10007030        0x0 linker stubs
 
-.vfp11_veneer   0x10007010        0x0
- .vfp11_veneer  0x10007010        0x0 linker stubs
+.vfp11_veneer   0x10007030        0x0
+ .vfp11_veneer  0x10007030        0x0 linker stubs
 
-.v4_bx          0x10007010        0x0
- .v4_bx         0x10007010        0x0 linker stubs
+.v4_bx          0x10007030        0x0
+ .v4_bx         0x10007030        0x0 linker stubs
 
-.iplt           0x10007010        0x0
- .iplt          0x10007010        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
+.iplt           0x10007030        0x0
+ .iplt          0x10007030        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
 
-.rodata         0x10007010      0x544
+.rodata         0x10007030      0x544
  *(EXCLUDE_FILE(*libm.a: *libc.a:*lib_a-mem*.o *libgcc.a:) .rodata*)
  .rodata.vent_servo_demo.str1.4
-                0x10007010      0x1d4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
+                0x10007030      0x1d4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/vent-servo.c.obj
                                  0x32 (size before relaxing)
  .rodata.spin_lock_claim_unused.str1.4
-                0x100071e4       0x1b CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
+                0x10007204       0x1b CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_sync/sync.c.obj
  .rodata.user_irq_claim_unused.str1.4
-                0x100071e4       0x1b CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
+                0x10007204       0x1b CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
  .rodata.hardware_alarm_claim.str1.4
-                0x100071e4       0x22 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
+                0x10007204       0x22 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_timer/timer.c.obj
  .rodata.panic.str1.4
-                0x100071e4       0x12 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+                0x10007204       0x12 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
  .rodata.hard_assertion_failure.str1.4
-                0x100071e4        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
+                0x10007204        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
  .rodata._ftoa.str1.4
-                0x100071e4       0x15 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10007204       0x15 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .rodata._vsnprintf
-                0x100071e4      0x19c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x10007204      0x19c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .rodata.pow10.0
-                0x10007380       0x50 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
+                0x100073a0       0x50 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_printf/printf.c.obj
  .rodata.str1.4
-                0x100073d0       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x100073f0       0x3c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .rodata.__bi_81
-                0x100073d0        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x100073f0        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .rodata.__bi_75
-                0x100073dc        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x100073fc        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .rodata.__bi_44
-                0x100073e8        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x10007408        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .rodata.crlf_str.0
-                0x100073f4        0x2 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10007414        0x2 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio/stdio.c.obj
  .rodata.str1.4
-                0x100073f6       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
- *fill*         0x100073f6        0x2 
+                0x10007416       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+ *fill*         0x10007416        0x2 
  .rodata.__bi_33.4
-                0x100073f8        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10007418        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
  .rodata.__bi_34.5
-                0x10007404        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10007424        0x8 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
  .rodata._resetd_driver
-                0x1000740c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
+                0x1000742c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/reset_interface.c.obj
  .rodata.str1.4
-                0x10007424       0x13 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10007444       0x13 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
  .rodata.__bi_182.0
-                0x10007424        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x10007444        0xc CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
  .rodata.str1.4
-                0x10007430       0x2a CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+                0x10007450       0x2a CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
  .rodata.usbd_desc_str
-                0x10007430       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+                0x10007450       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
  .rodata.usbd_desc_cfg
-                0x10007448       0x54 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+                0x10007468       0x54 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
  .rodata.usbd_desc_device
-                0x1000749c       0x12 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
+                0x100074bc       0x12 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c.obj
  .rodata.str1.4
-                0x100074ae       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
+                0x100074ce       0x14 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/dcd_rp2040.c.obj
  .rodata.str1.4
-                0x100074ae       0x53 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
- *fill*         0x100074ae        0x2 
+                0x100074ce       0x53 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/portable/raspberrypi/rp2040/rp2040_usb.c.obj
+ *fill*         0x100074ce        0x2 
  .rodata.tud_task_ext
-                0x100074b0       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x100074d0       0x8c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
  .rodata._usbd_driver
-                0x1000753c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
-                0x10007554                        . = ALIGN (0x4)
+                0x1000755c       0x18 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/device/usbd.c.obj
+                0x10007574                        . = ALIGN (0x4)
  *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.flashdata*)))
-                0x10007554                        . = ALIGN (0x4)
+                0x10007574                        . = ALIGN (0x4)
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x10007554                        __exidx_start = .
+                0x10007574                        __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x10007554                        __exidx_end = .
-                0x10007554                        . = ALIGN (0x4)
-                0x10007554                        __binary_info_start = .
+                0x10007574                        __exidx_end = .
+                0x10007574                        . = ALIGN (0x4)
+                0x10007574                        __binary_info_start = .
 
-.binary_info    0x10007554       0x28
+.binary_info    0x10007574       0x28
  *(.binary_info.keep.*)
  .binary_info.keep.__bi_ptr81
-                0x10007554        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x10007574        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .binary_info.keep.__bi_ptr75
-                0x10007558        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x10007578        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .binary_info.keep.__bi_ptr50
-                0x1000755c        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x1000757c        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .binary_info.keep.__bi_ptr44
-                0x10007560        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x10007580        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .binary_info.keep.__bi_ptr38
-                0x10007564        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x10007584        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .binary_info.keep.__bi_ptr30
-                0x10007568        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x10007588        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  .binary_info.keep.__bi_ptr22
-                0x1000756c        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
+                0x1000758c        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
  *(.binary_info.*)
  .binary_info.__bi_ptr34
-                0x10007570        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10007590        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
  .binary_info.__bi_ptr33
-                0x10007574        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
+                0x10007594        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/stdio_uart.c.obj
  .binary_info.__bi_ptr182
-                0x10007578        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
-                0x1000757c                        __binary_info_end = .
+                0x10007598        0x4 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb.c.obj
+                0x1000759c                        __binary_info_end = .
 
-.rel.dyn        0x1000757c        0x0
- .rel.iplt      0x1000757c        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
-                0x1000757c                        . = ALIGN (0x4)
+.rel.dyn        0x1000759c        0x0
+ .rel.iplt      0x1000759c        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
+                0x1000759c                        . = ALIGN (0x4)
 
 .ram_vector_table
                 0x20000000       0xc0
@@ -2307,7 +2311,7 @@ LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-no
                 0x20000000       0xc0 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_runtime/runtime.c.obj
                 0x20000000                ram_vector_table
 
-.data           0x200000c0      0xe48 load address 0x1000757c
+.data           0x200000c0      0xe48 load address 0x1000759c
                 0x200000c0                        __data_start__ = .
  *(vtable)
  *(.time_critical*)
@@ -2449,36 +2453,36 @@ LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  *(.jcr)
                 0x20000f08                        . = ALIGN (0x4)
                 0x20000f08                        __data_end__ = .
-                0x1000757c                        __etext = LOADADDR (.data)
+                0x1000759c                        __etext = LOADADDR (.data)
 
 .tm_clone_table
-                0x20000f08        0x0 load address 0x100083c4
+                0x20000f08        0x0 load address 0x100083e4
  .tm_clone_table
                 0x20000f08        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
  .tm_clone_table
                 0x20000f08        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtend.o
 
-.igot.plt       0x20000f08        0x0 load address 0x100083c4
+.igot.plt       0x20000f08        0x0 load address 0x100083e4
  .igot.plt      0x20000f08        0x0 /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/crtbegin.o
 
 .uninitialized_data
-                0x20000f08        0x0 load address 0x100083c4
+                0x20000f08        0x0 load address 0x100083e4
                 0x20000f08                        . = ALIGN (0x4)
  *(.uninitialized_data*)
 
-.scratch_x      0x20040000        0x0 load address 0x100083c4
+.scratch_x      0x20040000        0x0 load address 0x100083e4
                 0x20040000                        __scratch_x_start__ = .
  *(.scratch_x.*)
                 0x20040000                        . = ALIGN (0x4)
                 0x20040000                        __scratch_x_end__ = .
-                0x100083c4                        __scratch_x_source__ = LOADADDR (.scratch_x)
+                0x100083e4                        __scratch_x_source__ = LOADADDR (.scratch_x)
 
-.scratch_y      0x20041000        0x0 load address 0x100083c4
+.scratch_y      0x20041000        0x0 load address 0x100083e4
                 0x20041000                        __scratch_y_start__ = .
  *(.scratch_y.*)
                 0x20041000                        . = ALIGN (0x4)
                 0x20041000                        __scratch_y_end__ = .
-                0x100083c4                        __scratch_y_source__ = LOADADDR (.scratch_y)
+                0x100083e4                        __scratch_y_source__ = LOADADDR (.scratch_y)
 
 .bss            0x20000f08      0xd9c
                 0x20000f08                        . = ALIGN (0x4)
@@ -2609,8 +2613,8 @@ LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-no
  *(.stack*)
  .stack         0x20041000      0x800 CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_standard_link/crt0.S.obj
 
-.flash_end      0x100083c4        0x0
-                0x100083c4                        PROVIDE (__flash_binary_end = .)
+.flash_end      0x100083e4        0x0
+                0x100083e4                        PROVIDE (__flash_binary_end = .)
                 0x20040000                        __StackLimit = (ORIGIN (RAM) + LENGTH (RAM))
                 0x20041000                        __StackOneTop = (ORIGIN (SCRATCH_X) + LENGTH (SCRATCH_X))
                 0x20042000                        __StackTop = (ORIGIN (SCRATCH_Y) + LENGTH (SCRATCH_Y))
@@ -2691,7 +2695,7 @@ LOAD CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/202
 LOAD CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/tusb.c.obj
 LOAD CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
 LOAD CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/rp2040_usb_device_enumeration.c.obj
-LOAD /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccgCR5x3.o
+LOAD /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccI2KJIS.o
 LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libstdc++.a
 LOAD /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a
 START GROUP
@@ -2813,7 +2817,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x00000826       0x2c CMakeFiles/servo.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
  .ARM.attributes
-                0x00000852       0x22 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccgCR5x3.o
+                0x00000852       0x22 /var/folders/n7/t1959y0j4_gczygmz5tcw0qc0000gn/T//ccI2KJIS.o
  .ARM.attributes
                 0x00000874       0x1e /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.2.1/thumb/v6-m/nofp/libgcc.a(_dvmd_tls.o)
  .ARM.attributes
