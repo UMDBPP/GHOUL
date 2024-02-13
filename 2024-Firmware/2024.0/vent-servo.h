@@ -53,7 +53,7 @@ short vent_servo_set_pulse_width(uint level, bool low_power);
 void enable_servo();
 
 /**
- * Convenience function to disable servo PWM signal, includes dumb 500 ms delay.
+ * Convenience function to disable servo PWM signal.
  */
 void disable_servo();
 

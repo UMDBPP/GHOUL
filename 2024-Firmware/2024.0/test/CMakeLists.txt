@@ -16,4 +16,4 @@ pico_enable_stdio_usb(servo 1)
 
 pico_add_extra_outputs(servo)
 
-target_link_libraries(servo pico_stdlib hardware_pwm hardware_clocks)
+target_link_libraries(servo pico_stdlib hardware_pwm hardware_gpio hardware_clocks)

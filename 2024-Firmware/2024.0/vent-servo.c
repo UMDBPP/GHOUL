@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 
+#include "hardware/gpio.h"
 #include "hardware/pwm.h"
 #include "pico/stdlib.h"
 
@@ -111,14 +112,16 @@ void vent_servo_close(bool low_power) {
 }
 
 void disable_servo() {
-    sleep_ms(500);  // stupid delay for now until I can figure out how to ensure
-                    // that this doesn't cause the servo to stop moving to it's
-                    // intended position
-    pwm_set_gpio_level(pwm_pin, 0);
-    // current_level = 0;
+    // sleep_ms(500);  // stupid delay for now until I can figure out how to
+    // ensure that this doesn't cause the servo to stop moving to it's intended
+    // position GPIO_OVERRIDE_LOW GPIO_OVERRIDE_NORMAL
+    gpio_set_outover(pwm_pin, GPIO_OVERRIDE_LOW);
+    // pwm_set_gpio_level(pwm_pin, 0);
+
     pwm_set_enabled(slice_num, false);
 }
 void enable_servo() {
-    pwm_set_gpio_level(pwm_pin, current_level);
+    gpio_set_outover(pwm_pin, GPIO_OVERRIDE_NORMAL);
+    // pwm_set_gpio_level(pwm_pin, current_level);
     pwm_set_enabled(slice_num, true);
 }
