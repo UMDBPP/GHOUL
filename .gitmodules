@@ -9,3 +9,11 @@
 	path = 2024-Firmware/2024.0/pico-sdk
 	url = https://github.com/raspberrypi/pico-sdk.git
 	branch = master
+[submodule "2024-Firmware/2024.0/rp2040-drf1262-lib"]
+	path = 2024-Firmware/2024.0/rp2040-drf1262-lib
+	url = https://github.com/UMDBPP/rp2040-drf1262-lib.git
+	branch = main
+[submodule "2024-Firmware/2024.0/rp2040-config"]
+	path = 2024-Firmware/2024.0/rp2040-config
+	url = https://github.com/UMDBPP/rp2040-config.git
+	branch = main
