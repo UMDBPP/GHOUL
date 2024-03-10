@@ -134,6 +134,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/gps-test.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdlib/stdlib.c.obj.d"
   "CMakeFiles/gps-test.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj"
   "CMakeFiles/gps-test.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj.d"
+  "CMakeFiles/gps-test.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-config/MB85RS1MT.cpp.obj"
+  "CMakeFiles/gps-test.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-config/MB85RS1MT.cpp.obj.d"
   "CMakeFiles/gps-test.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-drf1262-lib/SX1262.cpp.obj"
   "CMakeFiles/gps-test.dir/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-drf1262-lib/SX1262.cpp.obj.d"
   "CMakeFiles/gps-test.dir/test.cpp.obj"

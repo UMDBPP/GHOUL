@@ -83,9 +83,9 @@ int main() {
         return -1;
     }
 
-    // Enable the watchdog, requiring the watchdog to be updated every 2000ms or
+    // Enable the watchdog, requiring the watchdog to be updated every 1 minute or
     // the chip will reboot
-    watchdog_enable(2000, 1);
+    watchdog_enable(60000, 1);
 
     if (watchdog_caused_reboot()) {
         printf("Rebooted by Watchdog!\n");
@@ -94,6 +94,8 @@ int main() {
     }
 
     while (true) {
+        watchdog_update();
+
         // timed events
         //  - transmit location and some status maybe
         //  - log LAT,LONG,Time,Fix
