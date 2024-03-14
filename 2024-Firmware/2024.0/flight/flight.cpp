@@ -20,28 +20,29 @@ volatile bool rx_done = false;
 volatile bool send_ack = false;
 volatile bool do_tx = false;
 
+// timers
 repeating_timer_t tx_timer;
 repeating_timer_t log_timer;
+alarm_pool_t *ack_alarm_pool;
+alarm_id_t ack_alarm_id;
 
+// radio
+DRF1262 radio(spi1, RADIO_CS, SCK_PIN, MOSI_PIN, MISO_PIN, TXEN_PIN, DIO1_PIN,
+              BUSY_PIN, SW_PIN, RADIO_RST);
 uint8_t radio_tx_buf[100] = "hello!";
+char radio_rx_buf[100] = {0};
+char ack[] = "ack - GHOUL alive";
+
+// logging
+MB85RS1MT mem(spi1, FRAM_CS, SCK_PIN, MOSI_PIN, MISO_PIN);
+Config test_config;
+char log_str[] = "GHOUL,PRESS,TEMP,LAT,LONG,TIME\n";  // "a b c d ef"
+char log_str1[] = "0,0,0,99.9999,99.9999,0000.00\n";  //"h i j k lm"
+uint8_t log_buf = 0;
+static uint32_t log_addr = LOG_INIT_ADDR;
 
 // Ports
 i2c_inst_t *i2c = i2c0;
-
-DRF1262 radio(spi1, RADIO_CS, SCK_PIN, MOSI_PIN, MISO_PIN, TXEN_PIN, DIO1_PIN,
-              BUSY_PIN, SW_PIN, RADIO_RST);
-
-MB85RS1MT mem(spi1, FRAM_CS, SCK_PIN, MOSI_PIN, MISO_PIN);
-
-static uint32_t log_addr = LOG_INIT_ADDR;
-
-char log_str[] = "BITSv5,PRESS,TEMP,LAT,LONG,TIME\n";  // "a b c d ef"
-char log_str1[] = "0,0,0,99.9999,99.9999,0000.00\n";   //"h i j k lm"
-uint8_t log_buf = 0;
-
-Config test_config;
-
-char radio_rx_buf[100] = {0};
 
 void setup_led();
 void led_on();
@@ -49,6 +50,7 @@ void led_off();
 bool tx_timer_callback(repeating_timer_t *rt);
 bool log_timer_callback(repeating_timer_t *rt);
 void gpio_callback(uint gpio, uint32_t events);
+static int64_t ack_timer_callback(alarm_id_t id, void *user_data);
 void setup_spi();
 void write_name_config();
 void transmit(uint8_t *buf, size_t len);
@@ -56,12 +58,16 @@ void transmit(uint8_t *buf, size_t len);
 int main() {
     stdio_init_all();
 
-    // set_sys_clock_48mhz();
+    // set_sys_clock_48mhz(); // could reduce the system clock speed if needed
+    // for power reasons, would rather have the performance
 
+    // when DIO1 goes high on the radio interrupt with gpio_callback
     gpio_set_irq_enabled_with_callback(DIO1_PIN, GPIO_IRQ_EDGE_RISE, true,
                                        &gpio_callback);
 
-    setup_spi();
+    setup_spi();  // init SPI peripheral for Radio and FRAM
+
+    ack_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
 
     sleep_ms(5000);
 
@@ -71,20 +77,23 @@ int main() {
 
     setup_vent_servo(SERVO_PWM);
 
+    // Timers: the next two blocks create timers that trigger every 60 seconds,
+    // they execute the timer_callback functions specified
+
     // negative timeout means exact delay (rather than delay between
     // callbacks)
-    if (!add_repeating_timer_us(60000, tx_timer_callback, NULL, &tx_timer)) {
+    if (!add_repeating_timer_us(-60000, tx_timer_callback, NULL, &tx_timer)) {
         printf("Failed to add timer\n");
         return -1;
     }
 
-    if (!add_repeating_timer_us(60000, log_timer_callback, NULL, &log_timer)) {
+    if (!add_repeating_timer_us(-60000, log_timer_callback, NULL, &log_timer)) {
         printf("Failed to add timer\n");
         return -1;
     }
 
-    // Enable the watchdog, requiring the watchdog to be updated every 1 minute or
-    // the chip will reboot
+    // Enable the watchdog, requiring the watchdog to be updated every 1 minute
+    // or the chip will reboot
     watchdog_enable(60000, 1);
 
     if (watchdog_caused_reboot()) {
@@ -105,23 +114,35 @@ int main() {
         // if new data in radio buffer, parse and execute
 
         if (rx_done) {
+            // reads received packet data from the radio and places it in
+            // radio_rx_buf
             radio.read_radio_buffer((uint8_t *)radio_rx_buf,
                                     sizeof(radio_rx_buf));
             printf("%s\n", radio_rx_buf);
+
+            // This is only important for testing
             radio.get_packet_status();
             printf("RSSI: %d dBm Signal RSSI: %d SNR: %d dB\n",
                    radio.pkt_stat.rssi_pkt, radio.pkt_stat.signal_rssi_pkt,
                    radio.pkt_stat.snr_pkt);
+
+            if (strncmp("ack", radio_rx_buf, 3) != 0) {
+                ack_alarm_id = alarm_pool_add_alarm_in_ms(
+                    ack_alarm_pool, 1000, ack_timer_callback, NULL, true);
+            }
+
+            rx_done = false;
         }
 
         if (send_ack && !tx_done) {
-            // create some ack buffer
-            // transmit()
+            printf("ACK\n");
+            transmit((uint8_t *)ack, sizeof(ack));
+            send_ack = false;
         }
 
         if (do_tx && !tx_done) {
-            // create some buffer
-            // transmit()
+            transmit((uint8_t *)radio_tx_buf, sizeof(radio_tx_buf));
+            do_tx = false;
         }
 
         if (cutdown) {
@@ -132,6 +153,7 @@ int main() {
     }
 }
 
+// writes the string to FRAM using the config settings in the test_config struct
 void write_name_config() {
     strcpy(test_config.name, "BITSv5.2-0");
     write_config(NAME, test_config, (uint8_t *)test_config.name,
@@ -147,12 +169,18 @@ void setup_spi() {
                    SPI_MSB_FIRST);
 }
 
+// Note that the callback functions interrupt the normal program routine (i.e.
+// the infinite while loop in main()) so it's important that they not take very
+// long. You'll notice that for the most part they consist of modifying a bool
+// flag that control a conditional in the main loop.
+
+// when the radio finishes sending or receiving a packet it asserts DIO1 high
+// and triggers this interrupt
 void gpio_callback(uint gpio, uint32_t events) {
     if (gpio == DIO1_PIN) {
         radio.get_irq_status();
 
         if (radio.irqs.TX_DONE) {
-            printf("TX ISR\n");
             radio.disable_tx();
             radio.radio_receive_cont();
             led_off();
@@ -161,7 +189,6 @@ void gpio_callback(uint gpio, uint32_t events) {
         }
 
         if (radio.irqs.RX_DONE) {
-            printf("RX ISR\n");
             radio.irqs.RX_DONE = false;
             send_ack = true;
             rx_done = true;
@@ -174,6 +201,15 @@ void gpio_callback(uint gpio, uint32_t events) {
 bool tx_timer_callback(repeating_timer_t *rt) {
     do_tx = true;
     return true;  // keep repeating
+}
+
+bool log_timer_callback(repeating_timer_t *rt) {
+    // log some status string
+}
+
+static int64_t ack_timer_callback(alarm_id_t id, void *user_data) {
+    send_ack = true;
+    return 0;  // don't repeat
 }
 
 void setup_led() {
@@ -196,8 +232,4 @@ void transmit(uint8_t *buf, size_t len) {
     // while (!tx_done) busy_wait_us_32(1);
 
     printf("%s\n", (char *)buf);
-}
-
-bool log_timer_callback(repeating_timer_t *rt) {
-    // log some status string
 }
