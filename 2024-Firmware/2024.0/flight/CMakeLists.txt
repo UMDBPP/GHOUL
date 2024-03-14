@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 pico_sdk_init()
 
 add_executable(flight 
-    test.c
+    flight.cpp
     ../vent-servo.c
     ../rp2040-drf1262-lib/SX1262.cpp
     ../rp2040-config/MB85RS1MT.cpp

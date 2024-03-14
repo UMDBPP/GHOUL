@@ -2,11 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern "C" {
+#include "../vent-servo.h"
+}
+
 #include "../GHOUL_2024_0.h"
 #include "../rp2040-config/MB85RS1MT.h"
 #include "../rp2040-config/config.h"
 #include "../rp2040-drf1262-lib/SX1262.h"
-#include "../vent-servo.h"
 #include "hardware/gpio.h"
 #include "hardware/i2c.h"
 #include "hardware/watchdog.h"

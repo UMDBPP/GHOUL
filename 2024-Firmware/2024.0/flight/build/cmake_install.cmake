@@ -1,4 +1,4 @@
-# Install script for directory: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test
+# Install script for directory: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/cmake_install.cmake")
+  include("/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/pico-sdk/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

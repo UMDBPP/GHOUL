@@ -53,10 +53,10 @@ RM = /opt/homebrew/Cellar/cmake/3.27.7/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test
+CMAKE_SOURCE_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build
+CMAKE_BINARY_DIR = /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build
 
 # Utility rule file for tinyusb_pico_pio_usb_usb_rx_pio_h.
 
@@ -69,8 +69,8 @@ include pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_p
 pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h: pico-sdk/src/rp2_common/tinyusb/usb_rx.pio.h
 
 pico-sdk/src/rp2_common/tinyusb/usb_rx.pio.h: /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/hw/mcu/raspberry_pi/Pico-PIO-USB/src/usb_rx.pio
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating usb_rx.pio.h"
-	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/tinyusb && ../../../../pioasm/pioasm -o c-sdk /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/hw/mcu/raspberry_pi/Pico-PIO-USB/src/usb_rx.pio /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/tinyusb/usb_rx.pio.h
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating usb_rx.pio.h"
+	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/pico-sdk/src/rp2_common/tinyusb && ../../../../pioasm/pioasm -o c-sdk /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/lib/tinyusb/hw/mcu/raspberry_pi/Pico-PIO-USB/src/usb_rx.pio /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/pico-sdk/src/rp2_common/tinyusb/usb_rx.pio.h
 
 tinyusb_pico_pio_usb_usb_rx_pio_h: pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h
 tinyusb_pico_pio_usb_usb_rx_pio_h: pico-sdk/src/rp2_common/tinyusb/usb_rx.pio.h
@@ -82,10 +82,10 @@ pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir
 .PHONY : pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/build
 
 pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/clean:
-	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/tinyusb && $(CMAKE_COMMAND) -P CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/cmake_clean.cmake
+	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/pico-sdk/src/rp2_common/tinyusb && $(CMAKE_COMMAND) -P CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/cmake_clean.cmake
 .PHONY : pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/clean
 
 pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/depend:
-	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/tinyusb /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/tinyusb /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/test/build/pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/tinyusb /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/pico-sdk/src/rp2_common/tinyusb /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/build/pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : pico-sdk/src/rp2_common/tinyusb/CMakeFiles/tinyusb_pico_pio_usb_usb_rx_pio_h.dir/depend
 
