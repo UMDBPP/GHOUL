@@ -18,7 +18,7 @@ extern "C" {
 
 volatile bool vent_open = false;
 volatile bool cutdown = false;
-volatile bool tx_done = false;
+volatile bool tx_done = true;
 volatile bool rx_done = false;
 volatile bool send_ack = false;
 volatile bool do_tx = false;
@@ -68,7 +68,11 @@ int main() {
     gpio_set_irq_enabled_with_callback(DIO1_PIN, GPIO_IRQ_EDGE_RISE, true,
                                        &gpio_callback);
 
-    setup_spi();  // init SPI peripheral for Radio and FRAM
+    // setup_spi();  // init SPI peripheral for Radio and FRAM
+
+    gpio_init(RADIO_RST);
+    gpio_set_dir(RADIO_RST, GPIO_OUT);
+    gpio_put(RADIO_RST, 1);
 
     ack_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
 
@@ -85,12 +89,12 @@ int main() {
 
     // negative timeout means exact delay (rather than delay between
     // callbacks)
-    if (!add_repeating_timer_us(-60000, tx_timer_callback, NULL, &tx_timer)) {
+    if (!add_repeating_timer_ms(-30000, tx_timer_callback, NULL, &tx_timer)) {
         printf("Failed to add timer\n");
         return -1;
     }
 
-    if (!add_repeating_timer_us(-60000, log_timer_callback, NULL, &log_timer)) {
+    if (!add_repeating_timer_ms(-60000, log_timer_callback, NULL, &log_timer)) {
         printf("Failed to add timer\n");
         return -1;
     }
@@ -130,6 +134,7 @@ int main() {
                    radio.pkt_stat.snr_pkt);
 
             if (strncmp("ack", radio_rx_buf, 3) != 0) {
+                printf("Starting ack timer");
                 ack_alarm_id = alarm_pool_add_alarm_in_ms(
                     ack_alarm_pool, 1000, ack_timer_callback, NULL, true);
             }
@@ -137,13 +142,13 @@ int main() {
             rx_done = false;
         }
 
-        if (send_ack && !tx_done) {
+        if (send_ack && tx_done) {
             printf("ACK\n");
             transmit((uint8_t *)ack, sizeof(ack));
             send_ack = false;
         }
 
-        if (do_tx && !tx_done) {
+        if (do_tx && tx_done) {
             transmit((uint8_t *)radio_tx_buf, sizeof(radio_tx_buf));
             do_tx = false;
         }
@@ -193,7 +198,7 @@ void gpio_callback(uint gpio, uint32_t events) {
 
         if (radio.irqs.RX_DONE) {
             radio.irqs.RX_DONE = false;
-            send_ack = true;
+
             rx_done = true;
         }
 
@@ -208,6 +213,7 @@ bool tx_timer_callback(repeating_timer_t *rt) {
 
 bool log_timer_callback(repeating_timer_t *rt) {
     // log some status string
+    return true;
 }
 
 static int64_t ack_timer_callback(alarm_id_t id, void *user_data) {
