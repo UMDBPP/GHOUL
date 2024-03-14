@@ -32,7 +32,7 @@ jobs:
           sudo apt install -y cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
           pwd
           git submodule update --init --remote --recursive
-          cd Code/BITS/BITSv5/test
+          cd 2024-Firmware/2024.0/flight
           rm -rf build
           mkdir build
           cd build
@@ -45,6 +45,6 @@ jobs:
         with:
           tag_name: 2024.0-v0.1
           files: |
-            /home/runner/work/GHOUL/2024-Firmware/2024.0/flight/build/flight.uf2
+            /home/runner/work/GHOUL/GHOUL/2024-Firmware/2024.0/flight/build/flight.uf2
            
     
