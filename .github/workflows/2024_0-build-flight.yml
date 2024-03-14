@@ -45,6 +45,6 @@ jobs:
         with:
           tag_name: 2024.0-v0.1
           files: |
-            /home/runner/work/GHOUL/2024-Firmware/2024.0/flight/build/flight.uf2
+            /home/runner/work/GHOUL/GHOUL/2024-Firmware/2024.0/flight/build/flight.uf2
            
     
