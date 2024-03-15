@@ -37,7 +37,7 @@ alarm_id_t vent_alarm_id;
 // radio
 DRF1262 radio(spi1, RADIO_CS, SCK_PIN, MOSI_PIN, MISO_PIN, TXEN_PIN, DIO1_PIN,
               BUSY_PIN, SW_PIN, RADIO_RST);
-uint8_t radio_tx_buf[100] = "hello!";
+uint8_t radio_tx_buf[100] = "GHOUL hello!";
 char radio_rx_buf[100] = {0};
 char ack[] = "ack - GHOUL alive";
 
@@ -112,7 +112,7 @@ nmea_position lat;
 // Misc
 char c = 0;
 uint32_t time_since_boot = 0;
-char time_since_boot_str[10] = {0};
+char gps_time_str[10] = {0};
 char new_line[] = "\n";
 
 void setup_led();
@@ -154,9 +154,6 @@ int main() {
     gpio_set_dir(RADIO_RST, GPIO_OUT);
     gpio_put(RADIO_RST, 1);
 
-    ack_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
-    vent_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
-
     gpio_init(EXTINT_PIN);
     gpio_set_dir(EXTINT_PIN, GPIO_IN);
     gpio_init(TIMEPULSE_PIN);
@@ -166,6 +163,9 @@ int main() {
     i2c_init(i2c, 100 * 1000);
     gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
+
+    ack_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
+    vent_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
 
     sleep_ms(5000);
 
@@ -191,9 +191,9 @@ int main() {
         return -1;
     }
 
-    // Enable the watchdog, requiring the watchdog to be updated every 1 minute
+    // Enable the watchdog, requiring the watchdog to be updated every 3 minutes
     // or the chip will reboot
-    watchdog_enable(60000, 1);
+    watchdog_enable(3 * 60000, 1);
 
     if (watchdog_caused_reboot()) {
         printf("Rebooted by Watchdog!\n");
@@ -202,12 +202,18 @@ int main() {
     }
 
     radio.radio_receive_cont();
+    // radio.radio_receive_cont();
+
+    sprintf(gps_time_str, "%d\n", to_ms_since_boot(get_absolute_time()));
+    mem.write_memory(log_addr, (uint8_t *)gps_time_str,
+                     strlen(gps_time_str) + 1);
+    log_addr = log_addr + strlen(gps_time_str) + 1;
 
     // time_since_boot = to_ms_since_boot(get_absolute_time());
-    sprintf(time_since_boot_str, "%d\n", to_ms_since_boot(get_absolute_time()));
-    mem.write_memory(log_addr, (uint8_t *)time_since_boot_str,
-                     strlen(time_since_boot_str) + 1);
-    log_addr = log_addr + strlen(time_since_boot_str) + 1;
+    sprintf(gps_time_str, "%d\n", to_ms_since_boot(get_absolute_time()));
+    mem.write_memory(log_addr, (uint8_t *)gps_time_str,
+                     strlen(gps_time_str) + 1);
+    log_addr = log_addr + strlen(gps_time_str) + 1;
 
     mem.write_memory(log_addr, (uint8_t *)&new_line, sizeof(new_line));
     log_addr = log_addr + sizeof(new_line);
@@ -227,16 +233,18 @@ int main() {
             printf("DEVICE NAME: %s\n", test_config.name);
             dump_fram();
             printf(
-                "\nDump complete, press \"d\" to dump memory, \"w\" to write "
+                "\nDump complete, press \"d\" to dump memory, \"w\" to clear "
                 "memory\n");
-        } else if (c == 'w') {
-            sleep_ms(500);
-            write_name_config();
-            write_fram();
-            printf(
-                "\nWrite complete, press \"d\" to dump memory, \"w\" to write "
-                "memory\n");
-        }
+        } 
+        
+        // else if (c == 'w') {
+        //     sleep_ms(500);
+        //     write_name_config();
+        //     write_fram();
+        //     printf(
+        //         "\nWrite complete, press \"d\" to dump memory, \"w\" to clear "
+        //         "memory\n");
+        // }
 
         // timed events
         //  - transmit location and some status maybe
@@ -248,9 +256,16 @@ int main() {
             radio.read_radio_buffer((uint8_t *)radio_rx_buf,
                                     sizeof(radio_rx_buf));
             printf("%s\n", radio_rx_buf);
+            char rxed[] = "rx: ";
+            mem.write_memory(log_addr, (uint8_t *)rxed, sizeof(rxed));
+            log_addr = log_addr + sizeof(rxed);
+
             mem.write_memory(log_addr, (uint8_t *)radio_rx_buf,
                              strlen(radio_rx_buf) + 1);
-            log_addr = log_addr + sizeof(radio_rx_buf);
+            log_addr = log_addr + strlen(radio_rx_buf) + 1;
+
+            mem.write_memory(log_addr, (uint8_t *)&new_line, sizeof(new_line));
+            log_addr = log_addr + sizeof(new_line);
 
             // This is only important for testing
             radio.get_packet_status();
@@ -265,7 +280,7 @@ int main() {
                       // an ack
                 printf("Starting ack timer\n");
                 ack_alarm_id = alarm_pool_add_alarm_in_ms(
-                    ack_alarm_pool, 1000, ack_timer_callback, NULL, true);
+                    ack_alarm_pool, 1500, ack_timer_callback, NULL, true);
             }
 
             rx_done = false;
@@ -333,7 +348,6 @@ void gpio_callback(uint gpio, uint32_t events) {
 
         if (radio.irqs.RX_DONE) {
             radio.irqs.RX_DONE = false;
-
             rx_done = true;
         }
 
@@ -347,11 +361,10 @@ bool tx_timer_callback(repeating_timer_t *rt) {
 }
 
 bool log_timer_callback(repeating_timer_t *rt) {
-    sprintf(time_since_boot_str, "%d:%d.%d\n", date.tm_hour, date.tm_min,
-            date.tm_sec);
-    mem.write_memory(log_addr, (uint8_t *)time_since_boot_str,
-                     strlen(time_since_boot_str) + 1);
-    log_addr = log_addr + strlen(time_since_boot_str) + 1;
+    sprintf(gps_time_str, "%d:%d.%d\n", date.tm_hour, date.tm_min, date.tm_sec);
+    mem.write_memory(log_addr, (uint8_t *)gps_time_str,
+                     strlen(gps_time_str) + 1);
+    log_addr = log_addr + strlen(gps_time_str) + 1;
     return true;
 }
 
@@ -366,14 +379,14 @@ static int64_t vent_timer_callback(alarm_id_t id, void *user_data) {
 }
 
 void setup_led() {
-    gpio_init(LED1_PIN);
-    gpio_set_dir(LED1_PIN, GPIO_OUT);
-    gpio_put(LED1_PIN, 0);
+    gpio_init(LED2_PIN);
+    gpio_set_dir(LED2_PIN, GPIO_OUT);
+    gpio_put(LED2_PIN, 1);
 }
 
-void led_on() { gpio_put(LED1_PIN, true); }
+void led_on() { gpio_put(LED2_PIN, true); }
 
-void led_off() { gpio_put(LED1_PIN, false); }
+void led_off() { gpio_put(LED2_PIN, false); }
 
 void transmit(uint8_t *buf, size_t len) {
     printf("Transmit Test\n");
@@ -634,24 +647,18 @@ void get_gps_data() {
         printf("\ni2c error occurred %x\n\n", result);
     else {
         if (rx_msg != NO_GPS_DATA) {
-            // printf("%c", rx_msg);
             // End sequence is "\r\n"
             gps_buf[pos++] = rx_msg;
             if (rx_msg == '\n') {
                 // We've reached the end of the sentence/line.
                 gps_buf[pos++] = '\0';  // NULL-terminate for safety
+
                 // Parse NMEA sentence, only if GNGGA for now
                 if (strlen((char *)gps_buf) >= 6 &&
                     strncmp((char *)(&gps_buf[3]), "GGA", 3) == 0) {
-                    // printf("%s\n", gps_buf);
                     // Split msg into values, parse each value, then assign
                     // each result to appropriate place in struct
                     _split_string_by_comma((char *)gps_buf, values, 7);
-                    // nmea_gga data;
-                    // tm date;
-                    // nmea_position lon;
-                    // nmea_position lat;
-                    // nmea_date_parse(values[1], &date);
                     nmea_time_parse(values[1], &date);
                     data.time = date;
                     nmea_position_parse(values[4], &lon);
