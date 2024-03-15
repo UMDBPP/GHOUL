@@ -3221,6 +3221,7 @@ CMakeFiles/flight.dir/flight.cpp.obj: /Users/michaelshipman/Developer/GHOUL/2024
   /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.2.1/include/stddef.h \
   /Applications/ArmGNUToolchain/13.2.Rel1/arm-none-eabi/lib/gcc/arm-none-eabi/13.2.1/include/stdint.h \
   /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/GHOUL_2024_0.h \
+  /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/libnmea/src/nmea/nmea.h \
   /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-config/MB85RS1MT.h \
   /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-config/config.h \
   /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-drf1262-lib/SX1262.h \
@@ -3331,6 +3332,8 @@ CMakeFiles/flight.dir/flight.cpp.obj: /Users/michaelshipman/Developer/GHOUL/2024
 /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/rp2040-config/MB85RS1MT.cpp:
 
 /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c:
+
+/Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/libnmea/src/nmea/nmea.h:
 
 /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/stdio_usb_descriptors.c:
 

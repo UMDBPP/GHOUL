@@ -77,6 +77,7 @@ CMakeFiles/flight.dir/flight.cpp.obj: \
  /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_uart/include/pico/stdio_uart.h \
  /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/pico_stdio_usb/include/pico/stdio_usb.h \
  /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/../GHOUL_2024_0.h \
+ /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/../libnmea/src/nmea/nmea.h \
  /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/flight/../rp2040-config/MB85RS1MT.h \
  /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2_common/hardware_spi/include/hardware/spi.h \
  /Users/michaelshipman/Developer/GHOUL/2024-Firmware/2024.0/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/spi.h \

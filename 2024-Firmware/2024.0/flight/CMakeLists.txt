@@ -19,4 +19,4 @@ pico_enable_stdio_usb(flight 1)
 
 pico_add_extra_outputs(flight)
 
-target_link_libraries(flight pico_stdlib hardware_sync hardware_pwm hardware_spi hardware_i2c hardware_gpio hardware_clocks pico_unique_id pico_rand hardware_watchdog)
+target_link_libraries(flight pico_stdlib hardware_sync hardware_pwm hardware_spi hardware_i2c hardware_gpio hardware_clocks pico_unique_id pico_rand hardware_watchdog pico_time)
