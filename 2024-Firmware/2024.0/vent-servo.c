@@ -84,7 +84,7 @@ void vent_servo_open(bool low_power) {
         vent_servo_set_pulse_width(current_level, false);
         current_level = current_level + 1;
         if (current_level >= max_level) current_level = max_level;
-        sleep_ms(2);
+        sleep_ms(3);
     }
     vent_servo_set_pulse_width(max_level, false);
 
@@ -102,7 +102,7 @@ void vent_servo_close(bool low_power) {
         vent_servo_set_pulse_width(current_level, false);
         current_level = current_level - 1;
         if (current_level <= min_level) current_level = min_level;
-        sleep_ms(2);
+        sleep_ms(3);
     }
     vent_servo_set_pulse_width(min_level, false);
 

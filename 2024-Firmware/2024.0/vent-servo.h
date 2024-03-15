@@ -6,7 +6,7 @@
 // Below values assume a 48 MHz system clock, otherwise PWM frequency and pulse
 // length will be incorrect
 #define WRAP_VALUE (uint16_t)59999  // wrap value of PWM counter
-#define PWM_DIV 8                   // PWM clock divider, divides system clock
+#define PWM_DIV 22                  // PWM clock divider, divides system clock
 
 /**
  * @brief Configures PWM pin and peripheral, system clock must be set to 48 MHz
