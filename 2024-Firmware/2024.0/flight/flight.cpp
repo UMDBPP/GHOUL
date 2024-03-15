@@ -22,12 +22,15 @@ volatile bool tx_done = true;
 volatile bool rx_done = false;
 volatile bool send_ack = false;
 volatile bool do_tx = false;
+volatile bool do_close_vent = false;
 
 // timers
 repeating_timer_t tx_timer;
 repeating_timer_t log_timer;
 alarm_pool_t *ack_alarm_pool;
 alarm_id_t ack_alarm_id;
+alarm_pool_t *vent_alarm_pool;
+alarm_id_t vent_alarm_id;
 
 // radio
 DRF1262 radio(spi1, RADIO_CS, SCK_PIN, MOSI_PIN, MISO_PIN, TXEN_PIN, DIO1_PIN,
@@ -47,6 +50,9 @@ static uint32_t log_addr = LOG_INIT_ADDR;
 // Ports
 i2c_inst_t *i2c = i2c0;
 
+// Misc
+char c = 0;
+
 void setup_led();
 void led_on();
 void led_off();
@@ -54,9 +60,14 @@ bool tx_timer_callback(repeating_timer_t *rt);
 bool log_timer_callback(repeating_timer_t *rt);
 void gpio_callback(uint gpio, uint32_t events);
 static int64_t ack_timer_callback(alarm_id_t id, void *user_data);
+static int64_t vent_timer_callback(alarm_id_t id, void *user_data);
 void setup_spi();
 void write_name_config();
 void transmit(uint8_t *buf, size_t len);
+void parse_text_radio_cmd(
+    char *buf,
+    uint len);  // parse received radio data and do action if applicable
+void dump_fram();
 
 int main() {
     stdio_init_all();
@@ -75,6 +86,7 @@ int main() {
     gpio_put(RADIO_RST, 1);
 
     ack_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
+    vent_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(4);
 
     sleep_ms(5000);
 
@@ -89,7 +101,7 @@ int main() {
 
     // negative timeout means exact delay (rather than delay between
     // callbacks)
-    if (!add_repeating_timer_ms(-30000, tx_timer_callback, NULL, &tx_timer)) {
+    if (!add_repeating_timer_ms(-60000, tx_timer_callback, NULL, &tx_timer)) {
         printf("Failed to add timer\n");
         return -1;
     }
@@ -109,16 +121,28 @@ int main() {
         printf("Clean boot\n");
     }
 
+    radio.radio_receive_cont();
+
     while (true) {
         watchdog_update();
+
+        c = getchar_timeout_us(0);
+
+        if (c == 'd') {
+            sleep_ms(500);
+            write_name_config();
+            printf("GHOUL Flight (Compiled %s %s)\n", __DATE__, __TIME__);
+            printf("Device ID: %d\n", mem.device_id);
+            read_config(NAME, test_config, (uint8_t *)test_config.name,
+                        sizeof(test_config.name), &mem);
+            printf("DEVICE NAME: %s\n", test_config.name);
+            dump_fram();
+            printf("\nDump complete, press \"d\" to dump memory\n");
+        }
 
         // timed events
         //  - transmit location and some status maybe
         //  - log LAT,LONG,Time,Fix
-
-        // get and parse any new GPS data
-
-        // if new data in radio buffer, parse and execute
 
         if (rx_done) {
             // reads received packet data from the radio and places it in
@@ -133,8 +157,12 @@ int main() {
                    radio.pkt_stat.rssi_pkt, radio.pkt_stat.signal_rssi_pkt,
                    radio.pkt_stat.snr_pkt);
 
-            if (strncmp("ack", radio_rx_buf, 3) != 0) {
-                printf("Starting ack timer");
+            parse_text_radio_cmd(radio_rx_buf, sizeof(radio_rx_buf));
+
+            if (strncmp("ack", radio_rx_buf, 3) !=
+                0) {  // if the receiving packet does not start with ack, send
+                      // an ack
+                printf("Starting ack timer\n");
                 ack_alarm_id = alarm_pool_add_alarm_in_ms(
                     ack_alarm_pool, 1000, ack_timer_callback, NULL, true);
             }
@@ -143,7 +171,7 @@ int main() {
         }
 
         if (send_ack && tx_done) {
-            printf("ACK\n");
+            printf("Received ACK\n");
             transmit((uint8_t *)ack, sizeof(ack));
             send_ack = false;
         }
@@ -157,13 +185,17 @@ int main() {
             // assert some pin to initiate cut
         }
 
-        vent_servo_open(vent_open);
+        if (do_close_vent) {
+            printf("Closing vent\n");
+            vent_servo_close(true);
+            do_close_vent = false;
+        };
     }
 }
 
 // writes the string to FRAM using the config settings in the test_config struct
 void write_name_config() {
-    strcpy(test_config.name, "BITSv5.2-0");
+    strcpy(test_config.name, "GHOUL 2024.0-0");
     write_config(NAME, test_config, (uint8_t *)test_config.name,
                  sizeof(test_config.name), &mem);
 }
@@ -221,6 +253,11 @@ static int64_t ack_timer_callback(alarm_id_t id, void *user_data) {
     return 0;  // don't repeat
 }
 
+static int64_t vent_timer_callback(alarm_id_t id, void *user_data) {
+    do_close_vent = true;
+    return 0;  // don't repeat
+}
+
 void setup_led() {
     gpio_init(LED1_PIN);
     gpio_set_dir(LED1_PIN, GPIO_OUT);
@@ -241,4 +278,86 @@ void transmit(uint8_t *buf, size_t len) {
     // while (!tx_done) busy_wait_us_32(1);
 
     printf("%s\n", (char *)buf);
+}
+
+void parse_text_radio_cmd(char *buf, uint len) {
+    static char separators[] = " -\t\f\r\v\n";
+    char *token;
+    int device_id = 0;
+
+    token = strtok(buf, separators);
+
+    if (strcmp(token, "vent") == 0) {
+        printf("Received Vent: ");
+
+        // do vent things
+        uint digit1 = 0;
+        uint digit2 = 0;
+        uint digit3 = 0;
+        uint vent_time = 0;
+
+        token = strtok(NULL, separators);
+
+        if (strcmp(token, "open") == 0) {
+            printf("open\n");
+            char vent_log[] = "vent open received\n";
+            mem.write_memory(log_addr, (uint8_t *)vent_log, sizeof(vent_log));
+            log_addr = log_addr + sizeof(vent_log);
+
+            vent_servo_open(true);
+        } else if (strcmp(token, "close") == 0) {
+            printf("close\n");
+            char vent_log[] = "vent close received\n";
+            mem.write_memory(log_addr, (uint8_t *)vent_log, sizeof(vent_log));
+            log_addr = log_addr + sizeof(vent_log);
+
+            vent_servo_close(true);
+        } else if (strcmp(token, "time") == 0) {
+            token = strtok(NULL, separators);
+
+            digit1 = ((uint)(*(token + 0))) - 48;
+            // token = token++;
+            digit2 = ((uint)(*(token + 1))) - 48;
+            // token = token++;
+            digit3 = ((uint)(*(token + 2))) - 48;
+            vent_time = (digit1 * 100) + (digit2 * 10) + digit3;
+
+            printf("timed %d sec\n", vent_time);
+            char vent_log[] = "vent timed received\n";
+            mem.write_memory(log_addr, (uint8_t *)vent_log, sizeof(vent_log));
+            log_addr = log_addr + sizeof(vent_log);
+
+            vent_servo_open(true);
+            vent_alarm_id =
+                alarm_pool_add_alarm_in_ms(vent_alarm_pool, vent_time * 1000,
+                                           vent_timer_callback, NULL, true);
+        } else {
+            printf("error\n");
+            char vent_log[] = "vent error received\n";
+            mem.write_memory(log_addr, (uint8_t *)vent_log, sizeof(vent_log));
+            log_addr = log_addr + sizeof(vent_log);
+        }
+
+    } else if (strcmp(token, "ack") == 0) {
+        // do nothing I guess
+    } else if (strcmp(token, "cut") == 0) {
+        char cut_log[] = "Cut Received\n";
+        printf("Received Cut\n");
+        mem.write_memory(log_addr, (uint8_t *)cut_log, sizeof(cut_log));
+        log_addr = log_addr + sizeof(cut_log);
+        // assert a GPIO
+    } else {
+    }
+}
+
+void dump_fram() {
+    printf("Dumping FRAM\n");
+    for (int addr = LOG_INIT_ADDR; addr <= LOG_MAX_ADDR; addr++) {
+        watchdog_update();
+        mem.read_memory(addr, &log_buf, 1);  // sizeof(log_buf)
+        if (log_buf != 0) printf("%c", log_buf);
+        // printf("%d - %c\n", log_addr, log_buf);
+        // memset(log_buf, 0, sizeof(log_buf));
+        log_buf = 0;
+    }
 }
