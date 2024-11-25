@@ -1,0 +1,107 @@
+** Drc report for GHOUL-CloudCruiser.kicad_pcb **
+** Created on 2024-10-25T17:39:33-0400 **
+
+** Found 28 DRC violations **
+[track_dangling]: Track has unconnected end
+    Local override; warning
+    @(105.3750 mm, 85.3750 mm): Track [+3.3V] on F.Cu, length 0.1768 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1250 mm)
+    Rule: netclass 'Default'; error
+    @(113.4625 mm, 112.5375 mm): Track [GND] on F.Cu, length 1.0000 mm
+    @(113.4625 mm, 113.0375 mm): Pad 14 [+5V] of U5 on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0512 mm)
+    Rule: netclass 'Default'; error
+    @(112.5900 mm, 112.9831 mm): Track [GND] on F.Cu, length 0.6302 mm
+    @(113.4625 mm, 113.0375 mm): Pad 14 [+5V] of U5 on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(114.4625 mm, 112.5375 mm): Track [GND] on F.Cu, length 0.7601 mm
+    @(116.6750 mm, 113.0375 mm): Track [+5V] on F.Cu, length 3.2125 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1500 mm)
+    Rule: netclass 'Default'; error
+    @(116.6750 mm, 113.0375 mm): Track [+5V] on F.Cu, length 3.2125 mm
+    @(113.4625 mm, 112.5375 mm): Track [GND] on F.Cu, length 1.0000 mm
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1126 mm)
+    Rule: netclass 'Default'; error
+    @(113.2625 mm, 85.0875 mm): Track [+3.3V] on F.Cu, length 1.7854 mm
+    @(113.2500 mm, 85.7500 mm): Via [Baro_SCL] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1126 mm)
+    Rule: netclass 'Default'; error
+    @(114.0000 mm, 85.0875 mm): Track [+3.3V] on F.Cu, length 0.7375 mm
+    @(113.2500 mm, 85.7500 mm): Via [Baro_SCL] on F.Cu - B.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1666 mm)
+    Rule: netclass 'Default'; error
+    @(113.0000 mm, 88.0000 mm): Track [+3.3V] on F.Cu, length 3.5355 mm
+    @(115.5000 mm, 86.9125 mm): Pad 1 [Baro_SDA] of R1 on F.Cu
+[drill_out_of_range]: Hole size out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm)
+    Rule: board setup constraints; error
+    @(112.5900 mm, 112.1975 mm): PTH pad 17 [GND] of U5
+[drill_out_of_range]: Hole size out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm)
+    Rule: board setup constraints; error
+    @(111.4100 mm, 112.1975 mm): PTH pad 17 [GND] of U5
+[drill_out_of_range]: Hole size out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm)
+    Rule: board setup constraints; error
+    @(112.5900 mm, 113.3775 mm): PTH pad 17 [GND] of U5
+[drill_out_of_range]: Hole size out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm)
+    Rule: board setup constraints; error
+    @(111.4100 mm, 113.3775 mm): PTH pad 17 [GND] of U5
+[lib_footprint_issues]: The current configuration does not include the library 'mechanical'.
+    Local override; warning
+    @(118.1161 mm, 133.2761 mm): Footprint REF**
+[lib_footprint_issues]: The current configuration does not include the library 'mechanical'.
+    Local override; warning
+    @(118.1161 mm, 54.5361 mm): Footprint REF**
+[lib_footprint_issues]: The current configuration does not include the library 'mechanical'.
+    Local override; warning
+    @(175.2661 mm, 54.5361 mm): Footprint REF**
+[lib_footprint_issues]: The current configuration does not include the library 'mechanical'.
+    Local override; warning
+    @(175.2661 mm, 133.2761 mm): Footprint REF**
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; warning
+    @(98.8399 mm, 62.3900 mm): Reference 'AE1'
+[starved_thermal]: Thermal relief connection to zone incomplete (layer In1.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(93.5000 mm, 59.7500 mm): Zone [GND] on In1.Cu
+    @(145.0000 mm, 101.7500 mm): PTH pad 2 [GND] of XBee1
+[starved_thermal]: Thermal relief connection to zone incomplete (layer In2.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(200.5000 mm, 59.0000 mm): Zone [GND] on In2.Cu
+    @(145.0000 mm, 101.7500 mm): PTH pad 2 [GND] of XBee1
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(118.1161 mm, 133.2761 mm): PTH pad 1 [<no net>] of REF**
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(118.1161 mm, 54.5361 mm): PTH pad 1 [<no net>] of REF**
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(175.2661 mm, 54.5361 mm): PTH pad 1 [<no net>] of REF**
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(175.2661 mm, 133.2761 mm): PTH pad 1 [<no net>] of REF**
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; warning
+    @(109.5127 mm, 95.8050 mm): Footprint Text '+' of BT1
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(112.7500 mm, 91.5750 mm): Reference 'R6'
+    @(113.4565 mm, 93.1360 mm): Reference 'BT1'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(123.9250 mm, 82.5250 mm): Reference 'U3'
+    @(124.2500 mm, 83.2500 mm): Reference 'C4'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(136.3375 mm, 83.0700 mm): Reference 'R10'
+    @(134.1800 mm, 82.6000 mm): Segment on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; warning
+    @(147.4100 mm, 110.9600 mm): Segment on F.Silkscreen
+    @(156.6750 mm, 110.7500 mm): Reference 'U2'
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

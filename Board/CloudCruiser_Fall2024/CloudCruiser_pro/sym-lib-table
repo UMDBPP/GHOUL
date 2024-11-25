@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "CloudCruiser")(type "KiCad")(uri "${KIPRJMOD}/CloudCruiser.kicad_sym")(options "")(descr ""))
+)
