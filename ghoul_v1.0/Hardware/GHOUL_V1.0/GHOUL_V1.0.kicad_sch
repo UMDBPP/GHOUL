@@ -8865,6 +8865,16 @@
 	)
 	(wire
 		(pts
+			(xy 142.24 62.23) (xy 142.24 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "aaa763d0-53df-47bf-9023-b5dcdf5ef598")
+	)
+	(wire
+		(pts
 			(xy 57.15 62.23) (xy 57.15 63.5)
 		)
 		(stroke
@@ -10276,7 +10286,7 @@
 				)
 			)
 		)
-		(property "Footprint" "teensy.pretty-master:Teensy41"
+		(property "Footprint" "BPP_Lib:Teensy4_1"
 			(at 90.932 128.016 0)
 			(effects
 				(font
@@ -12683,16 +12693,15 @@
 	(symbol
 		(lib_name "GND_1")
 		(lib_id "power:GND")
-		(at 142.24 60.96 0)
+		(at 142.24 62.23 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "7d743a26-cddd-4aa2-9f3d-965e8a160e40")
 		(property "Reference" "#PWR01"
-			(at 142.24 67.31 0)
+			(at 142.24 68.58 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12709,7 +12718,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 142.24 60.96 0)
+			(at 142.24 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12718,7 +12727,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 142.24 60.96 0)
+			(at 142.24 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12727,7 +12736,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 142.24 60.96 0)
+			(at 142.24 62.23 0)
 			(effects
 				(font
 					(size 1.27 1.27)
