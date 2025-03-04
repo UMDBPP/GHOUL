@@ -9813,7 +9813,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric_Pad0.64x0.40mm_HandSolder"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
 			(at 241.3 92.71 0)
 			(effects
 				(font
@@ -10689,7 +10689,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric_Pad0.64x0.40mm_HandSolder"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder"
 			(at 257.81 82.55 0)
 			(effects
 				(font
@@ -11925,7 +11925,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "GHOULFootPrints:XBee Explorer"
+		(property "Footprint" "BPP_Lib:XBee Explorer"
 			(at 119.634 147.828 0)
 			(effects
 				(font
@@ -12390,7 +12390,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "ML414H_IV01E:SEIKO_ML414H_IV01E"
+		(property "Footprint" "BPP_Lib:SEIKO_ML414H_IV01E"
 			(at 269.24 91.186 90)
 			(effects
 				(font
@@ -12648,7 +12648,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric_Pad0.64x0.40mm_HandSolder"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder"
 			(at 273.05 106.68 0)
 			(effects
 				(font
@@ -13117,7 +13117,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Resistor_SMD:R_0201_0603Metric_Pad0.64x0.40mm_HandSolder"
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric_Pad0.98x0.95mm_HandSolder"
 			(at 273.05 104.14 0)
 			(effects
 				(font
@@ -13257,7 +13257,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical"
 			(at 226.06 73.66 0)
 			(effects
 				(font
@@ -13326,7 +13326,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric_Pad0.64x0.40mm_HandSolder"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
 			(at 245.11 92.71 0)
 			(effects
 				(font
@@ -13463,7 +13463,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical"
 			(at 209.55 81.28 0)
 			(effects
 				(font
@@ -14828,7 +14828,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_SMD:TO-263-3_TabPin2"
 			(at 173.99 67.31 0)
 			(effects
 				(font
@@ -14901,7 +14901,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0201_0603Metric_Pad0.64x0.40mm_HandSolder"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric_Pad1.08x0.95mm_HandSolder"
 			(at 278.13 91.44 0)
 			(effects
 				(font
