@@ -17,3 +17,8 @@ This is also in the I2C bus. Refer to [This Link](https://www.digikey.com/en/pro
 ## Everything else
 Everything else was basically pulled from GHOUL, which includes the external battery connector, the voltage switcher/regulator component (which just converts external 9V to 5V/3.3V logic for uCon), an XBee radio, temperature probes, and some MOSFET circuits (for the heatpads and Nichrome strips). <br>
 The last thing to note is that there's a 3 pin connector for the SPI bus and a connector for the 2nd PCB
+# Bert Board
+Named after Robert Heng, thanks Robert :) <br>
+Baby Bert Board has a barometer (basically same schematic as main PCB), and a 3 pin connector to go back to main PCB. As of 4/29/25, this connection has yet to be soldered.
+![image](https://github.com/user-attachments/assets/a0d0c706-5957-40ae-8d9e-46e11ecbcce3)
+![image](https://github.com/user-attachments/assets/df610f99-bf50-452f-83c5-f997a764e17c)
