@@ -7430,6 +7430,10 @@
 		(uuid "33877239-9704-4059-9586-5c40944ebfe8")
 	)
 	(no_connect
+		(at 118.11 35.56)
+		(uuid "33a7cf7b-95c6-42ad-981c-adc7ed0604ad")
+	)
+	(no_connect
 		(at 118.11 43.18)
 		(uuid "353e7e97-f6eb-407c-80ce-c3ae2fb06736")
 	)
@@ -7608,16 +7612,6 @@
 			(type default)
 		)
 		(uuid "0372d112-92a0-486a-ab45-292a4b4290b8")
-	)
-	(wire
-		(pts
-			(xy 118.11 35.56) (xy 129.54 35.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "047bdde4-4d78-4592-95be-58b0c3b9fa37")
 	)
 	(wire
 		(pts
@@ -9909,17 +9903,6 @@
 			(justify left bottom)
 		)
 		(uuid "e5ce607a-177a-4514-9eb0-1cce99e1e19f")
-	)
-	(label "feedback"
-		(at 129.54 35.56 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "efe44ea1-89c2-44f5-9b8d-406b54d81a49")
 	)
 	(label "Temp_Data"
 		(at 120.65 162.56 180)
