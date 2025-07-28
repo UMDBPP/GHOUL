@@ -61,7 +61,7 @@ filtered_x = lfilter(taps, 1.0, my_data)
 t = np.arange(0,17212,1)
 
 plt.figure(figsize = (8, 6))
-plt.plot(t, my_data, 'b')
+plt.plot(t, my_data, 'b', alpha=0.2)
 plt.plot(t, filtered_x, 'r') 
 plt.plot(t, code_filter_data, 'g')
 plt.ylabel('Ascent Rate')
