@@ -2,12 +2,10 @@
 #include <stdlib.h>
 
 #include "FIR.h"
-#include "IIRFirstOrder.h"
 
 #include "input_ascent.h"
 
 FIRFilter fir;
-IIRFirstOrder iir;
 float buf[500];
 float coeffs[] = {
     -3.27821531666333e-05,   -3.682732121512476e-05,  -4.102860299368283e-05,
@@ -133,19 +131,21 @@ float coeffs[] = {
     -4.535634621249001e-05,  -4.102860299368283e-05,  -3.682732121512476e-05,
     -3.27821531666333e-05};
 
-int main() { /* Initialise PID controller */
-  FIRFilter_Init(&fir, coeffs, buf, 364);
-  IIRFirstOrder_Init(&iir, 0.99f);
+int main() {
 
-  FILE *f = fopen("file.csv", "w");
+  float output = 0.0f;
+
+  /* Initialise FIR Filter */
+  FIRFilter_Init(&fir, coeffs, buf, 364);
+
+  FILE *f = fopen("fir_output.csv", "w");
   if (f == NULL) {
     printf("Error opening file!\n");
     exit(1);
   }
 
   for (int i = 0; i < (sizeof(input) / 4); i++) {
-    // float output = FIRFilter_Update(&fir, input[i]);
-    float output = IIRFirstOrder_Update(&iir, input[i]);
+    output = FIRFilter_Update(&fir, input[i]);
     fprintf(f, "%f\n", output);
   }
 

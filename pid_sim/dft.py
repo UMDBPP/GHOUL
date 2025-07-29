@@ -25,8 +25,8 @@ def DFT(x):
     return X
 
 my_data = genfromtxt('ns120_ascent_rate.csv', delimiter=',')
-code_filter_data = genfromtxt('file.csv', delimiter=',')
-
+fir_code_filter = genfromtxt('fir_output.csv', delimiter=',')
+iir_code_filter = genfromtxt('iir_output.csv', delimiter=',') / 1000
 
 #------------------------------------------------
 # Create a FIR filter and apply it to x.
@@ -62,8 +62,8 @@ t = np.arange(0,17212,1)
 
 plt.figure(figsize = (8, 6))
 plt.plot(t, my_data, 'b', alpha=0.2)
-plt.plot(t, filtered_x, 'r') 
-plt.plot(t, code_filter_data, 'g')
+plt.plot(t, fir_code_filter, 'r') 
+plt.plot(t, iir_code_filter, 'g')
 plt.ylabel('Ascent Rate')
 
 plt.show()

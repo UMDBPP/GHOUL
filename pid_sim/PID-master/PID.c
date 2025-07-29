@@ -22,13 +22,14 @@ int PIDController_Update(PIDController *pid, int setpoint, int measurement) {
   /*
    * Proportional
    */
-  int proportional = pid->Kp * error;
+  int proportional = (pid->Kp * error);
 
   /*
    * Integral
    */
   pid->integrator =
-      pid->integrator + ((pid->Ki * pid->T * (error + pid->prevError)) / 2);
+      (pid->integrator + ((pid->Ki * pid->T * (error + pid->prevError)) / 2)) /
+      5000;
 
   /* Anti-wind-up via integrator clamping */
   if (pid->integrator > pid->limMaxInt) {

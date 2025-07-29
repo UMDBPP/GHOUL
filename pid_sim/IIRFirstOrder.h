@@ -15,17 +15,18 @@
 #define IIR_FIRST_ORDER_H
 
 typedef struct {
-  float alpha;
-  float out;
+  int32_t alpha;
+  int32_t out;
 } IIRFirstOrder;
 
-void IIRFirstOrder_Init(IIRFirstOrder *filt, float alpha) {
+void IIRFirstOrder_Init(IIRFirstOrder *filt, int32_t alpha) {
   filt->alpha = alpha;
-  filt->out = 0.0f;
+  filt->out = 0;
 }
 
-float IIRFirstOrder_Update(IIRFirstOrder *filt, float in) {
-  filt->out = filt->alpha * filt->out + (1.0f - filt->alpha) * in;
+int32_t IIRFirstOrder_Update(IIRFirstOrder *filt, int32_t in) {
+  filt->out =
+      ((filt->alpha * filt->out) / 1000) + (((1000 - filt->alpha) * in) / 1000);
   return filt->out;
 }
 
