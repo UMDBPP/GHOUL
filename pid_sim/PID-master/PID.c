@@ -29,7 +29,7 @@ int PIDController_Update(PIDController *pid, int setpoint, int measurement) {
    */
   pid->integrator =
       (pid->integrator + ((pid->Ki * pid->T * (error + pid->prevError)) / 2)) /
-      5000;
+      2000;
 
   /* Anti-wind-up via integrator clamping */
   if (pid->integrator > pid->limMaxInt) {

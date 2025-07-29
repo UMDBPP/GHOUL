@@ -13,15 +13,17 @@
 #define PID_TAU 2
 
 #define PID_LIM_MIN 0
-#define PID_LIM_MAX 10
+#define PID_LIM_MAX 30
 
 #define PID_LIM_MIN_INT 0
-#define PID_LIM_MAX_INT 10
+#define PID_LIM_MAX_INT 30
 
 #define SAMPLE_TIME_S 5 // sample time in seconds
 
 /* Maximum run-time of simulation in seconds */
 #define SIMULATION_TIME_MAX (5 * 60 * 60)
+
+#define INITIAL_ASCENT_RATE 6500
 
 /* Simulated dynamical system (first order) */
 int TestSystem_Update(int inp);
@@ -29,12 +31,15 @@ int TestSystem_Update(int inp);
 int ascent_changes[] = {-35, -12, -22};
 IIRFirstOrder iir;
 
+int ascent_rate = INITIAL_ASCENT_RATE;
+int pos = 0;
+
 int main() {
 
   PIDController pid = {PID_KP,          PID_KI,          PID_KD,
                        PID_TAU,         PID_LIM_MIN,     PID_LIM_MAX,
                        PID_LIM_MIN_INT, PID_LIM_MAX_INT, SAMPLE_TIME_S};
-  int setpoint = 1000;
+  int setpoint = 23000 * 1000;
   unsigned int delay = 0;
 
   srand(time(NULL)); // set random seed
@@ -42,8 +47,9 @@ int main() {
   PIDController_Init(&pid);
   IIRFirstOrder_Init(&iir, 900);
 
+  // force initial ascent rate
   for (int i = 0; i < 100; i++)
-    IIRFirstOrder_Update(&iir, 6000);
+    IIRFirstOrder_Update(&iir, INITIAL_ASCENT_RATE);
 
   FILE *f = fopen("pid_output.csv", "w");
   if (f == NULL) {
@@ -51,47 +57,72 @@ int main() {
     exit(1);
   }
 
-  fprintf(f, "Time (s),System Output,ControllerOutput\n");
+  fprintf(f, "Time (s),Altitude,Controller Output,Ascent Rate\n");
   for (int t = 0; t <= SIMULATION_TIME_MAX; t++) {
 
     /* Get measurement from system */
-    int measurement = TestSystem_Update(pid.out);
+    int raw_measurement = TestSystem_Update(pid.out);
+    int filtered_ascent_rate = IIRFirstOrder_Update(&iir, ascent_rate);
+    // int measurement = IIRFirstOrder_Update(&iir, raw_measurement);
 
     pid.out = 0;
 
-    if (t >= 30) {
+    // only start iterating after 30 seconds
+    if (t > 30) {
       if (delay <= 0) {
-        /* Compute new control signal */
-        PIDController_Update(&pid, setpoint,
-                             IIRFirstOrder_Update(&iir, measurement));
+        /* Compute new control signal using filtered measurement*/
+        PIDController_Update(&pid, setpoint, raw_measurement);
+
+        // if ascent rate is within desired ranges or time is past some point,
+        // do not vent
+        if (filtered_ascent_rate < 1000 || t > 7200)
+          pid.out = 0;
+
+        if (pos < setpoint + (5000 * 1000) && pos > setpoint - (5000 * 1000)) {
+          pid.out = 0;
+        }
+
+        // delay next controller update by the vent time and some additional
+        // delay
         delay = pid.out + (1 * 30);
       }
       delay--;
     }
 
-    fprintf(f, "%d,%d,%d\n", t, measurement, pid.out);
+    fprintf(f, "%d,%d,%d,%d\n", t, raw_measurement, pid.out, ascent_rate);
+
+    if (raw_measurement < 0) {
+      printf("Altitude less than 0 meters\n");
+      fclose(f);
+      return 0;
+    }
   }
+
+  fclose(f);
 
   return 0;
 }
 
 int TestSystem_Update(int inp) {
 
-  static int output = 6000;
   int32_t delta = ascent_changes[rand() % ((sizeof(ascent_changes) / 4))];
   static int venting = 0;
   // static const int alpha = 2;
 
   // output = (SAMPLE_TIME_S * inp + output) / (alpha * SAMPLE_TIME_S);
 
+  // simulate venting of helium
   venting = venting + inp;
 
-  output = output + ((rand() % 101) - 50);
-
   if (venting > 0) {
-    output = output + delta;
+    ascent_rate = ascent_rate + delta;
     venting--;
   }
 
-  return output;
+  // add randomness (updrafts and downdrafts)
+  ascent_rate = ascent_rate + ((rand() % 101) - 50);
+
+  pos = pos + ascent_rate;
+
+  return pos;
 }

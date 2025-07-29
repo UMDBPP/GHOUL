@@ -30,8 +30,9 @@ ax1.plot(time, vent_cmds, color=color, alpha=0.2)
 ax2 = ax1.twinx()  
 
 color = 'tab:red'
-ax2.set_ylabel('Ascent Rate (m/s)', color=color)
+ax2.set_ylabel('Altitude (m)', color=color)
 ax2.plot(time, ascent_rate, color=color)
+ax2.ticklabel_format(useOffset=False, style='plain')
 
 fig.tight_layout()
 plt.show()
