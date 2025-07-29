@@ -10,6 +10,8 @@ void PIDController_Init(PIDController *pid) {
   pid->prevMeasurement = 0;
 
   pid->out = 0;
+
+  pid->error = 0;
 }
 
 int PIDController_Update(PIDController *pid, int setpoint, int measurement) {
@@ -18,7 +20,7 @@ int PIDController_Update(PIDController *pid, int setpoint, int measurement) {
    * Error signal
    */
   int error = setpoint - measurement;
-
+  pid->error = setpoint - measurement;
   /*
    * Proportional
    */
@@ -28,8 +30,7 @@ int PIDController_Update(PIDController *pid, int setpoint, int measurement) {
    * Integral
    */
   pid->integrator =
-      (pid->integrator + ((pid->Ki * pid->T * (error + pid->prevError)) / 2)) /
-      2000;
+      (pid->integrator + ((pid->Ki * pid->T * (error + pid->prevError)) / 2));
 
   /* Anti-wind-up via integrator clamping */
   if (pid->integrator > pid->limMaxInt) {

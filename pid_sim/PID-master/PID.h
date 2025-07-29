@@ -31,6 +31,8 @@ typedef struct {
   /* Controller output */
   int out;
 
+  int error;
+
 } PIDController;
 
 void PIDController_Init(PIDController *pid);

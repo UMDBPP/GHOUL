@@ -68,17 +68,17 @@ plt.ylabel('Ascent Rate')
 
 plt.show()
 
-# X = DFT(filtered_x)
+X = DFT(filtered_x)
 
 # calculate the frequency
-# N = len(X)
-#n = np.arange(N)
-# T = N
-# freq = n/T 
+N = len(X)
+n = np.arange(N)
+T = N
+freq = n/T 
 
-# plt.figure(figsize = (8, 6))
-# plt.stem(freq, abs(X), 'b', markerfmt=" ", basefmt="-b")
-# plt.xlabel('Freq (Hz)')
-# plt.ylabel('DFT Amplitude |X(freq)|')
-# plt.xlim(0,0.5)
-# plt.show()
+plt.figure(figsize = (8, 6))
+plt.stem(freq, abs(X), 'b', markerfmt=" ", basefmt="-b")
+plt.xlabel('Freq (Hz)')
+plt.ylabel('DFT Amplitude |X(freq)|')
+plt.xlim(0,0.5)
+plt.show()
