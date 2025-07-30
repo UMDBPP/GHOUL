@@ -9,7 +9,7 @@ vent_cmds = []
 altitude = []
 filtered_ascent_rate = []
 
-with open('pid_output.csv','r') as csvfile:
+with open('sim_output.csv','r') as csvfile:
     plots = csv.reader(csvfile, delimiter = ',')
     next(plots)
     next(plots)
