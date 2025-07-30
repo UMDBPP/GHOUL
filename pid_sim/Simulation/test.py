@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy import genfromtxt
 import csv
+import matplotlib.ticker as ticker
 
 time = []
 ascent_rate = []
@@ -16,7 +17,7 @@ with open('sim_output.csv','r') as csvfile:
 
 
     for row in plots:
-        time.append(int(row[0]))
+        time.append(int(row[0]) / 60)
         altitude.append(int(row[1]) / 1000)
         vent_cmds.append(int(row[2]))
         ascent_rate.append(int(row[3]) / 1000)
@@ -29,7 +30,8 @@ fig, ax1 = plt.subplots()
 
 color = 'tab:blue'
 # ax1.get_yaxis().set_ticks([])
-ax1.set_xlabel('Time (s)')
+ax1.set_xlabel('Time (min)')
+ax1.xaxis.set_major_locator(ticker.MultipleLocator(30))
 ax1.set_ylabel('Vent Open', color=color)
 ax1.plot(time, vent_cmds, color=color, alpha=0.2)
 
