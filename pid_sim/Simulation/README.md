@@ -1,4 +1,4 @@
-I got bored. I and I've been thinking about solutions to autonomous venting so I finally broke down and tried to simulate what I think might be a solution.
+I got bored. I've been thinking about solutions to autonomous venting so I finally broke down and tried to simulate what I think might be a solution.
 
 This folder contains a C file that runs the simulation, and a Python file that graps the results. You can run the whole thing with the simple one-liner below.
 
