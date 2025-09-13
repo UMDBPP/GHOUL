@@ -1,6 +1,6 @@
 I got bored. I've been thinking about solutions to autonomous venting so I finally broke down and tried to simulate what I think might be a solution.
 
-This folder contains a C file that runs the simulation, and a Python file that graps the results. You can run the whole thing with the simple one-liner below.
+This folder contains a C file that runs the simulation, and a Python file that graphs the results. You can run the whole thing with the simple one-liner below.
 
 ```
 gcc sim.c -o sim.out && ./sim.out && python3 test.py
