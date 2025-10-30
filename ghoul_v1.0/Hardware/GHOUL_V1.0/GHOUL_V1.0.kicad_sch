@@ -11136,10 +11136,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "2fd90422-ba41-4885-811c-3484a05fc047")
 		(property "Reference" "MOSFET2"
-			(at 198.12 88.8999 0)
+			(at 196.342 93.218 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11147,8 +11146,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "IRF540N"
-			(at 198.12 91.4399 0)
+		(property "Value" "FDC637BNZ"
+			(at 196.342 95.758 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11167,7 +11166,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "http://www.irf.com/product-info/datasheets/data/irf540n.pdf"
+		(property "Datasheet" "https://www.onsemi.com/pdf/datasheet/fdc637bnz-d.pdf"
 			(at 191.77 90.17 0)
 			(effects
 				(font
@@ -12185,7 +12184,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "IRF540N"
+		(property "Value" "FDC637BNZ"
 			(at 144.78 57.15 0)
 			(effects
 				(font
@@ -12194,7 +12193,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:TO-252-2"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
 			(at 146.05 57.785 0)
 			(effects
 				(font
@@ -12205,7 +12204,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "http://www.irf.com/product-info/datasheets/data/irf540n.pdf"
+		(property "Datasheet" "https://www.onsemi.com/pdf/datasheet/fdc637bnz-d.pdf"
 			(at 139.7 55.88 0)
 			(effects
 				(font
@@ -15153,7 +15152,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "IRF540N"
+		(property "Value" "FDC637BNZ"
 			(at 214.63 95.25 0)
 			(effects
 				(font
@@ -15162,7 +15161,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:TO-252-2"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
 			(at 207.01 92.075 0)
 			(effects
 				(font
@@ -15173,7 +15172,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "http://www.irf.com/product-info/datasheets/data/irf540n.pdf"
+		(property "Datasheet" "https://www.onsemi.com/pdf/datasheet/fdc637bnz-d.pdf"
 			(at 213.36 90.17 0)
 			(effects
 				(font
