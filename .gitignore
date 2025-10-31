@@ -24,4 +24,4 @@ fp-info-cache
 *.ses
 
 # DS_Store
-.DS_Store
+**/.DS_Store
