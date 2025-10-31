@@ -7,7 +7,7 @@
 #include "IIRFirstOrder.h"
 
 /* Maximum run-time of simulation in seconds */
-#define SIMULATION_TIME_MAX (5 * 60 * 60)
+#define SIMULATION_TIME_MAX (3 * 60 * 60)
 #define INITIAL_ASCENT_RATE 6000
 
 /* Accepts control system signal (vent time in seconds) and time in seconds and
@@ -22,13 +22,16 @@ int target_altitude_reached = 0;
 
 /* Variables used by control system */
 IIRFirstOrder iir;
-int setpoint = 23000 * 1000;
-unsigned int delay = 0;
-int altitude_control = 0;
-int ascent_rate_control = 0;
+int setpoint = 23000 * 1000; // target altitude in meters * 1000
+unsigned int delay =
+    0; // used to delay control system update until current vent is complete
+int altitude_control = 0; // control signal from outer altitude loop
+int ascent_rate_control =
+    0; // control signal from inner ascent rate loop (outputs vent time)
 int prev_altitude = 0;
 int ascent_rate = 0;
-int filtered_ascent_rate = 0;
+int filtered_ascent_rate =
+    0; // current calaculated ascent rate after low-pass filtering
 int altitude = 0;
 
 /* Initializes Control System, accepts a filter parameter used to filter ascent
@@ -43,7 +46,7 @@ int main() {
   srand(time(NULL)); // set random seed
 
   // -- START of application code in setup --
-  ControlSystem_Init(990);
+  ControlSystem_Init(980);
   // -- END of application code in setup --
 
   FILE *f = fopen("sim_output.csv", "w");
@@ -119,24 +122,24 @@ void TestSystem_Update(int inp, int t) {
   static int venting = 0;
   static int inner_ascent_rate = INITIAL_ASCENT_RATE;
 
-  /* Select random delta */
-  int delta = (-1) * ((rand() % 101));
-
-  /* Simulate ascent rate increase during ascent */
-  int curve = ((-1) * (int)(pow(((pos / 1000) - 10000) / 5000, 2))) + 2;
-
-  /* simulate venting of helium by applying random negative ascent rate change
+  /* Simulate venting of helium by applying random negative ascent rate change
    * for given number of seconds */
   venting = venting + inp;
   total_vent_time = total_vent_time + inp;
 
   if (venting > 0) {
+    /* Select random value to apply to inner_ascent_rate */
+    int delta = (-1) * ((rand() % 41));
+
     inner_ascent_rate = inner_ascent_rate + delta;
     venting--;
   }
 
   /* Add small random noise that accumulates */
-  inner_ascent_rate = inner_ascent_rate + ((rand() % 11) - 5);
+  inner_ascent_rate = inner_ascent_rate + ((rand() % 21) - 10);
+
+  /* Simulate ascent rate increase during portion of balloon ascent */
+  int curve = ((-1) * (int)(pow(((pos / 1000) - 10000) / 5000, 2))) + 2;
 
   if (curve < 0)
     curve = 0;
@@ -146,7 +149,7 @@ void TestSystem_Update(int inp, int t) {
   /* Generates random system noise to hopefully
    * simulate updrafs and downdrafts
    */
-  double a = ((rand() % 4001) - 2000);
+  double a = ((rand() % 8001) - 4000);
   double b = ((double)((rand() % 1001))) / 1000.0;
   double y = a * sin(b * t);
   int noise = (int)(y);
@@ -160,8 +163,8 @@ void TestSystem_Update(int inp, int t) {
 void ControlSystem_Init(int32_t filter) {
   IIRFirstOrder_Init(&iir, filter); // force initial ascent rate
 
-  for (int i = 0; i < 100; i++)
-    IIRFirstOrder_Update(&iir, INITIAL_ASCENT_RATE);
+  for (int i = 0; i < 3000; i++)
+    IIRFirstOrder_Update(&iir, 0);
 }
 
 int ControlSystem_Update(int altitude, int ascent_rate) {
@@ -193,7 +196,7 @@ int ControlSystem_Update(int altitude, int ascent_rate) {
     ascent_rate_control = 1;
 
   // if ascent rate is within desired range do not vent
-  if (filtered_ascent_rate < 500)
+  if (filtered_ascent_rate < 800)
     ascent_rate_control = 0;
 
   // delay next controller update by the vent time
