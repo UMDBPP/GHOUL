@@ -1391,9 +1391,9 @@
 		)
 		(symbol "GND_1"
 			(power)
+			(pin_numbers hide)
 			(pin_names
-				(offset 0)
-			)
+				(offset 0) hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -1406,7 +1406,7 @@
 					(hide yes)
 				)
 			)
-			(property "Value" "GND_1"
+			(property "Value" "GND"
 				(at 0 -3.81 0)
 				(effects
 					(font
@@ -1467,8 +1467,8 @@
 			(symbol "GND_1_1_1"
 				(pin power_in line
 					(at 0 0 270)
-					(length 0) hide
-					(name "GND"
+					(length 0)
+					(name "~"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4583,13 +4583,13 @@
 				)
 			)
 		)
-		(symbol "Transistor_FET:IRF540N"
+		(symbol "Transistor_FET:RQ6E080AJ"
 			(pin_names hide)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "Q"
-				(at 6.35 1.905 0)
+				(at 5.08 1.905 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -4597,8 +4597,8 @@
 					(justify left)
 				)
 			)
-			(property "Value" "IRF540N"
-				(at 6.35 0 0)
+			(property "Value" "RQ6E080AJ"
+				(at 5.08 0 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -4606,8 +4606,8 @@
 					(justify left)
 				)
 			)
-			(property "Footprint" "Package_TO_SOT_THT:TO-220-3_Vertical"
-				(at 6.35 -1.905 0)
+			(property "Footprint" "Package_TO_SOT_SMD:TSOT-23-6"
+				(at 5.08 -1.905 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -4617,8 +4617,8 @@
 					(hide yes)
 				)
 			)
-			(property "Datasheet" "http://www.irf.com/product-info/datasheets/data/irf540n.pdf"
-				(at 0 0 0)
+			(property "Datasheet" "https://fscdn.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rq6e080ajtcr-e.pdf"
+				(at 5.08 -3.81 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -4627,7 +4627,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "33A Id, 100V Vds, HEXFET N-Channel MOSFET, TO-220"
+			(property "Description" "8A Id, 30V Vds, 16.5 mOhm RdsOn, N-Channel Small-Signal MOSFET, TSOT-23-6"
 				(at 0 0 0)
 				(effects
 					(font
@@ -4636,7 +4636,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "HEXFET N-Channel MOSFET"
+			(property "ki_keywords" "N-Channel MOSFET Low-Threshold sot-457t sc-95 tsmt6"
 				(at 0 0 0)
 				(effects
 					(font
@@ -4645,7 +4645,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_fp_filters" "TO?220*"
+			(property "ki_fp_filters" "TSOT?23*"
 				(at 0 0 0)
 				(effects
 					(font
@@ -4654,7 +4654,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "IRF540N_0_1"
+			(symbol "RQ6E080AJ_0_1"
 				(polyline
 					(pts
 						(xy 0.254 0) (xy -2.54 0)
@@ -4821,11 +4821,11 @@
 					)
 				)
 			)
-			(symbol "IRF540N_1_1"
-				(pin input line
-					(at -5.08 0 0)
+			(symbol "RQ6E080AJ_1_1"
+				(pin passive line
+					(at 2.54 5.08 270)
 					(length 2.54)
-					(name "G"
+					(name "D"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4842,7 +4842,7 @@
 				)
 				(pin passive line
 					(at 2.54 5.08 270)
-					(length 2.54)
+					(length 2.54) hide
 					(name "D"
 						(effects
 							(font
@@ -4851,6 +4851,24 @@
 						)
 					)
 					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -4868,7 +4886,43 @@
 							)
 						)
 					)
-					(number "3"
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54) hide
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54) hide
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -7635,6 +7689,16 @@
 	)
 	(wire
 		(pts
+			(xy 134.62 55.88) (xy 134.62 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "098a5e8f-dcee-4084-8377-65caae8c5f70")
+	)
+	(wire
+		(pts
 			(xy 264.16 87.63) (xy 264.16 88.9)
 		)
 		(stroke
@@ -7965,6 +8029,16 @@
 	)
 	(wire
 		(pts
+			(xy 142.24 80.01) (xy 142.24 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2d42025e-2b84-47a3-b395-41eaa549bc64")
+	)
+	(wire
+		(pts
 			(xy 165.1 73.66) (xy 165.1 72.39)
 		)
 		(stroke
@@ -8115,7 +8189,7 @@
 	)
 	(wire
 		(pts
-			(xy 218.44 90.17) (xy 223.52 90.17)
+			(xy 204.47 90.17) (xy 199.39 90.17)
 		)
 		(stroke
 			(width 0)
@@ -8543,16 +8617,6 @@
 		)
 		(uuid "769cc0df-b5a4-4f59-b3f2-367b7a3282ea")
 	)
-	(wire
-		(pts
-			(xy 210.82 76.2) (xy 212.09 76.2)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7749f7df-b126-48ec-a921-0580bf018c16")
-	)
 	(polyline
 		(pts
 			(xy 78.74 138.43) (xy 78.74 181.61)
@@ -8945,16 +9009,6 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 62.23) (xy 142.24 60.96)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aaa763d0-53df-47bf-9023-b5dcdf5ef598")
-	)
-	(wire
-		(pts
 			(xy 57.15 62.23) (xy 57.15 63.5)
 		)
 		(stroke
@@ -9095,7 +9149,7 @@
 	)
 	(wire
 		(pts
-			(xy 134.62 55.88) (xy 118.11 55.88)
+			(xy 118.11 55.88) (xy 134.62 55.88)
 		)
 		(stroke
 			(width 0)
@@ -9235,7 +9289,7 @@
 	)
 	(wire
 		(pts
-			(xy 210.82 76.2) (xy 210.82 85.09)
+			(xy 212.09 76.2) (xy 212.09 85.09)
 		)
 		(stroke
 			(width 0)
@@ -9405,16 +9459,6 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 49.53) (xy 142.24 50.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e8d99130-2aba-4197-8356-12ac9e7cda32")
-	)
-	(wire
-		(pts
 			(xy 24.13 151.13) (xy 35.56 151.13)
 		)
 		(stroke
@@ -9475,6 +9519,16 @@
 	)
 	(wire
 		(pts
+			(xy 142.24 49.53) (xy 142.24 69.85)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eee1a1bf-fa5f-4f18-bab4-47cc7a5b880f")
+	)
+	(wire
+		(pts
 			(xy 133.35 38.1) (xy 133.35 39.37)
 		)
 		(stroke
@@ -9505,7 +9559,7 @@
 	)
 	(wire
 		(pts
-			(xy 210.82 95.25) (xy 210.82 96.52)
+			(xy 212.09 95.25) (xy 212.09 96.52)
 		)
 		(stroke
 			(width 0)
@@ -9696,13 +9750,13 @@
 		(uuid "fc82f558-2349-41e2-9dbb-f6ea54af5eca")
 	)
 	(label "nic1"
-		(at 223.52 90.17 180)
+		(at 199.39 90.17 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right bottom)
+			(justify left bottom)
 		)
 		(uuid "051c13a5-d678-4947-a844-5cdee82f8b03")
 	)
@@ -11129,81 +11183,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Transistor_FET:IRF540N")
-		(at 191.77 90.17 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "2fd90422-ba41-4885-811c-3484a05fc047")
-		(property "Reference" "MOSFET2"
-			(at 196.342 93.218 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "FDC637BNZ"
-			(at 196.342 95.758 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 198.12 92.075 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.onsemi.com/pdf/datasheet/fdc637bnz-d.pdf"
-			(at 191.77 90.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 191.77 90.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "4b3494ed-a2af-4a1a-900c-6317f9bba250")
-		)
-		(pin "2"
-			(uuid "dc053b75-1a07-4823-a4fb-ce9cd8d29087")
-		)
-		(pin "3"
-			(uuid "58d0e6f2-f99a-4f3a-9f5a-754463b9fdbb")
-		)
-		(instances
-			(project "GHOUL_V1.0"
-				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
-					(reference "MOSFET2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:R_Small")
 		(at 246.38 40.64 0)
 		(unit 1)
@@ -11473,6 +11452,90 @@
 			(project "GHOUL_V1.0"
 				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
 					(reference "R3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:RQ6E080AJ")
+		(at 209.55 90.17 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3f2f6d5f-bec4-4d5d-acb1-695935f3c44c")
+		(property "Reference" "Q3"
+			(at 198.374 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "FDC637BNZ"
+			(at 198.374 96.266 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:TSOT-23-6"
+			(at 214.63 92.075 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://fscdn.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rq6e080ajtcr-e.pdf"
+			(at 214.63 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "8A Id, 30V Vds, 16.5 mOhm RdsOn, N-Channel Small-Signal MOSFET, TSOT-23-6"
+			(at 209.55 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "4"
+			(uuid "9fe305c5-f2f0-4a84-a96c-726909fbdd2c")
+		)
+		(pin "2"
+			(uuid "09769faf-b285-4c05-b9ee-af109f0a6f60")
+		)
+		(pin "3"
+			(uuid "96c58578-a584-49e7-94c4-787de214e1ad")
+		)
+		(pin "1"
+			(uuid "d357b360-bd01-4273-95dc-973afa59e863")
+		)
+		(pin "5"
+			(uuid "b373120e-f3ac-4d44-9f54-59cf2b9c5fe1")
+		)
+		(pin "6"
+			(uuid "db18827e-5377-4419-9b16-544f7d159681")
+		)
+		(instances
+			(project "GHOUL_V1.0"
+				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
+					(reference "Q3")
 					(unit 1)
 				)
 			)
@@ -12167,81 +12230,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Transistor_FET:IRF540N")
-		(at 139.7 55.88 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "60a6edc7-b5d8-4b8a-9c0d-4b59ef0f8c4d")
-		(property "Reference" "MOSFET_H1"
-			(at 144.78 54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "FDC637BNZ"
-			(at 144.78 57.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 146.05 57.785 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.onsemi.com/pdf/datasheet/fdc637bnz-d.pdf"
-			(at 139.7 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 139.7 55.88 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "49968e79-d7a8-4598-bc09-ddbc0050319d")
-		)
-		(pin "2"
-			(uuid "c9796c21-7ddd-47fc-b723-eb36cc76f175")
-		)
-		(pin "3"
-			(uuid "74c9f915-f0ec-41e0-8b72-551e46f7011b")
-		)
-		(instances
-			(project "GHOUL_V1.0"
-				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
-					(reference "MOSFET_H1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_name "GND_3")
 		(lib_id "power:GND")
 		(at 227.33 55.88 0)
@@ -12427,7 +12415,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 210.82 96.52 0)
+		(at 212.09 96.52 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12435,7 +12423,7 @@
 		(dnp no)
 		(uuid "629fbdff-cfdd-4be9-8b5a-5af1bfdf8a9e")
 		(property "Reference" "#PWR0105"
-			(at 210.82 102.87 0)
+			(at 212.09 102.87 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12444,7 +12432,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 210.82 100.33 0)
+			(at 212.09 100.33 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12452,7 +12440,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 210.82 96.52 0)
+			(at 212.09 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12461,7 +12449,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 210.82 96.52 0)
+			(at 212.09 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12470,7 +12458,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 210.82 96.52 0)
+			(at 212.09 96.52 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12754,72 +12742,6 @@
 			(project "GHOUL_V1.0"
 				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
 					(reference "R7")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_name "GND_1")
-		(lib_id "power:GND")
-		(at 142.24 62.23 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7d743a26-cddd-4aa2-9f3d-965e8a160e40")
-		(property "Reference" "#PWR01"
-			(at 142.24 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 142.24 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 142.24 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 142.24 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 142.24 62.23 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fe5fe525-215d-4552-bf89-19a30211086e")
-		)
-		(instances
-			(project "GHOUL_V1.0"
-				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
-					(reference "#PWR01")
 					(unit 1)
 				)
 			)
@@ -13293,6 +13215,90 @@
 			(project "GHOUL_V1.0"
 				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
 					(reference "C6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:RQ6E080AJ")
+		(at 191.77 90.17 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "918f4010-1ac8-48bd-8ea6-e0136c588fa8")
+		(property "Reference" "Q2"
+			(at 180.848 93.472 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "FDC637BNZ"
+			(at 180.848 96.012 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:TSOT-23-6"
+			(at 196.85 92.075 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://fscdn.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rq6e080ajtcr-e.pdf"
+			(at 196.85 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "8A Id, 30V Vds, 16.5 mOhm RdsOn, N-Channel Small-Signal MOSFET, TSOT-23-6"
+			(at 191.77 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "4"
+			(uuid "b63abd1d-98cb-4049-8cc3-4ff78feb389c")
+		)
+		(pin "2"
+			(uuid "b7086aaf-8579-4925-9d2d-5cbd6659a47a")
+		)
+		(pin "3"
+			(uuid "fbabfab6-949a-41f0-8ac3-cc8b80a3f914")
+		)
+		(pin "1"
+			(uuid "a995f4a4-31d5-49a2-9f31-e7a1a2ae2d3b")
+		)
+		(pin "5"
+			(uuid "19133b69-0f00-4d12-aae3-df509b9b57c9")
+		)
+		(pin "6"
+			(uuid "5c9c6339-96c2-4fec-a589-09d9b13947b2")
+		)
+		(instances
+			(project "GHOUL_V1.0"
+				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
+					(reference "Q2")
 					(unit 1)
 				)
 			)
@@ -14635,6 +14641,73 @@
 		)
 	)
 	(symbol
+		(lib_name "GND_1")
+		(lib_id "power:GND")
+		(at 142.24 91.44 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "dd695e87-0aa9-4115-921f-d19099c662b3")
+		(property "Reference" "#PWR01"
+			(at 142.24 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 142.24 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 142.24 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 142.24 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 142.24 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "54a1b5e0-b17a-4539-a227-c2211a6924e5")
+		)
+		(instances
+			(project ""
+				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
+					(reference "#PWR01")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:Battery_Cell")
 		(at 82.55 123.19 0)
 		(mirror y)
@@ -14854,6 +14927,91 @@
 			(project "GHOUL_V1.0"
 				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
 					(reference "#PWR05")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:RQ6E080AJ")
+		(at 139.7 74.93 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f120608c-e81a-437c-81a6-2c8bc3608f92")
+		(property "Reference" "Q1"
+			(at 146.05 73.6599 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "FDC637BNZ"
+			(at 146.05 76.1999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:TSOT-23-6"
+			(at 144.78 76.835 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://fscdn.rohm.com/en/products/databook/datasheet/discrete/transistor/mosfet/rq6e080ajtcr-e.pdf"
+			(at 144.78 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "8A Id, 30V Vds, 16.5 mOhm RdsOn, N-Channel Small-Signal MOSFET, TSOT-23-6"
+			(at 139.7 74.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "4"
+			(uuid "aebd44e2-690e-4692-94ff-16d37e58b114")
+		)
+		(pin "2"
+			(uuid "38bd2be1-a7e9-4248-b570-5edff71c136c")
+		)
+		(pin "3"
+			(uuid "2562ab45-8364-4277-a0a9-513a9e5db118")
+		)
+		(pin "1"
+			(uuid "5d12a3c3-70ea-4e7c-b0ae-a372d3f3664b")
+		)
+		(pin "5"
+			(uuid "d4339335-ee77-4ba0-b409-089648785a57")
+		)
+		(pin "6"
+			(uuid "c6ebe683-7dfc-4a39-8f27-ea73f7e61be0")
+		)
+		(instances
+			(project ""
+				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
+					(reference "Q1")
 					(unit 1)
 				)
 			)
@@ -15128,82 +15286,6 @@
 			(project "GHOUL_V1.0"
 				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
 					(reference "#PWR02")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Transistor_FET:IRF540N")
-		(at 213.36 90.17 0)
-		(mirror y)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "fb9808b6-3c55-475e-85a2-8d8d68a98948")
-		(property "Reference" "MOSFET1"
-			(at 214.63 92.71 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "FDC637BNZ"
-			(at 214.63 95.25 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 207.01 92.075 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-					(italic yes)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.onsemi.com/pdf/datasheet/fdc637bnz-d.pdf"
-			(at 213.36 90.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 213.36 90.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "24bf7df8-c11b-4b02-ad4d-262ba6c3a65c")
-		)
-		(pin "2"
-			(uuid "6194a690-e481-4a6a-86be-ffd7bc3e4312")
-		)
-		(pin "3"
-			(uuid "f324f61d-6369-46e7-aa80-c3b7b690b71a")
-		)
-		(instances
-			(project "GHOUL_V1.0"
-				(path "/a2e390a1-3d20-4e85-b6dd-da84eefdc6ca"
-					(reference "MOSFET1")
 					(unit 1)
 				)
 			)

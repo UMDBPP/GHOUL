@@ -49,7 +49,7 @@
         "silk_text_upright": false,
         "zones": {
           "45_degree_only": false,
-          "min_clearance": 0.3
+          "min_clearance": 0.127
         }
       },
       "diff_pair_dimensions": [
@@ -59,22 +59,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        "drill_out_of_range|182443551|73016051|0c953f75-074b-4393-a09e-c332e2153e40|00000000-0000-0000-0000-000000000000",
-        "drill_out_of_range|182443551|74196051|22a1d697-14fb-4dd5-8db7-cca8bf71879f|00000000-0000-0000-0000-000000000000",
-        "drill_out_of_range|183623551|73016051|37e4834c-d52e-4fcd-b3db-80ea3add0920|00000000-0000-0000-0000-000000000000",
-        "drill_out_of_range|183623551|74196051|fafdf2dc-4699-48ba-8583-b42be9ab0b9d|00000000-0000-0000-0000-000000000000",
-        "items_not_allowed|108274598|67900000|31aa4ad0-60a6-455e-a6fa-9a7cf8359da3|00000000-0000-0000-0000-000000000000",
-        "items_not_allowed|108274598|67900000|5beb5a12-6d42-4888-9c16-220fb67ad46f|00000000-0000-0000-0000-000000000000",
-        "items_not_allowed|115200000|67900000|4612efdf-c734-44f4-8136-7fd18a0f1183|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_issues|184046051|61116051|3c7bb3a6-c5db-4a3f-8f44-fa33b4f78db8|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_mismatch|181936051|108416051|3799fe2c-7f19-4c5a-a050-9dd8b3c1f982|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_mismatch|182496051|125566051|40ae0f30-2d44-40e8-ae1b-5b3ccf14b73d|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_mismatch|196616051|124811051|3f8c47e4-8b9b-4a0c-9e6a-9c74fd212e8a|00000000-0000-0000-0000-000000000000",
-        "lib_footprint_mismatch|202366051|93206051|242bb6d8-98f8-4aec-9919-e692f203fe4a|00000000-0000-0000-0000-000000000000",
-        "net_conflict|181936051|102736051|9f61ded4-7428-4c3c-9fd2-bec0ec459cf1|00000000-0000-0000-0000-000000000000",
-        "solder_mask_bridge|141000000|73800000|b239be0e-1458-42cc-9db7-84510d3c6f4e|49ae9184-6d6d-4095-b3ba-5a3407f67873"
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -143,7 +128,7 @@
         "min_microvia_drill": 0.1,
         "min_resolved_spokes": 2,
         "min_silk_clearance": 0.0,
-        "min_text_height": 0.8,
+        "min_text_height": 0.5,
         "min_text_thickness": 0.08,
         "min_through_hole_diameter": 0.3,
         "min_track_width": 0.127,
